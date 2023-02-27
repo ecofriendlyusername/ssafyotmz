@@ -183,14 +183,14 @@ git checkout master
 git merge --no-ff release/0.2
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/34489688-237c-4622-916e-23457a02df49/Untitled.png)
+![image-4.png](./image-4.png)
 
 ```java
 git branch -d release/0.2    // release 브랜치는 사용하고 삭제하는 임시 브랜치 
 git tag 0.2         // 다시 출시한 버젼 tag 다시 keep 개발ing..
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1f6b78d0-73e7-4049-a3b7-462c661e40d9/Untitled.png)
+![image-5.png](./image-5.png)
 
 → 다시 keep 개발ing
 
@@ -229,7 +229,7 @@ git add short.txt
 git commit -am "short 2"
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/216ecabd-8c28-4138-abfc-24c07f13b965/Untitled.png)
+![image-6.png](./image-6.png)
 
 feature/long
 
@@ -248,7 +248,7 @@ git commit -am "long 1"
 git commit -am "long 2"
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1f6fd12c-2f79-4c55-bffc-b984b098627c/Untitled.png)
+![image-7.png](./image-7.png)
 
 출시 준비 -> feature 병합작업
 
@@ -257,7 +257,8 @@ git checout develop
 git merge --no-ff feature/short         // commit message를 일부러 만들어주기 by --no-ff
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/510ddf9e-f02e-4b91-acbc-fd95665a6470/Untitled.png)
+![image-8.png](./image-8.png)
+
 
 ```java
 git branch -d feature/short
@@ -279,7 +280,8 @@ short.txt 코드 수정 (but fix함)
 git commit -am "short 3 bug fix"
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1b6db43d-1558-490e-8968-ccb74da4e97a/Untitled.png)
+![image-9.png](./image-9.png)
+
 
 기존의 main.txt에서도 bug fix 했다면
 
@@ -287,7 +289,8 @@ git commit -am "short 3 bug fix"
 git commit -am "work 4 bug fix'
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/10c5e003-520a-40b2-892b-7aa95afb90b8/Untitled.png)
+![image-10.png](./image-10.png)
+
 
 release/1.0 까지 merge 한 상태에서 bugfix를 해나가기 => release 준비 완료
 
@@ -298,14 +301,16 @@ git checkout develop
 git merge --no-ff release/1.0
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5942f1ee-f96e-48c1-90f7-f3b50d6f5099/Untitled.png)
+![image-11.png](./image-11.png)
+
 
 ```java
 git checkout master 
 git merge --no-ff release/1.0
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8889f316-7961-4f09-8a0d-90f02ec72f38/Untitled.png)
+![image-12.png](./image-12.png)
+
 
 ```java
 git tag 1.0 
@@ -336,7 +341,7 @@ git checkout develop
 git merge --no-ff hotfixes/1.1
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e346ac30-2a20-46f0-abea-6257ebb6acec/Untitled.png)
+![image-14.png](./image-14.png)
 
 ```java
 git chechout master
@@ -345,7 +350,8 @@ git tag 1.1                             //1.1로 tag (출시)
 git branch -d hotfixes/1.1         //삭제
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/98dec149-4eba-4108-bc8b-bd286e4e9642/Untitled.png)
+![image-15.png](./image-15.png)
+
 
 ### **9) feature/long merge**
 
@@ -357,6 +363,7 @@ git checkout master
 git merge --no-ff develop
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/aa8e3c1c-2cae-424e-993d-dd2e7996247d/Untitled.png)
+![image-16.png](./image-16.png)
+
 
 출처 - [https://blckchainetc.tistory.com/352](https://blckchainetc.tistory.com/352)
