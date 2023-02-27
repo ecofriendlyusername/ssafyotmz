@@ -99,7 +99,7 @@ git add main.txt
 git commit -am "work 1"
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/40d256b2-569f-465e-8259-742fa945344e/Untitled.png)
+![image](/uploads/4168f7d894ae2bc2c5ea2dd0d497b609/image.png)
 
 현재 완성된 master 제품을 출시한 상태라고 가정
 
@@ -109,7 +109,7 @@ git commit -am "work 1"
 git tag 0.1
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bca53012-7ace-4f5d-bc29-d9d51b8816ac/Untitled.png)
+![image](/uploads/24957b172c8f1fe4160b183e6d85cd3c/image.png)
 
 이제 기능 추가 / 코드 작성 등등을 위한 develop branch를 만들기
 
@@ -119,7 +119,7 @@ git tag 0.1
 git checkout -b develop
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/74532f6e-54f8-4791-986c-04c40017f95a/Untitled.png)
+![image](/uploads/a3c70a30de9cdf78abdef1980a376c0e/image.png)
 
 →  develop branch에서 기능 개선, 버그 수정 등의 코드 작성 후
 
@@ -128,7 +128,7 @@ git commit -am "work 2"
 git commit -am "work 3"
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/aa1f78c9-41f7-4605-a011-a0cdc6649675/Untitled.png)
+![image](/uploads/c21463fca90fcc6cbd1e8d6326d0fd92/image.png)
 
 요렇게 develop line에서 기능 추가가 이루어짐
 
@@ -142,7 +142,7 @@ git checkout -b release/0.2
 
 이전 출시가 0.1 버전이라 이번 출시 branch 이름을 release/0.2로 지음 
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d3760159-a203-4713-bf8a-55caa4c93cfc/Untitled.png)
+![image](/uploads/73ed5462548d54ed7fb030bbd389b5e2/image.png)
 
 출시하려하는데 고쳐야할 버그들이 보이면 bugfix
 
@@ -155,7 +155,7 @@ git commit -am "release 0.2 1"
 git commit -am "release 0.2 2"
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ce9ff44c-3e51-4051-a7b9-91c7cc1a7789/Untitled.png)
+![image](/uploads/83b3aeec893975474d83843992035a09/image.png)
 
 **4) release를 devlop 브랜치로 merge 하기**
 
@@ -164,7 +164,7 @@ git checkout develop
 git merge release/0.2
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/fa1c55bc-37f6-4955-847d-49433d15440b/Untitled.png)
+![image](/uploads/70b72198c3159023b3b6337ae34e0f19/image.png)
 
 요런 과정을 반복하며 release준비가 끝나면 (잘 작동하는지 확인이 끝나면)
 
