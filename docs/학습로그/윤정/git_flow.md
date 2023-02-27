@@ -50,7 +50,7 @@ merge 된 후 사라지는 임시 브랜치
 
 ## Git-flow 개발 프로세스
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/dadc0eea-dd8e-4e4f-b315-5532c940a398/Untitled.png)
+![image](/uploads/d5df9884eeb3d45958c408940107caaa/image.png)
 
 **git-flow 개발 프로세스**
 
