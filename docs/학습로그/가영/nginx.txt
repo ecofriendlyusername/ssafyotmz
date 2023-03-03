@@ -1,0 +1,10 @@
+Proxying
+- Typically used to distribute the load among several servers
+- Seamlessly show content from different websites
+- Pass requests for processing to application servers over protocols other than HTTP
+
+A proxy server
+- Go-between or intermediary server that forwards requests for content from multiple clients to different servers across the Internet.
+What is a Reverse Proxy Server?
+- A type of proxy server that typically sits behind the firewall in a private network and directs client requests to the appropriate backend server.
+- Provides an additional level of abstraction and control to ensure the smooth flow of network traffic between clients and servers.
