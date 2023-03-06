@@ -1,4 +1,4 @@
-# 양가영 1주차 스프린트 회고
+# 학습로그
 
 ## Nginx
 - has one **master process** and several **worker processes.**
