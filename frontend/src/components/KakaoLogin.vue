@@ -1,71 +1,30 @@
 <template>
-    <section class="test">
-        <div v-on:click="kakaoLoginBtn">카카오 연동</div>
+    <section>
+        <p>1234</p>
+        <button type="submit"></button>
+        
     </section>
 </template>
 
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
+    integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx" crossorigin="anonymous"></script>
+<script>
+    // SDK를 초기화 합니다. 사용할 앱의 JavaScript 키를 설정해야 합니다.
+
+
+</script>
 <script>
 export default {
-    name: 'KakaoLoginVue',
-    methods: {
-        kakaoLoginBtn: function () {
+    name:'KakaoLoginVue',
+    methods:{
+        log: function () {
+            Kakao.init("d351596851492e4d0a8828d5497305e8");
 
-            window.Kakao.init('d351596851492e4d0a8828d5497305e8') // Kakao Developers에서 요약 정보 -> JavaScript 키
-
-            if (window.Kakao.Auth.getAccessToken()) {
-                window.Kakao.API.request({
-                    url: '/v1/user/unlink',
-                    success: function (response) {
-                        console.log(response)
-                    },
-                    fail: function (error) {
-                        console.log(error)
-                    },
-                })
-                window.Kakao.Auth.setAccessToken(undefined)
-            }
-
-
-            window.Kakao.Auth.login({
-                success: function () {
-                    window.Kakao.API.request({
-                        url: '/v2/user/me',
-                        data: {
-                            property_keys: ["kakao_account.email"]
-                        },
-                        success: async function (response) {
-                            console.log(response);
-                        },
-                        fail: function (error) {
-                            console.log(error)
-                        },
-                    })
-                },
-                fail: function (error) {
-                    console.log(error)
-                },
-            })
+            // SDK 초기화 여부를 판단합니다.
+            console.log(Kakao.isInitialized());
         }
     }
 }
 </script>
 
-<style scoped>
-.test {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-div {
-    width: 200px;
-    height: 40px;
-    background-color: #fdd101;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-</style>
+<style></style>
