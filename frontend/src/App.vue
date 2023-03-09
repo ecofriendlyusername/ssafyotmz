@@ -13,10 +13,34 @@
       </li>
     </ul>
 
+    <div id="main">
+      <div class="inner">
+        <!-- <HeaderComponentVue /> -->
+        <router-view />
+      </div>
+    </div>
+    
+
+    <SidebarComponentVue/>
+
+
     <router-view />
   </div>
 </template>
 
+<script>
+  import SidebarComponentVue from './components/SidebarComponent.vue';
+
+  export default {
+    name: 'App',
+    components: {
+      SidebarComponentVue,
+    },
+  }
+</script>
+<script src="./assets/js/main.js"></script>
+
+<style src="./assets/css/main.css"></style>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -26,16 +50,4 @@
   color: #2c3e50;
 }
 
-nav {
-  height: 50%;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>
