@@ -28,7 +28,8 @@ export default {
     data() {
         return {
             file: null,
-            image: null
+            image: null,
+            formData: null
         };
     },
 
@@ -36,15 +37,28 @@ export default {
         fileUpload() {
             this.file = this.$refs.fileInput.files[0];
             this.image = URL.createObjectURL(this.file);
+            this.formData = new FormData()
+            this.formData.append('image', this.file)
         },
 
         uploadImage() {
-            let formData = new FormData();
-            formData.append('image', this.file);
-            axios.post('/api/upload', formData)
+            if (this.file == null) {
+                return;
+            }
+
+            this.uploadForm(this.formData)
+
+        },
+
+        uploadForm(formData) {
+            return axios.post('http://127.0.0.1:8000/ai/v1/style', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
                 .then(response => {
                     console.log(response.data);
-                    // context.commit('setResult', response.data);
+
                 })
                 .catch(error => {
                     console.log(error);
