@@ -5,6 +5,7 @@ COPY . .
 RUN python -m venv venv
 RUN pip install uvicorn 
 RUN pip install fastapi
+RUN pip install torch
 
 EXPOSE 8000
 CMD ["source" "venv/scripts/activate"]
