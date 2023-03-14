@@ -8,8 +8,6 @@ RUN pip install fastapi
 RUN pip install torch
 RUN pip install torchvision
 RUN pip install pandas
-RUN pip install numpy
-RUN pip install urllib
 RUN pip install PIL
 RUN pip install tqdm
 RUN pip install util
