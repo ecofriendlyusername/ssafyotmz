@@ -2,7 +2,8 @@
 FROM python:3.8
 WORKDIR /ai
 COPY . .
-RUN python -m venv venv 
+RUN python -m venv venv
+RUN pip install uvicorn 
 
 EXPOSE 8000
 CMD ["source" "venv/scripts/activate"]
