@@ -1,5 +1,5 @@
 #build stage
-FROM python:3.8-slim-buster
+FROM python:3.8
 WORKDIR /ai
 COPY . .
 RUN python -m venv venv 
