@@ -1,20 +1,21 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import UtilOneVue from "@/components/utilOne.vue";
+import roadingVue from "@/components/roading.vue";
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/util',
     name: 'UtilOneVue',
     component: UtilOneVue,
     children: [
       {
-        path:'/',
-        // component: ,
+        path:'roading',
+        component: roadingVue,
       },
-      {}
+
     ]
   },
 ]

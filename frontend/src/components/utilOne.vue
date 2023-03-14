@@ -7,12 +7,15 @@
         <p>전신이 나온 사진을 선택해주세요</p>
 
         <label for="" class="">사진 촬영</label> |
+
         <label for="fileInput" class="file-label">파일 선택</label>
         <input id="fileInput" type="file" ref="fileInput" @change="fileUpload" hidden>
 
         <br>|<br>|<br>|<br>
 
-        <button @click="uploadImage">Upload</button>
+        <router-link to="util/roading">
+            <button @click="uploadImage">Upload</button>
+        </router-link>
 
     </div>
 </template>
@@ -41,11 +44,17 @@ export default {
             axios.post('/api/upload', formData)
                 .then(response => {
                     console.log(response.data);
+                    // context.commit('setResult', response.data);
                 })
                 .catch(error => {
                     console.log(error);
                 });
         }
+    },
+    computed: {
+        // uploadImage() {
+        //     this.$store.dispatch('setImage', this.image)
+        // }
     }
 };
 </script>
