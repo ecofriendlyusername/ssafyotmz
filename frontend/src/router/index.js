@@ -1,28 +1,22 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import UtilOneView from '../views/UtilOneView.vue'
-import UtilTwoView from '../views/AboutView.vue'
-import UtilThreeView from '../views/AboutView.vue'
+import UtilOneVue from "@/components/utilOne.vue";
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/util_one',
-    name: 'util_one',
-    component: UtilOneView
+    path: '/',
+    name: 'UtilOneVue',
+    component: UtilOneVue,
+    children: [
+      {
+        path:'/',
+        // component: ,
+      },
+      {}
+    ]
   },
-  {
-    path: '/util_two',
-    name: 'util_two',
-    component: UtilTwoView
-  },
-  {
-    path: '/util_three',
-    name: 'util_three',
-    component: UtilThreeView
-  },
-  
 ]
 
 const router = new VueRouter({
