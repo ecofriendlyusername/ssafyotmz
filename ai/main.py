@@ -1,8 +1,23 @@
 from fastapi import FastAPI, File, UploadFile
 from style_classifier import *
 import io
+from starlette.middleware.cors import CORSMiddleware
+
+origins = [
+    "http://127.0.0.1",
+    "http://127.0.0.1:3000",
+    "http://localhost:3000"
+]
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
@@ -20,9 +35,10 @@ async def test(img: UploadFile = File(...)):
     return {"filename": img.filename}
 
 
-@app.get("/ai/v1/style")
+@app.post("/ai/v1/style")
 async def style_classification(image: UploadFile = File(...)):
     """inference""" 
+    print(image)
     img = await image.read()
     img = io.BytesIO(img)
     #open image

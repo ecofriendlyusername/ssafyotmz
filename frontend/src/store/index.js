@@ -11,7 +11,11 @@ export default new Vuex.Store({
   getters: {
     getImage(state) {
       return state.image
+    },
+    getResult(state) {
+      return state.result
     }
+
   },
   mutations: {
     setImage(state, payload) {
@@ -24,6 +28,9 @@ export default new Vuex.Store({
   actions: {
     setImage(context, payload) {
       context.commit('setImage', payload)
+    },
+    setResult(state, payload) {
+      state.result = payload;
     }
   },
   modules: {
