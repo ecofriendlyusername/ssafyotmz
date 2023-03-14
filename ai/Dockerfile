@@ -14,5 +14,4 @@ RUN pip install -r req.txt
 
 EXPOSE 8000
 CMD ["source" "venv/scripts/activate"]
-CMD ["pip", "install", "-r", "req.txt"]
 CMD ["uvicorn","main:app","--reload"]
