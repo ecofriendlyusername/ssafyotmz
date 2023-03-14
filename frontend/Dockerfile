@@ -1,5 +1,5 @@
 #build stage
-FROM node:12.18.1 as build-stage
+FROM node:12.18.1-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -13,4 +13,4 @@ RUN npm run build
 # COPY --from=build-stage /app/deploy_conf/nginx.conf  
 # /etc/nginx/conf.d/default.conf
 EXPOSE 3000
-# CMD ["npm", "start"]
+CMD ["npm", "run", "serve"]
