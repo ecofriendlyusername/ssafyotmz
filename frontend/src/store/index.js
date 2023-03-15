@@ -10,6 +10,7 @@ export default new Vuex.Store({
     image: null,
     result: null,
   },
+
   getters: {
     getImage(state) {
       return state.image
@@ -18,14 +19,17 @@ export default new Vuex.Store({
       return state.result
     }
   },
+
   mutations: {
     setImage(state, payload) {
       state.image = payload;
     },
+
     setResult(state, payload) {
       state.result = payload;
     }
   },
+
   actions: {
     prediction(context, formData) {
       axios.post('http://127.0.0.1:8000/ai/v1/style', formData, {
@@ -41,10 +45,9 @@ export default new Vuex.Store({
                 .catch(error => {
                     console.log(error);
                 });
-
     }
-
   },
+
   modules: {
 
   }
