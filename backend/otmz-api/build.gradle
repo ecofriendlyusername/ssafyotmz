@@ -30,6 +30,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'com.azure.spring:spring-cloud-azure-dependencies:5.0.0'
+    implementation 'com.azure.spring:spring-cloud-azure-starter-jdbc-mysql:5.0.0'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
