@@ -2,13 +2,25 @@ pipeline {
     agent any
     stages {
         stage('back') {
+            agent {
+                 dockerfile {
+                        dir './backend/otmz-api'
+                        additionalBuildArgs '-t back'
+                 }
+            }
             steps {
-                sh 'docker build -t back ./backend/otmz-api'
+                echo 'back'
             }
         }
          stage('front') {
+            agent {
+                 dockerfile {
+                        dir './frontend'
+                        additionalBuildArgs '-t front'
+                 }
+            }
             steps {
-                sh 'docker build -t front ./frontend'
+                echo 'front'
             }
          }
          stage('ai') {
