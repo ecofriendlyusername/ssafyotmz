@@ -15,7 +15,7 @@ pipeline {
          stage('front') {
             agent {
                  dockerfile {
-                      tag front'
+                      tag 'front'
                       dir './frontend'
                  }
             }
