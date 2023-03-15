@@ -19,7 +19,7 @@ pipeline {
                   }
             }
             steps {
-                sh 'ai'
+                echo 'ai'
             }
          }
     }
