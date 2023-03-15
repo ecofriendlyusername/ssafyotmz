@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from style_classifier import *
+import io
 
 app = FastAPI()
 
@@ -13,15 +14,19 @@ async def root():
 async def say_hello(name: str):
     return {"message": f"Hello {name}"}
 
-@app.get("/ai/v1/style/{img}")
-async def style_classification(img: str):
-    """inference"""
-    
-    img = "./test/64471.jpg"
-    
+
+@app.get("/test")
+async def test(img: UploadFile = File(...)):
+    return {"filename": img.filename}
+
+
+@app.get("/ai/v1/style")
+async def style_classification(image: UploadFile = File(...)):
+    """inference""" 
+    img = await image.read()
+    img = io.BytesIO(img)
     #open image
     img = Image.open(img).convert('RGB')
-    
     #transformation
     if val_transform is not None:
     
