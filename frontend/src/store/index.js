@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+import axios from 'axios';
+
 export default new Vuex.Store({
   state: {
     image: null,
@@ -15,7 +17,6 @@ export default new Vuex.Store({
     getResult(state) {
       return state.result
     }
-
   },
   mutations: {
     setImage(state, payload) {
@@ -26,12 +27,23 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    setImage(context, payload) {
-      context.commit('setImage', payload)
-    },
-    setResult(state, payload) {
-      state.result = payload;
+    prediction(context, formData) {
+      axios.post('http://127.0.0.1:8000/ai/v1/style', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(response => {
+                    console.log(response.data);
+                    context.commit("setImage", formData.get('image'));
+                    context.commit("setResult", response.data);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
     }
+
   },
   modules: {
 
