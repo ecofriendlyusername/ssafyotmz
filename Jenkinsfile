@@ -4,7 +4,7 @@ pipeline {
         stage('back') {
             agent {
                 dockerfile { 
-                     args '-t back' 
+                     tag 'back' 
                      dir './backend/otmz-api'
                 }
             }
@@ -15,7 +15,7 @@ pipeline {
          stage('front') {
             agent {
                  dockerfile {
-                      args '-t front'
+                      tag front'
                       dir './frontend'
                  }
             }
@@ -26,7 +26,7 @@ pipeline {
          stage('ai') {
             agent {
                   dockerfile {
-                        args '-t ai'
+                        tag 'ai'
                         dir './ai'
                   }
             }
