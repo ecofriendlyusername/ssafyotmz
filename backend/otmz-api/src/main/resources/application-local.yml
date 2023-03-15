@@ -8,3 +8,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+
+file:
+  image:
+    path: C:/Users/multicampus/Desktop/storage/
