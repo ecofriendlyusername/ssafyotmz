@@ -1,5 +1,6 @@
 <template>
     <div>
+        <img src="../../MLC.png" alt="">
         <div v-if="image">
             <img :src="image" />
         </div>
@@ -44,14 +45,9 @@ export default {
             if (this.file == null) {
                 return;
             }
-
-            this.uploadForm(this.formData)
-
+            this.$store.dispatch("prediction", this.formData);
         },
 
-        uploadForm(formData) {
-            this.$store.dispatch("prediction", formData);
-        }
     },
 
 };
