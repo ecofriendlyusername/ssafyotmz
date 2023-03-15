@@ -11,5 +11,10 @@ pipeline {
                 sh 'docker build -t front ./frontend'
             }
          }
+         stage('ai') {
+            steps {
+                sh 'docker build -t ai ./ai'
+            }
+         }
     }
 }
