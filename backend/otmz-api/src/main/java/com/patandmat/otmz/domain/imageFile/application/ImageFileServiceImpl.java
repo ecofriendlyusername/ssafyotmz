@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -49,6 +51,14 @@ public class ImageFileServiceImpl implements ImageFileService {
         }
 
         return imageFileRepository.save(imageFile);
+    }
+
+    @Override
+    @Transactional
+    public void delete(String path) throws IOException {
+        File f = new File(absolutePath+path);
+        if (!f.exists()) return;
+        Files.delete(Path.of(absolutePath,path));
     }
 
     @Override
