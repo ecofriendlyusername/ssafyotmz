@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile
 from style_classifier import *
+from category_classifier import *
 import io
 from starlette.middleware.cors import CORSMiddleware
 
@@ -37,8 +38,8 @@ async def test(img: UploadFile = File(...)):
 
 @app.post("/ai/v1/style")
 async def style_classification(image: UploadFile = File(...)):
+    
     """inference""" 
-    print(image)
     img = await image.read()
     img = io.BytesIO(img)
     #open image
@@ -53,12 +54,8 @@ async def style_classification(image: UploadFile = File(...)):
 
     feature_var = torch.autograd.Variable(img).float()
     
-    #eval mode
-
-    model.eval()
-    
     #data
-    output = model(feature_var, inp_var)
+    output = model_style(feature_var, inp_var)
     percentage_output = F.softmax(output, dim = 1)
 
     pred = output.cpu().detach().numpy()
@@ -68,9 +65,47 @@ async def style_classification(image: UploadFile = File(...)):
     #result  
     result = {}
     
-    for i in range(num_classes-1,-1,-1):
+    for i in range(num_classes_style-1,-1,-1):
         
-        result[10-i] = {"style":change_category[sorted_pred[0][i]],
+        result[10-i] = {"style":change_class_style[sorted_pred[0][i]],
                         "score":round((percentage_output[0][sorted_pred[0][i]].item())*100, 4)}
     
+    return result
+
+@app.post("/ai/v1/category")
+async def category_classification(image: UploadFile = File(...)):
+    """#inference"""
+
+    filename = "./dummy/test_skirt.jpg"
+
+    img = Image.open(filename).convert('RGB')
+    
+    # img = await image.read()
+    # img = io.BytesIO(img)
+    # #open image
+    # img = Image.open(img).convert('RGB')
+
+    if val_transform is not None:
+        
+        img = val_transform(img)
+
+    img = img.unsqueeze(0)
+
+    feature_var = torch.autograd.Variable(img).float()
+
+    output = model_category(feature_var)
+    percentage_output = F.softmax(output, dim = 1)
+
+
+    pred = output.cpu().detach().numpy()
+
+    sorted_pred = np.argsort(pred,axis = 1)
+    
+    result = {}
+
+    for i in range(num_classes_category-1,-1,-1):
+        
+        result[21-i] = {"category":change_class_category[sorted_pred[0][i]],
+                        "score":round((percentage_output[0][sorted_pred[0][i]].item())*100, 4)}
+        
     return result
