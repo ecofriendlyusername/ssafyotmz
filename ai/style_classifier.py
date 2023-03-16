@@ -20,8 +20,8 @@ import torch.nn.functional as F
 import torchvision.models as models
 import torchvision.transforms as transforms
 
-import torch.utils.data as Data
-import torch.backends.cudnn as cudnn
+#import torch.utils.data as Data
+#import torch.backends.cudnn as cudnn
 
 #numpy
 import numpy as np
@@ -30,19 +30,11 @@ import numpy as np
 import pandas as pd
 
 #utility
+import pickle
 
 import math
-from urllib.request import urlretrieve
 
 from PIL import Image
-from tqdm import tqdm
-import random
-
-import json
-import os
-import pickle
-import shutil
-import time
 
 from util import *
 
@@ -135,23 +127,9 @@ def gcn_resnet101(num_classes, t, pretrained=True, adj_file=None, in_channel=300
 
 """# initialize hyperparameter"""
 
-use_gpu = torch.cuda.is_available()
-
 image_size = 224
 
-batch_size = 64
-
-workers = 25
-
-device_ids = None
-
-evaluate = False
-
-use_pb = True
-
-best_score= 0
-
-change_category = {0: "traditional", 
+change_class_style = {0: "traditional", 
                    1: "manish", 
                    2: "feminine", 
                    3: "ethnic", 
@@ -164,15 +142,15 @@ change_category = {0: "traditional",
 
 """# load model"""
 
-num_classes = 10
+num_classes_style = 10
 
 adj = "./style/custom_adj_final.pkl"
 
-model = gcn_resnet101(num_classes=num_classes, t=0.03, adj_file=adj)
+model_style = gcn_resnet101(num_classes=num_classes_style, t=0.03, adj_file=adj)
 
 """# data augmentation"""
 
-normalize = transforms.Normalize(mean = model.image_normalization_mean, std = model.image_normalization_std)
+normalize = transforms.Normalize(mean = model_style.image_normalization_mean, std = model_style.image_normalization_std)
 
 val_transform = transforms.Compose([
     Warp(image_size),
@@ -188,7 +166,9 @@ resume = "./style/model_best.pth.tar"
 
 checkpoint = torch.load(resume, map_location=torch.device('cpu'))
 
-model.load_state_dict(checkpoint['state_dict'])
+model_style.load_state_dict(checkpoint['state_dict'])
+
+model_style.eval()
 
 """word2vec"""
 
