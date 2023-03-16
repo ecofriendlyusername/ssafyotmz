@@ -54,7 +54,6 @@ public class ImageFileServiceImpl implements ImageFileService {
     }
 
     @Override
-    @Transactional
     public void delete(String path) throws IOException {
         File f = new File(absolutePath+path);
         if (!f.exists()) return;
