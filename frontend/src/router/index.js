@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import UtilOneVue from "@/components/utilOne.vue";
-import roadingVue from "@/components/roading.vue";
+import UtilOneComponentVue from "@/components/utilOne.vue";
+import roadingComponentVue from "@/components/roadingComponent.vue";
+import resultComponentVue from "@/components/resultComponent.vue";
+import startComponentVue from "@/components/startComponent.vue"
 
 Vue.use(VueRouter)
 
@@ -9,12 +11,20 @@ const routes = [
   {
     path: '/util',
     name: 'UtilOneVue',
-    component: UtilOneVue,
+    component: UtilOneComponentVue,
     children: [
       {
-        path:'roading',
-        component: roadingVue,
+        path:'start',
+        component: startComponentVue
       },
+      {
+        path:'roading',
+        component: roadingComponentVue,
+      },
+      {
+        path:'result',
+        component: resultComponentVue,
+      }
 
     ]
   },
