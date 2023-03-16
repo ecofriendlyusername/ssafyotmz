@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 import axios from 'axios';
+import watermark from 'watermarkjs';
 
 export default new Vuex.Store({
   state: {
@@ -39,7 +40,14 @@ export default new Vuex.Store({
             })
                 .then(response => {
                     console.log(response.data);
-                    context.commit("setImage", formData.get('image'));
+                    console.log("setImage", formData.get('image'));
+                    // console.log(require('@/assets/img/MLC.png'))
+                    watermark([formData.get('image'), 'http://localhost:3000/img/MLC.30de3069.png'])
+                    .image()
+                    .then(function (img) {
+                      context.commit("setImage", img);  
+                    });
+                    // context.commit("setImage", formData.get('image'));
                     context.commit("setResult", response.data);
                 })
                 .catch(error => {
