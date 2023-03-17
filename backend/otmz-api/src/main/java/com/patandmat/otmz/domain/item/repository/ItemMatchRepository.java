@@ -1,4 +1,10 @@
 package com.patandmat.otmz.domain.item.repository;
 
-public class ItemMatchRepository {
+import com.patandmat.otmz.domain.item.entity.ItemMatch;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ItemMatchRepository extends JpaRepository<ItemMatch, Long> {
+    Page<ItemMatch> findAll(Pageable pageable);
 }
