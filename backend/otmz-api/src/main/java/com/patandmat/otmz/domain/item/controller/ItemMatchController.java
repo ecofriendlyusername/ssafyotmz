@@ -1,6 +1,8 @@
 package com.patandmat.otmz.domain.item.controller;
 
 import com.patandmat.otmz.domain.item.dto.ItemDto;
+import com.patandmat.otmz.domain.item.dto.ItemMatchDto;
+import com.patandmat.otmz.domain.item.service.ItemMatchService;
 import com.patandmat.otmz.domain.item.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,10 +20,11 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
-public class ItemController {
+public class ItemMatchController {
     private final ItemService itemService;
+    private final ItemMatchService itemMatchService;
     @PostMapping("/item")
-    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemDto item) throws IOException {
+    public ResponseEntity<?> saveItemMatch(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemDto item) throws IOException {
         // take name, comment
         try {
             itemService.saveItem(file,item);
@@ -35,11 +38,11 @@ public class ItemController {
     }
 
     @GetMapping("/item/{id}")
-    public ResponseEntity<?> getItem(@PathVariable Long id) {
+    public ResponseEntity<?> getItemMatch(@PathVariable Long id) {
         // take name, comment
         try {
-            ItemDto itemDto = itemService.getItem(id);
-            return new ResponseEntity<>(itemDto, HttpStatus.OK);
+            ItemMatchDto itemMatchDto = itemMatchService.getItem(id);
+            return new ResponseEntity<>(itemMatchDto, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
         }
@@ -59,9 +62,9 @@ public class ItemController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<Page<ItemDto>> getItemPage(Pageable pageable) {
+    public ResponseEntity<Page<ItemMatchDto>> getItemMatchPage(Pageable pageable) {
         try {
-            Page<ItemDto> page = itemService.getItems(pageable);
+            Page<ItemMatchDto> page = itemService.getItems(pageable);
             return new ResponseEntity<>(page, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
