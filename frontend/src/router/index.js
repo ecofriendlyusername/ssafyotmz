@@ -4,6 +4,7 @@ import UtilOneComponentVue from "@/components/utilOne.vue";
 import roadingComponentVue from "@/components/roadingComponent.vue";
 import resultComponentVue from "@/components/resultComponent.vue";
 import startComponentVue from "@/components/startComponent.vue"
+import watermarkComponent from "@/components/watermarkComponent.vue";
 
 Vue.use(VueRouter)
 
@@ -25,9 +26,18 @@ const routes = [
         path:'result',
         component: resultComponentVue,
       }
-
     ]
   },
+  {
+    path: '/watermark',
+    name:'water',
+    component: watermarkComponent
+  },
+  {
+    path: '/modal',
+    name:'modal',
+    component: watermarkComponent
+  }
 ]
 
 const router = new VueRouter({
