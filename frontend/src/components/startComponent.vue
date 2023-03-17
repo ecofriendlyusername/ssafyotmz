@@ -1,9 +1,10 @@
 <template>
     <div>
-        <img src="../../MLC.png" alt="">
+
         <div v-if="image">
             <img :src="image" />
         </div>
+
 
         <p>전신이 나온 사진을 선택해주세요</p>
 
@@ -14,6 +15,9 @@
 
         <br>|<br>|<br>|<br>
 
+
+        <!-- 모달창 열기 -->
+        
         <router-link to="result">
             <button @click="uploadImage">Upload</button>
         </router-link>
