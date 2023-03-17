@@ -1,44 +1,53 @@
 package com.patandmat.otmz.domain.member.entity;
 
-import com.patandmat.otmz.domain.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseEntity {
+@Setter
+@NoArgsConstructor
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="user_id")
     private Long id;
 
-    @Column(nullable = false, length = 15, unique = true)
+    @Column
     private String nickname;
 
     @Column
-    private String authId;
-
-    @Column(nullable = false, length = 3)
-    private Integer age;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Gender gender;
+    private Long authId;
 
     @Column
-    private String profileImage;
+    private String profileImg;
+
+    @CreatedDate
+    @Column
+    private LocalDate joinDate; // 가입일자
+
+    @ColumnDefault("0")
+    private int isDeleted; // 탈퇴여부
+
+    private String refreshToken;
+
 
     @Builder
-    public Member(Long id, String nickname, String authId, Integer age, Gender gender, String profileImage) {
-        this.id = id;
-        this.nickname = nickname;
+    public Member(Long authId, String nickname, String profileImg){
         this.authId = authId;
-        this.age = age;
-        this.gender = gender;
-        this.profileImage = profileImage;
+        this.nickname = nickname;
+        this.profileImg = profileImg;
+
     }
+
+
 }

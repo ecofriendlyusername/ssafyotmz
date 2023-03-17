@@ -1,9 +1,9 @@
-spring:
-  datasource:
-    url: jdbc:mysql://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S08P22C105?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
-    username: S08P22C105@stg-yswa-kr-practice-db-master.mariadb.database.azure.com
-    password: UVatA2MtuY
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
+#spring:
+#  datasource:
+#    url: jdbc:mysql://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S08P22C105?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+#    username: S08P22C105@stg-yswa-kr-practice-db-master.mariadb.database.azure.com
+#    password: UVatA2MtuY
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
