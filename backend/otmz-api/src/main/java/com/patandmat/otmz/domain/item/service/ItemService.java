@@ -8,15 +8,15 @@ import com.patandmat.otmz.domain.item.repository.ItemRepository;
 import com.patandmat.otmz.domain.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -73,6 +73,25 @@ public class ItemService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+    public Page getItems(Pageable pageable) {
+        Page<Item> page = itemRepository.findAllByName("cute",pageable);
+        Page<ItemDto> itemDtoPage = page.map(this::convertToItemDto);
+        return itemDtoPage;
+    }
+
+    public ItemDto convertToItemDto(Item item) {
+        ImageFile imageFile = item.getImage();
+        ItemDto itemDto = ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .comment(item.getComment())
+                .fabric(numToFabric[item.getFabric()])
+                .print(numToPrint[item.getPrint()])
+                .category(numToCategory[item.getCategory()])
+                .path(imageFile.getPath())
+                .build();
+        return itemDto;
     }
 
 
