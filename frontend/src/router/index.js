@@ -32,6 +32,11 @@ const routes = [
     path: '/watermark',
     name:'water',
     component: watermarkComponent
+  },
+  {
+    path: '/modal',
+    name:'modal',
+    component: watermarkComponent
   }
 ]
 
