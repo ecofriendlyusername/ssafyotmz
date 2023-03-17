@@ -15,6 +15,9 @@
 
         <br>|<br>|<br>|<br>
 
+
+        <!-- 모달창 열기 -->
+        
         <router-link to="result">
             <button @click="uploadImage">Upload</button>
         </router-link>
