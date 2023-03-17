@@ -19,8 +19,10 @@ public class ItemDto extends BaseEntity {
     private String print;
     private byte[] image;
 
+    private String path;
+
     @Builder
-    public ItemDto(Long id, String name, String comment, byte[] image, String category, String fabric, String print) {
+    public ItemDto(Long id, String name, String comment, byte[] image, String category, String fabric, String print, String path) {
         this.id = id;
         this.name = name;
         this.comment = comment;
@@ -28,5 +30,6 @@ public class ItemDto extends BaseEntity {
         this.category = category;
         this.fabric = fabric;
         this.print = print;
+        this.path = path;
     }
 }
