@@ -11,4 +11,4 @@ spring:
 
 file:
   image:
-    path: C:/Users/SSAFY/Desktop/storage/
+    path: /Users/gayoungyang/Desktop/storage/
