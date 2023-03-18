@@ -25,47 +25,41 @@ public class ItemMatchService {
     private final ItemMatchRepository itemMatchRepository;
 
     @Transactional
-    public void saveItem(MultipartFile file, ItemDto itemDto) throws IOException, AttributeNotFoundException {
+    public void saveItemMatch(MultipartFile file, ItemMatch itemMatch) throws IOException, AttributeNotFoundException {
         ImageFile imageFile = imageFileService.save(file);
         String path = imageFile.getPath();
         try {
-//            Optional<Member> optionalMember = memberRepository.findById(memberId);
-//            Member member = optionalMember.get();
-//            if (member == null) throw new NoSuchElementException();
-            // Item item = Item.builder().name(name).comment(comment).image(imageFile).build();
-            ItemMatch item = ItemMatch.builder()
-                    .name(itemDto.getName())
-                    .image(imageFile)
-                    .build();
-            itemMatchRepository.save(item);
+            itemMatch.setImage(imageFile);
+            itemMatchRepository.save(itemMatch);
         } catch (Exception e) {
+            e.printStackTrace();
             imageFileService.delete(path);
             throw e;
         }
     }
 
-    public ItemDto getItem(Long id) {
+    public ItemMatchDto getItemMatch(Long id) {
         Optional<ItemMatch> optionalItem = itemMatchRepository.findById(id);
         if (!optionalItem.isPresent()) throw new NoSuchElementException();
         ItemMatch itemMatch = optionalItem.get();
         ImageFile imageFile = itemMatch.getImage();
         try {
             byte[] image = imageFileService.loadData(imageFile.getPath());
-            ItemDto itemDto = ItemDto.builder()
+            ItemMatchDto itemMatchDto = ItemMatchDto.builder()
                     .id(itemMatch.getId())
                     .name(itemMatch.getName())
+                    .comment(itemMatch.getComment())
                     .image(image)
-                    .vector(itemMatch.getVector())
                     .build();
-            return itemDto;
+            return itemMatchDto;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-    public Page getItems(Pageable pageable) {
+    public Page getItemMatchPage(Pageable pageable) {
         Page<ItemMatch> page = itemMatchRepository.findAll(pageable);
-        Page<ItemMatchDto> itemDtoPage = page.map(this:: convertToItemMatchDto);
-        return itemDtoPage;
+        Page<ItemMatchDto> itemMatchDtoPage = page.map(this:: convertToItemMatchDto);
+        return itemMatchDtoPage;
     }
 
     public ItemMatchDto convertToItemMatchDto(ItemMatch itemMatch) {
@@ -74,6 +68,7 @@ public class ItemMatchService {
                 .id(itemMatch.getId())
                 .name(itemMatch.getName())
                 .imageId(imageFile.getId())
+                .comment(itemMatch.getComment())
                 .build();
         return itemMatchDto;
     }
