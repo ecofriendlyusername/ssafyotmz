@@ -24,8 +24,8 @@ import java.util.NoSuchElementException;
 public class ItemMatchController {
     private final ItemService itemService;
     private final ItemMatchService itemMatchService;
-    @PostMapping("/itemmatch")
-    public ResponseEntity<?> saveItemMatch(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemMatch itemMatch) throws IOException {
+    @PostMapping("/itemmatch/{id}")
+    public ResponseEntity<?> saveItemMatch(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemMatch itemMatch, @PathVariable Long id) throws IOException {
         // take name, comment
         try {
             itemMatchService.saveItemMatch(file,itemMatch);
@@ -49,7 +49,7 @@ public class ItemMatchController {
         }
     }
 
-    @GetMapping("/itemmatchpage")
+    @GetMapping("/itemmatchpage/{id}")
     @Operation(summary= "여러 아이템매치들을 페이지 안에 넣어 돌려줌(사진 파일은 보내지 않음)", description = "각 아이템매치의 사진을 제외한 정보들을 보내주며 사진을 얻기 위해서는 imageId(사진 아이디)로 api에 요청하면 됨. " +
             "<br><br> 이미지 요청 endpoint -> http://(host)/api/v1/images/{id}" +
             "<br><br> page 관련 정보를 쿼리 파라미터로 보내면 해당 페이지를 보내줌. " +
@@ -63,7 +63,7 @@ public class ItemMatchController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<Page<ItemMatchDto>> getItemMatchPage(Pageable pageable) {
+    public ResponseEntity<Page<ItemMatchDto>> getItemMatchPage(Pageable pageable, @PathVariable Long id) {
         try {
             Page<ItemMatchDto> page = itemMatchService.getItemMatchPage(pageable);
             return new ResponseEntity<>(page, HttpStatus.OK);
