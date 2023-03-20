@@ -38,6 +38,7 @@ public class ItemController {
     public ResponseEntity<?> getItem(@PathVariable Long id) {
         // take name, comment
         try {
+            System.out.println("testing");
             ItemDto itemDto = itemService.getItem(id);
             return new ResponseEntity<>(itemDto, HttpStatus.OK);
         } catch (NoSuchElementException e) {
