@@ -34,5 +34,13 @@ pipeline {
                 echo 'ai'
             }
          }
+         stage('run') {
+            agent any
+            steps {
+                sh 'sudo docker run -d -v back:/app -p 8081:8080 back'
+                sh 'sudo docker run -d -p 3000:3000 front'
+                sh 'sudo docker run -d -p 8000:8000 ai'
+            }
+         }
     }
 }

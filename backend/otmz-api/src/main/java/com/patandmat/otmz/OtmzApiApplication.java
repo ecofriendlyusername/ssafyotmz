@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class OtmzApiApplication {
 
     public static void main(String[] args) {
+        System.out.println("testing with...");
         SpringApplication.run(OtmzApiApplication.class, args);
     }
 
