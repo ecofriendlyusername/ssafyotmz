@@ -17,10 +17,6 @@ public class Item extends BaseEntity {
     private String name;
     @Column(nullable = false, length = 15)
     private int category;
-    @Column(nullable = false, length = 15)
-    private int fabric;
-    @Column(nullable = false, length = 15)
-    private int print;
     @OneToOne
     private ImageFile image;
     @Column(nullable = false, length = 25)
@@ -29,13 +25,11 @@ public class Item extends BaseEntity {
 
 
     @Builder
-    public Item(Long id, String name, ImageFile image, int category, int fabric, int print, String vector) {
+    public Item(Long id, String name, ImageFile image, int category, String vector) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.category = category;
-        this.fabric = fabric;
-        this.print = print;
         this.vector = vector;
     }
 }
