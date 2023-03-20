@@ -37,9 +37,10 @@ pipeline {
          stage('run') {
             agent any
             steps {
-                sh 'sudo docker run -d -v back:/app -p 8081:8080 back'
-                sh 'sudo docker run -d -p 3000:3000 front'
-                sh 'sudo docker run -d -p 8000:8000 ai'
+                sh 'docker ps -aq | xargs docker stop | xargs docker rm'
+                sh 'docker run -d -v back:/app -p 8081:8080 back'
+                sh 'docker run -d -p 3000:3000 front'
+                sh 'docker run -d -p 8000:8000 ai'
             }
          }
     }
