@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/oauthredirect")
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application-security.yml")
 public class OAuthRedirectController {
     private Environment env;
     @Autowired
