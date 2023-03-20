@@ -41,8 +41,8 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenCheckInterceptor)
-//                .addPathPatterns("/**")
-                .excludePathPatterns(Arrays.asList("/api/v1/oauth/kakao/**", "/api/v1/swagger-ui/**", "/member/**", "/api/v1/**"));
+                .addPathPatterns("/**")
+                .excludePathPatterns(Arrays.asList("/oauth/kakao/**", "/swagger-ui/**", "/v3/api-docs/**", "/member/**"));
     }
 
     @Bean
@@ -68,6 +68,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin().disable()
                 .logout().disable()
+                .authorizeRequests().requestMatchers("/**").permitAll()
+                .and()
                 .build();
     }
 
