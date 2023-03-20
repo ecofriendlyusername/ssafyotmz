@@ -2,28 +2,22 @@ package com.patandmat.otmz.domain.member.controller;
 
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.domain.member.service.JwtService;
-import com.patandmat.otmz.domain.member.service.OAuthService;
 import com.patandmat.otmz.domain.member.service.MemberService;
-
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.patandmat.otmz.domain.member.service.OAuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/oauth")
-@AllArgsConstructor
 public class OAuthController {
     private OAuthService oauthService;
     private JwtService jwtService;
     private MemberService memberService;
 
-    @Autowired
     public OAuthController(OAuthService oauthService, MemberService userService, JwtService jwtService) {
         this.jwtService = jwtService;
         this.memberService = userService;
@@ -31,12 +25,22 @@ public class OAuthController {
     }
     @ResponseBody
     @GetMapping("/kakao")
-    public void kakaoCallback(@RequestParam String code) {
+    public ResponseEntity<Map<String,String>> kakaoCallback(@RequestParam String code) {
+        Map<String, String> map = new HashMap<>();
         System.out.println(code);
-        Map<String , Object> map = oauthService.getKakaoAccessToken(code);
-        Member member = oauthService.getKakaoUser(map.get("access_Token").toString());
-        map.put("member", member);
+        Map<String , Object> result = oauthService.getKakaoAccessToken(code);
+        System.out.println("출력  " + result.get("access_Token").toString());
+        Member member = oauthService.getKakaoUser(result.get("access_Token").toString());
+        result.put("member", member);
         oauthService.loginOrJoin(member);
+
+        String accessToken = jwtService.createAccessToken("id", member.getId());
+        String refreshToken = jwtService.createRefreshToken("id", member.getId());
+        map.put("access_token", accessToken);
+        map.put("refresh_token", refreshToken);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+
 
     }
 

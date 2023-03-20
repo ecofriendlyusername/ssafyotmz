@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -15,17 +14,19 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;;
+;
 
 @Service
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application-security.yml")
 public class OAuthService {
 
     private MemberRepository memberRepository;
+    private JwtService jwtService;
 
     @Autowired
-    public OAuthService(MemberRepository memberRepository) {
+    public OAuthService(MemberRepository memberRepository, JwtService jwtService) {
         this.memberRepository = memberRepository;
+        this.jwtService = jwtService;
 
     }
     public Map<String, Object> getKakaoAccessToken (String code) {
@@ -156,7 +157,6 @@ public class OAuthService {
             memberRepository.save(isJoined);
             //(재가입)로그인
         }
-
 
 
     }
