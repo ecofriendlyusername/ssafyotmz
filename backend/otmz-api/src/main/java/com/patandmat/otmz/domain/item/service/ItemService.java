@@ -23,7 +23,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
 
     @Transactional
-    public void saveItem(MultipartFile file, ItemDto itemDto, String category) throws IOException, AttributeNotFoundException {
+    public void saveItem(MultipartFile file, ItemDto itemDto, String category, Long id) throws IOException, AttributeNotFoundException {
         ImageFile imageFile = imageFileService.save(file);
         String path = imageFile.getPath();
         try {
@@ -46,8 +46,8 @@ public class ItemService {
         }
     }
 
-    public ItemDto getItem(Long id) {
-        Optional<Item> optionalItem = itemRepository.findById(id);
+    public ItemDto getItem(Long item_id) {
+        Optional<Item> optionalItem = itemRepository.findById(item_id);
         if (!optionalItem.isPresent()) throw new NoSuchElementException();
         Item item = optionalItem.get();
         ImageFile imageFile = item.getImage();
@@ -65,8 +65,10 @@ public class ItemService {
             throw new RuntimeException(e);
         }
     }
-    public Page getItems(Pageable pageable) {
-        Page<Item> page = itemRepository.findAllByName("cute",pageable);
+    public Page getItems(Pageable pageable, String category, Long id) throws AttributeNotFoundException {
+        int categoryNum = categoryToNum.getOrDefault(category,-1);
+        if (categoryNum == -1) throw new AttributeNotFoundException();
+        Page<Item> page = itemRepository.findAllByCategory(categoryNum,pageable);
         Page<ItemDto> itemDtoPage = page.map(this::convertToItemDto);
         return itemDtoPage;
     }
