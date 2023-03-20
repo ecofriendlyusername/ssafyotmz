@@ -1,28 +1,43 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import UtilOneView from '../views/UtilOneView.vue'
-import UtilTwoView from '../views/AboutView.vue'
-import UtilThreeView from '../views/AboutView.vue'
+import UtilOneComponentVue from "@/components/utilOne.vue";
+import roadingComponentVue from "@/components/roadingComponent.vue";
+import resultComponentVue from "@/components/resultComponent.vue";
+import startComponentVue from "@/components/startComponent.vue"
+import watermarkComponent from "@/components/watermarkComponent.vue";
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/util_one',
-    name: 'util_one',
-    component: UtilOneView
+    path: '/util',
+    name: 'UtilOneVue',
+    component: UtilOneComponentVue,
+    children: [
+      {
+        path:'start',
+        component: startComponentVue
+      },
+      {
+        path:'roading',
+        component: roadingComponentVue,
+      },
+      {
+        path:'result',
+        component: resultComponentVue,
+      }
+    ]
   },
   {
-    path: '/util_two',
-    name: 'util_two',
-    component: UtilTwoView
+    path: '/watermark',
+    name:'water',
+    component: watermarkComponent
   },
   {
-    path: '/util_three',
-    name: 'util_three',
-    component: UtilThreeView
-  },
-  
+    path: '/modal',
+    name:'modal',
+    component: watermarkComponent
+  }
 ]
 
 const router = new VueRouter({
