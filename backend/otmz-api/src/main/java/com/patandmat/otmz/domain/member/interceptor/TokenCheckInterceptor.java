@@ -1,7 +1,7 @@
 package com.patandmat.otmz.domain.member.interceptor;
 
-import com.patandmat.otmz.domain.member.service.IDTokenService;
-import com.patandmat.otmz.domain.member.service.JwtService;
+import com.patandmat.otmz.domain.member.application.IDTokenService;
+import com.patandmat.otmz.domain.member.application.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
