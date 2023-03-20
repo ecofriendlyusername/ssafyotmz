@@ -23,7 +23,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
 
     @Transactional
-    public void saveItem(MultipartFile file, ItemDto itemDto) throws IOException, AttributeNotFoundException {
+    public void saveItem(MultipartFile file, ItemDto itemDto, String category) throws IOException, AttributeNotFoundException {
         ImageFile imageFile = imageFileService.save(file);
         String path = imageFile.getPath();
         try {
@@ -31,10 +31,13 @@ public class ItemService {
 //            Member member = optionalMember.get();
 //            if (member == null) throw new NoSuchElementException();
             // Item item = Item.builder().name(name).comment(comment).image(imageFile).build();
+            int categoryNum = categoryToNum.getOrDefault(category,-1);
+            if (categoryNum == -1) throw new AttributeNotFoundException();
             Item item = Item.builder()
                     .name(itemDto.getName())
                     .image(imageFile)
                     .vector(itemDto.getVector())
+                    .category(categoryNum)
                     .build();
             itemRepository.save(item);
         } catch (Exception e) {
@@ -55,6 +58,7 @@ public class ItemService {
                     .name(item.getName())
                     .image(image)
                     .vector(item.getVector())
+                    .category(numToCategory[item.getCategory()])
                     .build();
             return itemDto;
         } catch (Exception e) {
@@ -80,30 +84,30 @@ public class ItemService {
 
 //    private static final Map<String, Integer> fabricToNum;
 //    private static final Map<String, Integer> printToNum;
-//    private static final Map<String, Integer> categoryToNum;
+      private static final Map<String, Integer> categoryToNum;
 //
 //    private static final String[] numToFabric = {"fur","mouton","suede","angora","corduroy","sequin/glitter","denim","jersey","tweed","velvet","vinyl/pvc","wool/cashmere","synthetic/polyester","knit","lace","linen","mesh","fleece","neoprene","silk","spandex","jacquard","leather","cotton","chiffon"};
 //    private static final String[] numToPrint = {"check","stripe","zigzag","leopard","zebra","dot","camouflage","paisley","argyle","floral","lettering","skull","tie-dye","gradation","solid","graphic","Hound's touth","gingham"};
-//    private static final String[] numToCategory = {"tops","blouses","casual-tops","knitwear","shirts","vests","coats","jackets","jumpers","paddings","jeans","pants","skirts","dresses","jumpsuits","swimwear"};
+      private static final String[] numToCategory = {"tops","blouses","casual-tops","knitwear","shirts","vests","coats","jackets","jumpers","paddings","jeans","pants","skirts","dresses","jumpsuits","swimwear"};
 //
-//    static {
-//        categoryToNum = new HashMap<>();
-//        categoryToNum.put("tops",0);
-//        categoryToNum.put("blouses",1);
-//        categoryToNum.put("casual-tops",2);
-//        categoryToNum.put("knitwear",3);
-//        categoryToNum.put("shirts",4);
-//        categoryToNum.put("vests",5);
-//        categoryToNum.put("coats",6);
-//        categoryToNum.put("jackets",7);
-//        categoryToNum.put("jumpers",8);
-//        categoryToNum.put("paddings",9);
-//        categoryToNum.put("jeans",10);
-//        categoryToNum.put("pants",11);
-//        categoryToNum.put("skirts",12);
-//        categoryToNum.put("dresses",13);
-//        categoryToNum.put("jumpsuits",14);
-//        categoryToNum.put("swimwear",15);
+    static {
+        categoryToNum = new HashMap<>();
+        categoryToNum.put("tops",0);
+        categoryToNum.put("blouses",1);
+        categoryToNum.put("casual-tops",2);
+        categoryToNum.put("knitwear",3);
+        categoryToNum.put("shirts",4);
+        categoryToNum.put("vests",5);
+        categoryToNum.put("coats",6);
+        categoryToNum.put("jackets",7);
+        categoryToNum.put("jumpers",8);
+        categoryToNum.put("paddings",9);
+        categoryToNum.put("jeans",10);
+        categoryToNum.put("pants",11);
+        categoryToNum.put("skirts",12);
+        categoryToNum.put("dresses",13);
+        categoryToNum.put("jumpsuits",14);
+        categoryToNum.put("swimwear",15);
 //
 //        printToNum = new HashMap<>();
 //        printToNum.put("check",0);
@@ -151,5 +155,5 @@ public class ItemService {
 //        fabricToNum.put("leather",22);
 //        fabricToNum.put("cotton",23);
 //        fabricToNum.put("chiffon",24);
-// }
+    }
 }

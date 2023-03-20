@@ -21,10 +21,10 @@ import java.util.NoSuchElementException;
 public class ItemController {
     private final ItemService itemService;
     @PostMapping("/item")
-    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemDto item) throws IOException {
+    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemDto item, @RequestParam String category) throws IOException {
         // take name, comment
         try {
-            itemService.saveItem(file,item);
+            itemService.saveItem(file,item,category);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("User Does Not Exist", HttpStatus.BAD_REQUEST);
         } catch (AttributeNotFoundException e) {
