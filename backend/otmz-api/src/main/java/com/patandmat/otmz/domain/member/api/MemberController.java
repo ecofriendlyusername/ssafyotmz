@@ -1,42 +1,39 @@
 package com.patandmat.otmz.domain.member.api;
 
 
-import com.patandmat.otmz.domain.member.entity.Member;
-import com.patandmat.otmz.domain.member.application.JwtService;
+import com.patandmat.otmz.domain.auth.application.JwtService;
 import com.patandmat.otmz.domain.member.application.MemberService;
+import com.patandmat.otmz.domain.member.entity.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/member")
 public class MemberController {
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
     // login
-    private MemberService memberService;
-    private JwtService jwtService;
-    @Autowired
-    public MemberController(MemberService memberService, JwtService jwtService) {
-        this.memberService = memberService;
-        this.jwtService = jwtService;
-    }
+    private final MemberService memberService;
+    private final JwtService jwtService;
 
     @GetMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestParam Long id, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> refreshToken(@RequestParam Long id, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.ACCEPTED;
         String token = request.getHeader("refresh_token");
-        // logger.debug("token : {}, memberDto : {}", token, memberDto);
+
         if (jwtService.checkToken(token,id)) {
             if (token.equals(memberService.getRefreshToken(id))) {
-                String accessToken = jwtService.createAccessToken("user_id",id);
+                String accessToken = jwtService.createAccessToken("member_id",id);
                 resultMap.put("access_token", accessToken);
                 resultMap.put("message", SUCCESS);
                 status = HttpStatus.ACCEPTED;
@@ -44,20 +41,19 @@ public class MemberController {
         } else {
             status = HttpStatus.FORBIDDEN;
         }
-        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+
+        return new ResponseEntity<>(resultMap, status);
     }
-    // join
 
-
-    @GetMapping("/delete")
-    public ResponseEntity<?> delete(@RequestParam Long id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> delete(@RequestParam Long id) {
         try {
-            memberService.userDelete(id);
-            return new ResponseEntity<String>(SUCCESS,HttpStatus.OK);
+            memberService.deleteMember(id);
+            return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("temp");
-            return new ResponseEntity<String>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     // logout
@@ -72,13 +68,15 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "success")
     })
     public ResponseEntity<Map<String, Object>> getMyInfo(@RequestParam Long id) {
-        Member member = memberService.getUserInfoById(id);
+        Member member = memberService.getMemberById(id);
+
         Map<String, Object> resultMap = new HashMap<>();
         if (member == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             resultMap.put("userInfo", member);
             resultMap.put("message", SUCCESS);
+
             return new ResponseEntity<>(resultMap,HttpStatus.OK);
         }
     }
