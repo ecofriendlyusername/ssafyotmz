@@ -1,6 +1,6 @@
 package com.patandmat.otmz.global.config;
 
-import com.patandmat.otmz.domain.member.interceptor.TokenCheckInterceptor;
+import com.patandmat.otmz.global.interceptor.TokenCheckInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

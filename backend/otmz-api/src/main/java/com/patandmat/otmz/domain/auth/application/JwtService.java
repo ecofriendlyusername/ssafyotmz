@@ -1,4 +1,4 @@
-package com.patandmat.otmz.domain.member.application;
+package com.patandmat.otmz.domain.auth.application;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -7,26 +7,26 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Service
 public class JwtService {
     @Value("${jwt.secret}")
     private String SALT;
-    private static final int ACCESS_TOKEN_EXPIRE_MINUTES = 2;
-    private static final int REFRESH_TOKEN_EXPIRE_MINUTES = 2;
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 6; // 6 hours
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 60; // 60 days
 
     public <T> String createAccessToken(String key, T data) {
-        return create(key, data, "access-token", 1000 * 60 * 60 * 24 * 7 * ACCESS_TOKEN_EXPIRE_MINUTES);
+        return create(key, data, "access-token", ACCESS_TOKEN_EXPIRE_TIME);
     }
 
-    //	AccessToken에 비해 유효기간을 길게
     public <T> String createRefreshToken(String key, T data) {
-        return create(key, data, "refresh-token", 1000 * 60 * 60 * 24 * 7 * REFRESH_TOKEN_EXPIRE_MINUTES);
+        return create(key, data, "refresh-token", REFRESH_TOKEN_EXPIRE_TIME);
     }
+
     public <T> String create(String key, T data, String subject, long expire) {
-        String jwt = Jwts.builder()
+        return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
                 .setHeaderParam("regDate", System.currentTimeMillis())
                 .setExpiration(new Date(System.currentTimeMillis() + expire))
@@ -34,16 +34,11 @@ public class JwtService {
                 .claim(key, data)
                 .signWith(SignatureAlgorithm.HS256, this.generateKey())
                 .compact();
-        return jwt;
     }
+
     private byte[] generateKey() {
         byte[] key = null;
-        try {
-            key = SALT.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            System.out.println("temp");
-            e.printStackTrace();
-        }
+        key = SALT.getBytes(StandardCharsets.UTF_8);
 
         return key;
     }
@@ -52,7 +47,7 @@ public class JwtService {
     public boolean checkToken(String jwt, Long id) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
-            return (id == -1 || id == claims.getBody().get("user_id",Long.class));
+            return (id == -1 || id.equals(claims.getBody().get("user_id", Long.class)));
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("temp");
@@ -63,17 +58,17 @@ public class JwtService {
     public boolean getIdFromToken(String jwt, Long id) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
-            return (id == -1 || id == claims.getBody().get("user_id",Long.class));
+            return (id == -1 || id.equals(claims.getBody().get("user_id", Long.class)));
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("temp");
             return false;
         }
     }
+
     public Jws<Claims> getClaims(String jwt) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(SALT.getBytes("UTF-8")).parseClaimsJws(jwt);
-            return claims;
+            return Jwts.parser().setSigningKey(SALT.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(jwt);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

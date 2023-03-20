@@ -1,10 +1,9 @@
-package com.patandmat.otmz.domain.member.interceptor;
+package com.patandmat.otmz.global.interceptor;
 
-import com.patandmat.otmz.domain.member.application.IDTokenService;
-import com.patandmat.otmz.domain.member.application.JwtService;
+import com.patandmat.otmz.domain.auth.application.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
@@ -12,15 +11,10 @@ import org.springframework.web.servlet.HandlerMapping;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class TokenCheckInterceptor implements HandlerInterceptor {
-    private JwtService jwtService;
-    private IDTokenService idTokenService;
+    private final JwtService jwtService;
 
-    @Autowired
-    public TokenCheckInterceptor(JwtService jwtService, IDTokenService idTokenService) {
-        this.jwtService = jwtService;
-        this.idTokenService = idTokenService;
-    }
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
@@ -39,7 +33,7 @@ public class TokenCheckInterceptor implements HandlerInterceptor {
         Long id = idString == null ? -1 : Long.valueOf(idString);
 
         final String token = request.getHeader("access_token");
-        if (token != null && jwtService.checkToken(token,id)){
+        if (token != null && jwtService.checkToken(token, id)) {
             // logger.info("토큰 사용 가능 : {}", token);
             System.out.println("successful");
             return true;
