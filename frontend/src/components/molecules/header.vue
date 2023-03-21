@@ -1,9 +1,11 @@
 <template>
   <header>
-    <router-link class="logo" to="/">
-      logo
-    </router-link>
-    <h1>제목</h1>
+    <div>
+      <router-link class="logo" to="/">
+        <img src="@/assets/img/logo.png" style="width:65px;">
+      </router-link>
+    </div>
+    <!-- <h1>제목</h1> -->
     <button class="hamburger" @click="toggleMenu">☰</button>
     <ul v-if="showMenu" class="menu">
       <li><router-link to='/login'>로그인</router-link></li>
@@ -41,7 +43,7 @@ header {
   justify-content: space-between;
   height: 60px;
   padding: 0 20px;
-  background-color: #f0f0f0;
+  background-color: black;
 }
 
 .logo {
@@ -58,8 +60,10 @@ h1 {
 }
 
 .hamburger {
-font-size: 24px;
+margin-top: 0px;
+font-size: 30px;
 background-color: transparent;
+color: white;
 border: none;
 cursor: pointer;
 }
