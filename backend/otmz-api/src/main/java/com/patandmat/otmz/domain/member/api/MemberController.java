@@ -31,9 +31,9 @@ public class MemberController {
         HttpStatus status = HttpStatus.ACCEPTED;
         String token = request.getHeader("refresh_token");
 
-        if (jwtService.checkToken(token,id)) {
+        if (jwtService.checkToken(token, id)) {
             if (token.equals(memberService.getRefreshToken(id))) {
-                String accessToken = jwtService.createAccessToken("member_id",id);
+                String accessToken = jwtService.createAccessToken("member_id", id);
                 resultMap.put("access_token", accessToken);
                 resultMap.put("message", SUCCESS);
                 status = HttpStatus.ACCEPTED;
@@ -49,13 +49,14 @@ public class MemberController {
     public ResponseEntity<String> delete(@RequestParam Long id) {
         try {
             memberService.deleteMember(id);
-            return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("temp");
-            return new ResponseEntity<>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     // logout
     @GetMapping("/logout")
     public ResponseEntity<?> logout(@RequestParam Long id) {
@@ -64,7 +65,7 @@ public class MemberController {
     }
 
     @GetMapping("/info")
-    @Operation(summary= "유저 정보 얻기.", description = "json형식으로 감. 실제 어떻게 오는지는 response 참고. 키값 userInfo를 통해 유저 정보(객체) 접근 가능. 닉네임(nickname), 비밀번호(password), 돌생일(birthday), 가입일자(joinDate), 아이디(id), 이메일(email)", responses = {
+    @Operation(summary = "유저 정보 얻기.", description = "json형식으로 감. 실제 어떻게 오는지는 response 참고. 키값 userInfo를 통해 유저 정보(객체) 접근 가능. 닉네임(nickname), 비밀번호(password), 돌생일(birthday), 가입일자(joinDate), 아이디(id), 이메일(email)", responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
     public ResponseEntity<Map<String, Object>> getMyInfo(@RequestParam Long id) {
@@ -74,19 +75,12 @@ public class MemberController {
         if (member == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            resultMap.put("userInfo", member);
+            resultMap.put("memberInfo", member);
             resultMap.put("message", SUCCESS);
 
-            return new ResponseEntity<>(resultMap,HttpStatus.OK);
+            return new ResponseEntity<>(resultMap, HttpStatus.OK);
         }
     }
-
-
-
-
-
-
-
 
 
 }

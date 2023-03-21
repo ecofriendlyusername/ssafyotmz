@@ -2,7 +2,6 @@ package com.patandmat.otmz.domain.auth.api;
 
 import com.patandmat.otmz.domain.auth.application.JwtService;
 import com.patandmat.otmz.domain.auth.application.OAuthService;
-import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
