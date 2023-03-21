@@ -68,6 +68,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin().disable()
                 .logout().disable()
+                .headers().frameOptions().disable()
+                .and()
                 .authorizeRequests().requestMatchers("/**").permitAll()
                 .and()
                 .build();
