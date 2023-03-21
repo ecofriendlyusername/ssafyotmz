@@ -7,7 +7,6 @@ spring:
 server:
   servlet:
     context-path: /api/v1
-  port: 8081
 jwt:
   secret: 8sknjlO3NPTBqo319DHLNqsQAfRJEdKsETOds
 oauth:
