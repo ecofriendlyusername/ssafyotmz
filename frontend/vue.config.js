@@ -5,6 +5,4 @@ module.exports = defineConfig({
     port: 3000
   }
 })
-devServer: {
-  port: 3001 // 포트번호 변경
-}
+

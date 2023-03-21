@@ -3,13 +3,16 @@ spring:
     active: local
   jpa:
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        use_sql_comments: true
     generate-ddl: true
-
 server:
   servlet:
     context-path: /api/v1
   port: 8081
+jwt:
+  secret: 8sknjlO3NPTBqo319DHLNqsQAfRJEdKsETOds
+oauth:
+  kakao:
+    authenticationUrl: https://kauth.kakao.com/oauth/token
+    authorizationUrl: https://kapi.kakao.com/v2/user/me
+    grantType: authorization_code
+    clientId: 899719034b2557a7c9b9ed80e93b5afd
