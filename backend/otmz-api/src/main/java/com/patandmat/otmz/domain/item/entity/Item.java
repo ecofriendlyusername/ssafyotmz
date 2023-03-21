@@ -2,6 +2,7 @@ package com.patandmat.otmz.domain.item.entity;
 
 import com.patandmat.otmz.domain.common.BaseEntity;
 import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
+import com.patandmat.otmz.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,4 +25,7 @@ public class Item extends BaseEntity {
 
     @OneToOne
     private ImageFile image;
+
+    @ManyToOne
+    private Member member;
 }

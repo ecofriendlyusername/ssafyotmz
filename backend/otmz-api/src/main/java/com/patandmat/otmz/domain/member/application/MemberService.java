@@ -1,12 +1,17 @@
 package com.patandmat.otmz.domain.member.application;
 
 
+import com.patandmat.otmz.domain.item.repository.ItemRepository;
+import com.patandmat.otmz.domain.look.api.model.LookCount;
+import com.patandmat.otmz.domain.look.repository.LookRepository;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.domain.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -14,6 +19,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final LookRepository lookRepository;
+    private final ItemRepository itemRepository;
 
     public Member getMemberWithAuthId(Long authId) {
         Member member = memberRepository.findByAuthId(authId);
@@ -71,5 +78,23 @@ public class MemberService {
             member.setRefreshToken(null);
             memberRepository.save(member);
         }
+    }
+
+    public int getTotalStyleCount(long memberId){
+
+        int totalStyleCount = lookRepository.countByMemberId(memberId);
+        return totalStyleCount;
+
+    }
+
+
+    public int getTotalItemCount(Long memberId) {
+        int totalItemCount = itemRepository.countByMemberId(memberId);
+        return totalItemCount;
+    }
+
+    public List<LookCount> getStyleSummary(Long memberId) {
+        return null;
+
     }
 }

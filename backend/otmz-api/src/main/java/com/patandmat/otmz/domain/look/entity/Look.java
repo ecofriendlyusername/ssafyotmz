@@ -26,4 +26,5 @@ public class Look extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Style style;
+
 }
