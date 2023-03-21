@@ -2,6 +2,7 @@ package com.patandmat.otmz.domain.item.entity;
 
 import com.patandmat.otmz.domain.common.BaseEntity;
 import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
+import com.patandmat.otmz.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,17 +20,24 @@ public class Item extends BaseEntity {
     private int category;
     @OneToOne
     private ImageFile image;
-    @Column(nullable = false, length = 25)
-    private String vector;
-
-
+    @Column(nullable = false, length = 600)
+    private String categoryVector;
+    @Column(nullable = false, length = 600)
+    private String printVector;
+    @Column(nullable = false, length = 600)
+    private String fabricVector;
+    @ManyToOne
+    private Member member;
 
     @Builder
-    public Item(Long id, String name, ImageFile image, int category, String vector) {
+    public Item(Long id, String name, ImageFile image, int category, String categoryVector, String printVector, String fabricVector, Member member) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.category = category;
-        this.vector = vector;
+        this.categoryVector = categoryVector;
+        this.printVector = printVector;
+        this.fabricVector = categoryVector;
+        this.member = member;
     }
 }

@@ -1,7 +1,9 @@
-package com.patandmat.otmz.domain.item.controller;
+package com.patandmat.otmz.domain.item.api;
 
 import com.patandmat.otmz.domain.item.dto.ItemDto;
-import com.patandmat.otmz.domain.item.service.ItemService;
+import com.patandmat.otmz.domain.item.application.ItemService;
+import com.patandmat.otmz.domain.item.exception.NoSuchMemberException;
+import com.patandmat.otmz.domain.item.exception.UnauthorizedException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,47 +16,75 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
 public class ItemController {
+
+    private final String SUCCESS = "SUCCESS";
+    private final String FAIL = "FAIL";
     private final ItemService itemService;
-    @PostMapping("/item/{id}")
-    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemDto item, @RequestParam String category, @PathVariable Long id) throws IOException {
-        // take name, comment
+    @PostMapping("/item")
+    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemDto item, @RequestParam String category) throws IOException {
+        Long member_id = 1L;
         try {
-            itemService.saveItem(file,item,category,id);
+            itemService.saveItem(file,item,category,member_id);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("User Does Not Exist", HttpStatus.BAD_REQUEST);
         } catch (AttributeNotFoundException e) {
             return new ResponseEntity<>("Check Attributes of The Item", HttpStatus.BAD_REQUEST);
+        } catch (NoSuchMemberException e) {
+            return new ResponseEntity<>("User Doesn't Exist", HttpStatus.BAD_REQUEST);
         }
 
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/item/{id}/{item_id}")
-    public ResponseEntity<?> getItem(@PathVariable Long item_id, @PathVariable Long id) {
+    @GetMapping("/item/{id}")
+    public ResponseEntity<?> getItem(@PathVariable Long id) {
         // take name, comment
+        Long member_id = 1L;
         try {
-            ItemDto itemDto = itemService.getItem(item_id);
+            ItemDto itemDto = itemService.getItem(member_id,id);
             return new ResponseEntity<>(itemDto, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("/test")
-    public @ResponseBody ResponseEntity<?> test() {
-        Map<String,String> map = new HashMap<>();
-        map.put("hello","hell");
-        return new ResponseEntity<Map<String,String>>(map,HttpStatus.OK);
+    @DeleteMapping("/item/{id}")
+    public ResponseEntity<?> deleteItem(@PathVariable Long id) throws IOException {
+        // take name, comment
+        Long member_id = 1L;
+        try {
+            itemService.deleteItem(member_id,id);
+            return new ResponseEntity<>("Success", HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            return new ResponseEntity<>("Unauthorized Operation", HttpStatus.UNAUTHORIZED);
+        }
     }
 
-    @GetMapping("/items/{id}/{category}")
+    @DeleteMapping("/items")
+    public ResponseEntity<?> deleteMultipleItems(@RequestBody List<Long> ids) throws IOException {
+        // take name, comment
+        Long member_id = 1L;
+        try {
+            itemService.deleteMultipleItems(ids,member_id);
+            return new ResponseEntity<>("Success", HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
+        } catch (UnauthorizedException e) {
+            return new ResponseEntity<>("Unauthorized Operation", HttpStatus.UNAUTHORIZED);
+        } catch (NoSuchMemberException e) {
+            return new ResponseEntity<>("User Doesn't Exist", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/items/{category}")
     @Operation(summary= "여러 아이템들을 페이지 안에 넣어 돌려줌(사진 파일은 보내지 않음)", description = "각 아이템의 사진을 제외한 정보들을 보내주며 사진을 얻기 위해서는 imageId(사진 아이디)로 api에 요청하면 됨. " +
             "<br><br> 이미지 요청 endpoint -> http://(host)/api/v1/images/{id}" +
             "<br><br> page 관련 정보를 쿼리 파라미터로 보내면 해당 페이지를 보내줌. " +
@@ -68,14 +98,17 @@ public class ItemController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> getItemPageByCategory(Pageable pageable, @PathVariable String category, @PathVariable Long id) {
+    public ResponseEntity<?> getItemPageByCategory(Pageable pageable, @PathVariable String category) {
+        Long member_id = 1L;
         try {
-            Page<ItemDto> page = itemService.getItems(pageable, category, id);
+            Page<ItemDto> page = itemService.getItems(pageable, category, member_id);
             return new ResponseEntity<>(page, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } catch (AttributeNotFoundException e) {
             return new ResponseEntity<>("Wrong Category Value",HttpStatus.BAD_REQUEST);
+        } catch (NoSuchMemberException e) {
+            return new ResponseEntity<>("User Doesn't Exist", HttpStatus.BAD_REQUEST);
         }
     }
 }

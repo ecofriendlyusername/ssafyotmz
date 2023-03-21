@@ -13,10 +13,15 @@ public class ItemDto extends BaseEntity {
     private String path;
     private Long imageId;
     private String category;
+
+    private String categoryVector;
+    private String printVector;
+    private String fabricVector;
+
     private String vector;
 
     @Builder
-    public ItemDto(Long id, String name, byte[] image, String path, Long imageId, String vector, String category) {
+    public ItemDto(Long id, String name, byte[] image, String path, Long imageId, String vector, String category, String categoryVector, String printVector, String fabricVector) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -24,5 +29,8 @@ public class ItemDto extends BaseEntity {
         this.imageId = imageId;
         this.vector = vector;
         this.category = category;
+        this.categoryVector = categoryVector;
+        this.fabricVector = fabricVector;
+        this.printVector = printVector;
     }
 }

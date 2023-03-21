@@ -1,10 +1,14 @@
-package com.patandmat.otmz.domain.item.service;
+package com.patandmat.otmz.domain.item.application;
 
 import com.patandmat.otmz.domain.imageFile.application.ImageFileService;
 import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
 import com.patandmat.otmz.domain.item.dto.ItemDto;
 import com.patandmat.otmz.domain.item.entity.Item;
+import com.patandmat.otmz.domain.item.exception.NoSuchMemberException;
+import com.patandmat.otmz.domain.item.exception.UnauthorizedException;
 import com.patandmat.otmz.domain.item.repository.ItemRepository;
+import com.patandmat.otmz.domain.member.entity.Member;
+import com.patandmat.otmz.domain.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,22 +26,27 @@ public class ItemService {
     private final ImageFileService imageFileService;
     private final ItemRepository itemRepository;
 
+    private final MemberRepository memberRepository;
+
     @Transactional
-    public void saveItem(MultipartFile file, ItemDto itemDto, String category, Long id) throws IOException, AttributeNotFoundException {
+    public void saveItem(MultipartFile file, ItemDto itemDto, String category, Long id) throws IOException, AttributeNotFoundException, NoSuchMemberException {
         ImageFile imageFile = imageFileService.save(file);
         String path = imageFile.getPath();
         try {
-//            Optional<Member> optionalMember = memberRepository.findById(memberId);
-//            Member member = optionalMember.get();
-//            if (member == null) throw new NoSuchElementException();
-            // Item item = Item.builder().name(name).comment(comment).image(imageFile).build();
+            Optional<Member> optionalMember = memberRepository.findById(id);
+            if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
+            Member member = optionalMember.get();
+            if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
             int categoryNum = categoryToNum.getOrDefault(category,-1);
             if (categoryNum == -1) throw new AttributeNotFoundException();
             Item item = Item.builder()
                     .name(itemDto.getName())
                     .image(imageFile)
-                    .vector(itemDto.getVector())
+                    .categoryVector(itemDto.getCategoryVector())
+                    .printVector(itemDto.getPrintVector())
+                    .fabricVector(itemDto.getFabricVector())
                     .category(categoryNum)
+                    .member(member)
                     .build();
             itemRepository.save(item);
         } catch (Exception e) {
@@ -46,18 +55,24 @@ public class ItemService {
         }
     }
 
-    public ItemDto getItem(Long item_id) {
+    public ItemDto getItem(Long id, Long item_id) {
         Optional<Item> optionalItem = itemRepository.findById(item_id);
         if (!optionalItem.isPresent()) throw new NoSuchElementException();
         Item item = optionalItem.get();
         ImageFile imageFile = item.getImage();
         try {
             byte[] image = imageFileService.loadData(imageFile.getPath());
+            Optional<Member> optionalMember = memberRepository.findById(id);
+            if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
+            Member member = optionalMember.get();
+            if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
             ItemDto itemDto = ItemDto.builder()
                     .id(item.getId())
                     .name(item.getName())
                     .image(image)
-                    .vector(item.getVector())
+                    .categoryVector(item.getCategoryVector())
+                    .printVector(item.getPrintVector())
+                    .fabricVector(item.getFabricVector())
                     .category(numToCategory[item.getCategory()])
                     .build();
             return itemDto;
@@ -65,10 +80,45 @@ public class ItemService {
             throw new RuntimeException(e);
         }
     }
-    public Page getItems(Pageable pageable, String category, Long id) throws AttributeNotFoundException {
+    @Transactional
+    public void deleteItem(Long memberId, Long id) throws UnauthorizedException, IOException {
+        Optional<Item> optionalItem = itemRepository.findById(id);
+        if (!optionalItem.isPresent()) return;
+        Item item = optionalItem.get();
+        Member member = item.getMember();
+        if (member == null || member.getId() != memberId) throw new UnauthorizedException();
+        itemRepository.delete(item);
+        ImageFile imageFile = item.getImage();
+        imageFileService.delete(imageFile.getPath());
+    }
+
+    public void deleteMultipleItems(List<Long> ids, Long memberId) throws NoSuchMemberException, UnauthorizedException {
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
+        Member member = optionalMember.get();
+        if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
+        List<Item> itemMatchList = itemRepository.findAllById(ids);
+        for (Item item : itemMatchList) {
+            if (item.getMember().getId() != memberId) throw new UnauthorizedException();
+            ImageFile imageFile = item.getImage();
+            itemRepository.delete(item);
+            try {
+                imageFileService.delete(imageFile.getPath());
+            } catch (IOException e) {
+                // throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public Page getItems(Pageable pageable, String category, Long id) throws AttributeNotFoundException, NoSuchMemberException {
+        Optional<Member> optionalMember = memberRepository.findById(id);
+        if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
+        Member member = optionalMember.get();
+        if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
+
         int categoryNum = categoryToNum.getOrDefault(category,-1);
         if (categoryNum == -1) throw new AttributeNotFoundException();
-        Page<Item> page = itemRepository.findAllByCategory(categoryNum,pageable);
+        Page<Item> page = itemRepository.findAllByCategoryAndMemberId(categoryNum,id,pageable);
         Page<ItemDto> itemDtoPage = page.map(this::convertToItemDto);
         return itemDtoPage;
     }
@@ -86,30 +136,35 @@ public class ItemService {
 
 //    private static final Map<String, Integer> fabricToNum;
 //    private static final Map<String, Integer> printToNum;
-      private static final Map<String, Integer> categoryToNum;
+    private static final Map<String, Integer> categoryToNum;
 //
 //    private static final String[] numToFabric = {"fur","mouton","suede","angora","corduroy","sequin/glitter","denim","jersey","tweed","velvet","vinyl/pvc","wool/cashmere","synthetic/polyester","knit","lace","linen","mesh","fleece","neoprene","silk","spandex","jacquard","leather","cotton","chiffon"};
 //    private static final String[] numToPrint = {"check","stripe","zigzag","leopard","zebra","dot","camouflage","paisley","argyle","floral","lettering","skull","tie-dye","gradation","solid","graphic","Hound's touth","gingham"};
-      private static final String[] numToCategory = {"tops","blouses","casual-tops","knitwear","shirts","vests","coats","jackets","jumpers","paddings","jeans","pants","skirts","dresses","jumpsuits","swimwear"};
+// private static final String[] numToCategory = {"tops","blouses","casual-tops","knitwear","shirts","vests","coats","jackets","jumpers","paddings","jeans","pants","skirts","dresses","jumpsuits","swimwear"};
+    private static final String[] numToCategory = {"outer","upper","lower","dress","etc"};
+
 //
     static {
         categoryToNum = new HashMap<>();
-        categoryToNum.put("tops",0);
-        categoryToNum.put("blouses",1);
-        categoryToNum.put("casual-tops",2);
-        categoryToNum.put("knitwear",3);
-        categoryToNum.put("shirts",4);
-        categoryToNum.put("vests",5);
-        categoryToNum.put("coats",6);
-        categoryToNum.put("jackets",7);
-        categoryToNum.put("jumpers",8);
-        categoryToNum.put("paddings",9);
-        categoryToNum.put("jeans",10);
-        categoryToNum.put("pants",11);
-        categoryToNum.put("skirts",12);
-        categoryToNum.put("dresses",13);
-        categoryToNum.put("jumpsuits",14);
-        categoryToNum.put("swimwear",15);
+        categoryToNum.put("outer",1);
+        categoryToNum.put("upper",2);
+        categoryToNum.put("lower",3);
+        categoryToNum.put("dress",4);
+        categoryToNum.put("etc",5);
+//        categoryToNum.put("shirts",4);
+//        categoryToNum.put("vests",5);
+//        categoryToNum.put("coats",6);
+//        categoryToNum.put("jackets",7);
+//        categoryToNum.put("jumpers",8);
+//        categoryToNum.put("paddings",9);
+//        categoryToNum.put("jeans",10);
+//        categoryToNum.put("pants",11);
+//        categoryToNum.put("skirts",12);
+//        categoryToNum.put("dresses",13);
+//        categoryToNum.put("jumpsuits",14);
+//        categoryToNum.put("swimwear",15);{
+//"" : 2.3
+//}
 //
 //        printToNum = new HashMap<>();
 //        printToNum.put("check",0);
