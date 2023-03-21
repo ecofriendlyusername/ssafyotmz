@@ -1,39 +1,36 @@
 package com.patandmat.otmz.domain.auth.api;
 
-import com.patandmat.otmz.domain.auth.application.JwtService;
+import com.patandmat.otmz.domain.auth.api.model.MemberInfoFromKakao;
+import com.patandmat.otmz.domain.auth.api.model.TokenResponse;
 import com.patandmat.otmz.domain.auth.application.OAuthService;
 import com.patandmat.otmz.domain.member.entity.Member;
+import com.patandmat.otmz.global.auth.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/oauth")
 public class OAuthController {
     private final OAuthService oauthService;
-    private final JwtService jwtService;
+
+    private final JwtUtil jwtUtil;
 
     @ResponseBody
     @GetMapping("/kakao")
-    public ResponseEntity<Map<String,String>> kakaoCallback(@RequestParam String code) {
-        Map<String, String> map = new HashMap<>();
-        Map<String , Object> result = oauthService.getKakaoAccessToken(code);
+    public ResponseEntity<TokenResponse> kakaoCallback(@RequestParam String code) throws IOException {
+        TokenResponse tokens = oauthService.getKakaoTokens(code);
+        MemberInfoFromKakao memberInfoFromKakao = oauthService.getKakaoUser(tokens.getAccessToken());
 
-        Member member = oauthService.getKakaoUser(result.get("access_Token").toString());
-        result.put("member", member);
+        Member member = oauthService.loginOrJoin(memberInfoFromKakao);
 
-        oauthService.loginOrJoin(member);
+        String accessToken = jwtUtil.createAccessToken(String.valueOf(member.getId()));
+        String refreshToken = jwtUtil.createRefreshToken(String.valueOf(member.getId()));
 
-        String accessToken = jwtService.createAccessToken("id", member.getId());
-        String refreshToken = jwtService.createRefreshToken("id", member.getId());
-        map.put("access_token", accessToken);
-        map.put("refresh_token", refreshToken);
-
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity<>(new TokenResponse(accessToken, refreshToken), HttpStatus.OK);
     }
 }
