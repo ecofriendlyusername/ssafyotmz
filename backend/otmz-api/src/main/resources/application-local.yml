@@ -12,3 +12,6 @@ spring:
 file:
   image:
     path: C:/Users/multicampus/Desktop/storage/
+oauth:
+  kakao:
+    redirectUri: http://localhost:8080/api/v1/oauth/kakao
