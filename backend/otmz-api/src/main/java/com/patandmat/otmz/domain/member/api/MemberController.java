@@ -2,6 +2,7 @@ package com.patandmat.otmz.domain.member.api;
 
 
 import com.patandmat.otmz.domain.auth.application.JwtService;
+import com.patandmat.otmz.domain.look.api.model.LookCount;
 import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,9 +11,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -64,22 +68,49 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/info")
-    @Operation(summary = "유저 정보 얻기.", description = "json형식으로 감. 실제 어떻게 오는지는 response 참고. 키값 userInfo를 통해 유저 정보(객체) 접근 가능. 닉네임(nickname), 비밀번호(password), 돌생일(birthday), 가입일자(joinDate), 아이디(id), 이메일(email)", responses = {
+    @GetMapping("/mypage")
+    @Operation(summary = "mypage", description = "json형식", responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<Map<String, Object>> getMyInfo(@RequestParam Long id) {
-        Member member = memberService.getMemberById(id);
+    public ResponseEntity<Map<String, Object>> getMypage(@RequestParam Long memberId) {
 
+        Member member = memberService.getMemberById(memberId);
+        String nickname = member.getNickname();
+        int totalStyleCount = memberService.getTotalStyleCount(memberId);
+        int totalItemCount = memberService.getTotalItemCount(memberId);
         Map<String, Object> resultMap = new HashMap<>();
-        if (member == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            resultMap.put("memberInfo", member);
-            resultMap.put("message", SUCCESS);
+        List<LookCount> list  = memberService.getStyleSummary(memberId);
+        List<LookCount> result = new ArrayList<>();
+        LookCount lookCount = null;
 
-            return new ResponseEntity<>(resultMap, HttpStatus.OK);
+
+        int total = 0;
+        for (int i=0; i<list.size(); i++){
+            total += list.get(i).getCount();
         }
+
+
+        for (int i=0; i<3; i++){
+
+            double cal = list.get(i).getCount()/(double)total * 100;
+
+            int percentage = (int) Math.round(cal);
+
+            lookCount.setStyle(list.get(i).getStyle());
+            lookCount.setCount(percentage);
+
+            result.add(lookCount);
+        }
+        resultMap.put("nickname", nickname);
+        resultMap.put("totalStyleCount", totalStyleCount);
+        resultMap.put("totalItemCount", totalItemCount);
+        resultMap.put("result", result);
+
+
+
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);
+
+
     }
 
 
