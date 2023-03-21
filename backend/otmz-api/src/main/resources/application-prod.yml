@@ -11,3 +11,6 @@ spring:
 file:
   image:
     path: /app
+oauth:
+  kakao:
+    redirectUri: https://j8c206.p.ssafy.io/api/v1/oauth/kakao
