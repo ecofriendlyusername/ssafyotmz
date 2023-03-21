@@ -8,7 +8,7 @@
     <!-- <h1>제목</h1> -->
     <button class="hamburger" @click="toggleMenu">☰</button>
     <ul v-if="showMenu" class="menu">
-      <li><router-link to='/login'>로그인</router-link></li>
+      <li><a v-on:click="loginWithKakao">로그인</a></li>
       <li><router-link to='/MyPage'>마이 페이지</router-link></li>
       <li><router-link to='/Find'>내 스타일 찾기</router-link></li>
       <li><router-link to='/Codybook'>코디북 만들기</router-link></li>
@@ -31,6 +31,12 @@ export default {
   methods: {
     toggleMenu() {
       this.showMenu = !this.showMenu;
+    },
+    loginWithKakao: function () {
+      Kakao.init("4a558f01722d37955f2c7bb1c18170d0")
+      Kakao.Auth.authorize({
+        redirectUri: 'http://localhost:3000'
+      });
     }
   }
 }
