@@ -1,9 +1,13 @@
 <template>
   <div>
-    <div v-if="image">
-      <img :src="image" />
+    <div v-if="!image" id="PhotoBox">
+      <img src="@/assets/img/T.png" style="width:250px; margin-top:25px;">
     </div>
-    <p v-else>사진을 선택해주세요</p>
+
+    <div v-if="image" id="PhotoBox">
+      <img style="width:250px; border-radius: 40px;" :src="image" />
+    </div>
+    <p v-else style="color:#C92D1F; font-size: 18px; margin-top: -20px;">전신이 나온 사진을 선택해주세요</p>
 
     <form @submit.prevent="uploadImage">
       <label for="cameraInput" class="file-label">파일 선택</label>
@@ -72,5 +76,14 @@ input[type="file"] {
 button {
   margin-top: -25px;
   margin-left: 10px;
+}
+
+#PhotoBox {
+  margin: 30px;
+  display: inline-block;
+  width: 280px;
+  height: 400px;
+  border: 1px solid #C92D1F;
+  border-radius: 40px;
 }
 </style>
