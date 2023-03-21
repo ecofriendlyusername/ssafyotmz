@@ -1,51 +1,51 @@
 package com.patandmat.otmz.global.config;
 
+import com.patandmat.otmz.global.auth.JwtAuthenticationFilter;
+import com.patandmat.otmz.global.auth.JwtExceptionFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+@Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@Configuration
 public class SecurityConfig {
 
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails user = User.withUsername("user")
-                .password(passwordEncoder.encode("password"))
-                .roles("USER")
-                .build();
+    private final WebConfig webMvcConfig;
 
-        UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder.encode("admin"))
-                .roles("USER", "ADMIN")
-                .build();
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-        return new InMemoryUserDetailsManager(user, admin);
-    }
+    private final JwtExceptionFilter jwtExceptionFilter;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
+    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors().configurationSource(webMvcConfig.corsConfigurationSource())
+                .and()
                 .httpBasic().disable()
-                .csrf().disable()
+                .authorizeHttpRequests((authorize) ->
+                        authorize.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+                                .requestMatchers(AntPathRequestMatcher.antMatcher("/swagger-ui/**")).permitAll()
+                                .requestMatchers(AntPathRequestMatcher.antMatcher("/v3/api-docs/**")).permitAll()
+                                .requestMatchers(AntPathRequestMatcher.antMatcher("/oauth/**")).permitAll()
+                                .anyRequest().authenticated()
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin().disable()
                 .logout().disable()
-                .headers().frameOptions().disable()
-                .and()
-                .authorizeRequests().requestMatchers("/**").permitAll()
-                .and()
-                .build();
+                .headers(headers -> headers.frameOptions().disable())
+                .csrf().disable()
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
     @Bean
@@ -53,5 +53,3 @@ public class SecurityConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }
-
-
