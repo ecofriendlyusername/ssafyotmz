@@ -2,7 +2,6 @@
   <headerComponent/>
 
   <router-view/>
-  
 </template>
 
 <script>
@@ -11,7 +10,7 @@ import headerComponent from "@/components/molecules/header.vue";
 export default {
   components: {
     headerComponent,
-  }
+  },
 }
 </script>
 
