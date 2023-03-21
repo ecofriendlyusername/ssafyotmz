@@ -4,6 +4,8 @@ import com.patandmat.otmz.domain.item.dto.ItemDto;
 import com.patandmat.otmz.domain.item.application.ItemService;
 import com.patandmat.otmz.domain.item.exception.NoSuchMemberException;
 import com.patandmat.otmz.domain.item.exception.UnauthorizedException;
+import com.patandmat.otmz.domain.member.entity.Member;
+import com.patandmat.otmz.global.auth.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,8 +32,10 @@ public class ItemController {
     private final String FAIL = "FAIL";
     private final ItemService itemService;
     @PostMapping("/item")
-    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemDto item, @RequestParam String category) throws IOException {
-        Long member_id = 1L;
+    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemDto item, @RequestParam String category, Authentication authentication) throws IOException {
+        // Long member_id = 1L;
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        Member member = userDetails.getMember();
         try {
             itemService.saveItem(file,item,category,member_id);
         } catch (NoSuchElementException e) {

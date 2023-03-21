@@ -1,8 +1,11 @@
 from fastapi import FastAPI, File, UploadFile
+
 from style_classifier import *
 from category_classifier import *
 from texture_classifier import *
 from print_classifier import *
+from rembg import remove
+
 import io
 from starlette.middleware.cors import CORSMiddleware
 
@@ -36,6 +39,27 @@ async def say_hello(name: str):
 @app.get("/test")
 async def test(img: UploadFile = File(...)):
     return {"filename": img.filename}
+
+@app.post("/ai/v1/remove")
+async def remove_bg(image: UploadFile = File(...)):
+    
+    filename = "./dummy/test12.jpg"
+
+    img = Image.open(filename)
+    
+    # img = await image.read()
+    # img = io.BytesIO(img)
+    # #open image
+    # img = Image.open(img)
+    
+    #remove background
+    
+    img = remove(img, alpha_matting=True, alpha_matting_erode_size=15)
+    
+    
+    #fix output
+    #save image
+    img.save("./remove/output.png","png")
 
 
 @app.post("/ai/v1/style")
