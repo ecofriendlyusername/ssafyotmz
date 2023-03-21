@@ -21,13 +21,13 @@
 
 <script>
 import axios from 'axios';
-
+import defaultImg from "@/assets/img/findDefault.png";
 export default {
   name: 'HelloWorld',
   data() {
     return {
       file: null,
-      image: null,
+      image: defaultImg,
     };
   },
 
@@ -50,8 +50,12 @@ export default {
       })
       .then(response => {
         console.log(response.data);
-        this.result = response.data
-        this.$router.push('/Find/result')
+        this.$router.push({
+          path:'/Find/result',
+          props: {
+            result: response.data
+          }
+        })
       })
       .catch(error => {
         console.log(error);
