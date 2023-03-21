@@ -16,7 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -40,6 +42,13 @@ public class ItemController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> test() {
+        Map<String,String> hm = new HashMap<>();
+        hm.put("hello","world");
+        return new ResponseEntity<>(hm,HttpStatus.OK);
     }
 
     @GetMapping("/item/{id}")
