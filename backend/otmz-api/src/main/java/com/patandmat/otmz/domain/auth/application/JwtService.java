@@ -47,10 +47,9 @@ public class JwtService {
     public boolean checkToken(String jwt, Long id) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
-            return (id == -1 || id.equals(claims.getBody().get("user_id", Long.class)));
+            return (id == -1 || id.equals(claims.getBody().get("member_id", Long.class)));
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("temp");
             return false;
         }
     }
@@ -58,10 +57,9 @@ public class JwtService {
     public boolean getIdFromToken(String jwt, Long id) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
-            return (id == -1 || id.equals(claims.getBody().get("user_id", Long.class)));
+            return (id == -1 || id.equals(claims.getBody().get("member_id", Long.class)));
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("temp");
             return false;
         }
     }

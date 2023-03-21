@@ -42,7 +42,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenCheckInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns(Arrays.asList("/oauth/kakao/**", "/swagger-ui/**", "/v3/api-docs/**", "/member/**"));
+                .excludePathPatterns(Arrays.asList("/oauth/kakao/**", "/swagger-ui/**", "/v3/api-docs/**"));
     }
 
     @Bean
