@@ -35,6 +35,8 @@ dependencies {
     implementation 'com.azure.spring:spring-cloud-azure-starter-jdbc-mysql:5.0.0'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
+//    implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
+//    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.2'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude module: 'junit'
     }
