@@ -11,7 +11,7 @@ public interface ImageFileService {
 
     ImageFile save(MultipartFile imageFile);
 
-    void delete(String path) throws IOException;
+    void delete(Long id) throws IOException;
 
     byte[] loadData(String path) throws Exception;
 }
