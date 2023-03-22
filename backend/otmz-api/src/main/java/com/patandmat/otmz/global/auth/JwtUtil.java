@@ -92,7 +92,6 @@ public class JwtUtil {
 
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = customUserDetailService.loadUserByUsername(this.getMemberId(token));
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails,"",userDetails.getAuthorities());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
