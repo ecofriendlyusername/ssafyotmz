@@ -100,15 +100,19 @@ export default {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const state = urlParams.get('state');
+    let auth = null;
     if (code) {
       console.log(code)
-      axios.get(process.env.VUE_APP_KAKAO_CERTIFIED_API_URL +'?code=' + code)
+      axios.get(process.env.VUE_APP_KAKAO_CERTIFIED_API_URL +'?code=' + code + '&redirect_uri=http://localhost:3000')
       .then(response => {
         console.log(response.data)
+        this.$store.commit('setAuth', response.data); // auth 값을 스토어에 저장
+      })
+      .then(() => {
+        console.log(this.$store.state.Auth)
       })
       .catch(error => console.log(error))
     }
-    
   }
 }
 </script>
