@@ -80,7 +80,10 @@ public class JwtUtil {
 
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = customUserDetailService.loadUserByUsername(this.getMemberId(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        authenticationToken.setDetails(userDetails);
+
+        return authenticationToken;
     }
 
     // accessToken HEADER 체크
