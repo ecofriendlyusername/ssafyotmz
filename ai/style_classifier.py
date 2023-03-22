@@ -129,47 +129,49 @@ def gcn_resnet101(num_classes, t, pretrained=True, adj_file=None, in_channel=300
 
 image_size = 224
 
-change_class_style = {0: "traditional", 
-                   1: "manish", 
-                   2: "feminine", 
-                   3: "ethnic", 
-                   4: "contemporary", 
-                   5: "natural", 
-                   6: "genderless", 
-                   7: "sporty", 
-                   8: "subculture", 
-                   9: "casual"}
+# change_class_style = {0: "traditional", 
+#                    1: "manish", 
+#                    2: "feminine", 
+#                    3: "ethnic", 
+#                    4: "contemporary", 
+#                    5: "natural", 
+#                    6: "genderless", 
+#                    7: "sporty", 
+#                    8: "subculture", 
+#                    9: "casual"}
 
-# change_class_style = {"classic": 0,
-#          "preppy":1, 
-#          "manish": 2,
-#          "tomboy":3, 
-#          "feminine": 4,
-#          "romantic": 5,
-#          "sexy": 6,
-#          "hippie": 7,
-#          "western": 8,
-#          "oriental": 9,
-#          "modern": 10,
-#          "sophisticated": 11,
-#          "avantgarde": 12,
-#          "country": 13,
-#          "resort": 14,
-#          "genderless": 15,
-#          "sporty": 16,
-#          "retro": 17,
-#          "hiphop": 18,
-#          "kitsch": 19,
-#          "punk": 20,
-#          "street": 21,
-#          "military":22
-#          }
+change_class_style = {0: "classic",
+         1: "preppy", 
+         2: "manish",
+         3: "tomboy", 
+         4: "feminine",
+         5: "romantic",
+         6: "sexy",
+         7: "hippie",
+         8: "western",
+         9: "oriental",
+         10: "modern",
+         11: "sophisticated",
+         12: "avantgarde",
+         13: "country",
+         14: "resort",
+         15: "genderless",
+         16: "sporty",
+         17: "retro",
+         18: "hiphop",
+         19: "kitsch",
+         20: "punk",
+         21: "street",
+         22: "military"
+         }
 
 """# load model"""
 
 num_classes_style = 23
 
-adj = "./style/custom_adj_final.pkl"
+#adj = "./style/custom_adj_final.pkl"
+
+adj = "./style/adj_file.pkl"
 
 model_style = gcn_resnet101(num_classes=num_classes_style, t=0.03, adj_file=adj)
 
@@ -187,17 +189,18 @@ val_transform = transforms.Compose([
 
 """# best model"""
 
-resume = "./style/model_best.pth.tar"
+# resume = "./style/model_best.pth.tar"
 
-checkpoint = torch.load(resume, map_location=torch.device('cpu'))
+# checkpoint = torch.load(resume, map_location=torch.device('cpu'))
 
-model_style.load_state_dict(checkpoint['state_dict'])
+# model_style.load_state_dict(checkpoint['state_dict'])
 
 model_style.eval()
 
 """word2vec"""
 
-wordvec = "./style/custom_glove_word2vec_final.pkl"
+#wordvec = "./style/custom_glove_word2vec_final.pkl"
+wordvec = "./style/custom_word2vec.pkl"
 
 with open(wordvec, 'rb') as f:
     inp = pickle.load(f)
