@@ -2,6 +2,7 @@ package com.patandmat.otmz.domain.item.dto;
 
 import com.patandmat.otmz.domain.common.BaseEntity;
 import lombok.*;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ItemRequestDto extends BaseEntity {

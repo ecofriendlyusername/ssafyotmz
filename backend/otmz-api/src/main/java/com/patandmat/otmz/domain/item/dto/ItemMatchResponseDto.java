@@ -1,6 +1,5 @@
 package com.patandmat.otmz.domain.item.dto;
 
-
 import lombok.*;
 
 @Getter
