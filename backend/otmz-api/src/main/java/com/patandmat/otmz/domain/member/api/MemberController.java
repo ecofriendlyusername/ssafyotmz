@@ -3,14 +3,17 @@ package com.patandmat.otmz.domain.member.api;
 
 import com.patandmat.otmz.domain.auth.application.JwtService;
 import com.patandmat.otmz.domain.look.api.model.LookCount;
+import com.patandmat.otmz.domain.member.api.model.MypageDto;
 import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
+import com.patandmat.otmz.global.auth.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,19 +71,21 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
     @GetMapping("/mypage")
     @Operation(summary = "mypage", description = "json형식", responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<Map<String, Object>> getMypage(@RequestParam Long memberId) {
+    public ResponseEntity<MypageDto> getMyPage(Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        Member member = userDetails.getMember();
 
-        Member member = memberService.getMemberById(memberId);
+        MypageDto result = new MypageDto();
         String nickname = member.getNickname();
-        int totalStyleCount = memberService.getTotalStyleCount(memberId);
-        int totalItemCount = memberService.getTotalItemCount(memberId);
-        Map<String, Object> resultMap = new HashMap<>();
-        List<LookCount> list  = memberService.getStyleSummary(memberId);
-        List<LookCount> result = new ArrayList<>();
+        int totalStyleCount = memberService.getTotalStyleCount(member.getId());
+        int totalItemCount = memberService.getTotalItemCount(member.getId());
+        List<LookCount> list  = memberService.getStyleSummary(member.getId());
+        List<LookCount> lookCountList = new ArrayList<>();
         LookCount lookCount = null;
 
 
@@ -99,16 +104,18 @@ public class MemberController {
             lookCount.setStyle(list.get(i).getStyle());
             lookCount.setCount(percentage);
 
-            result.add(lookCount);
+            lookCountList.add(lookCount);
         }
-        resultMap.put("nickname", nickname);
-        resultMap.put("totalStyleCount", totalStyleCount);
-        resultMap.put("totalItemCount", totalItemCount);
-        resultMap.put("result", result);
+
+        result.setNickname(nickname);
+        result.setTotalItemCount(totalItemCount);
+        result.setTotalStyleCount(totalStyleCount);
+        result.setLookCountList(lookCountList);
 
 
 
-        return new ResponseEntity<>(resultMap, HttpStatus.OK);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
 
 
     }
