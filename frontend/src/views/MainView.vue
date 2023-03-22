@@ -92,7 +92,7 @@ export default {
     loginWithKakao: function () {
       Kakao.init("4a558f01722d37955f2c7bb1c18170d0")
       Kakao.Auth.authorize({
-        redirectUri: 'http://localhost:3000'
+        redirectUri: process.env.VUE_APP_KAKAO_REDIRECT_API_URL
       })
     },
   }, 
@@ -102,7 +102,7 @@ export default {
     const state = urlParams.get('state');
     if (code) {
       console.log(code)
-      axios.get('https://j8c105.p.ssafy.io/api/v1/oauth/kakao?code=' + code)
+      axios.get(process.env.VUE_APP_KAKAO_CERTIFIED_API_URL +'?code=' + code)
       .then(response => {
         console.log(response.data)
       })
