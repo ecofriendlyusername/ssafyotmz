@@ -1,9 +1,9 @@
 <template>
   <header>
-    <p >aaa</p>
     <div>
-      <router-link class="logo" to="/">
-        <img src="@/assets/img/logo.png" style="width:65px;">
+      <router-link class="logo" to="/" style=" text-decoration:none;">
+        <p style="color:white;">O't MZ</p>
+        <!-- <img src="@/assets/img/logo.png" style="width:65px;"> -->
       </router-link>
     </div>
     <!-- <h1>제목</h1> -->

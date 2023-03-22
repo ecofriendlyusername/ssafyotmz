@@ -4,8 +4,11 @@ import axios from 'axios';
 export default createStore({
   state: {
     Auth: {
-      token: null,
-      userId: null
+      accessToken: null,
+      refreshToken: null,
+      memberId: null,
+      nickname: null,
+      profileImagePath: null,
     },
     Board: {
       title: null
@@ -60,6 +63,9 @@ export default createStore({
     },
   },
   actions: {
+    setAuth(state, Auth){
+      state.Auth = Auth
+    },
     AuthLogin(context, formData){
       axios.post(process.env.VUE_APP_AUTH_LOGIN_API_URL, formData)
       .then(response => {
