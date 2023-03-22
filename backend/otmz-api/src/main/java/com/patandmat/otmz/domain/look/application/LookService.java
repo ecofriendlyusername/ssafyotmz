@@ -39,7 +39,7 @@ public class LookService {
                     .build();
             lookRepository.save(look);
         } catch (Exception e) {
-            imageFileService.delete(path);
+            imageFileService.delete(image.getId());
             throw e;
         }
 
