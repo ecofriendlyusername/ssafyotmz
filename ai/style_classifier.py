@@ -140,9 +140,34 @@ change_class_style = {0: "traditional",
                    8: "subculture", 
                    9: "casual"}
 
+# change_class_style = {"classic": 0,
+#          "preppy":1, 
+#          "manish": 2,
+#          "tomboy":3, 
+#          "feminine": 4,
+#          "romantic": 5,
+#          "sexy": 6,
+#          "hippie": 7,
+#          "western": 8,
+#          "oriental": 9,
+#          "modern": 10,
+#          "sophisticated": 11,
+#          "avantgarde": 12,
+#          "country": 13,
+#          "resort": 14,
+#          "genderless": 15,
+#          "sporty": 16,
+#          "retro": 17,
+#          "hiphop": 18,
+#          "kitsch": 19,
+#          "punk": 20,
+#          "street": 21,
+#          "military":22
+#          }
+
 """# load model"""
 
-num_classes_style = 10
+num_classes_style = 23
 
 adj = "./style/custom_adj_final.pkl"
 
