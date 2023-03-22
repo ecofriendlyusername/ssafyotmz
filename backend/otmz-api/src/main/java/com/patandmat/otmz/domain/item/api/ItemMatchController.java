@@ -6,6 +6,8 @@ import com.patandmat.otmz.domain.item.application.ItemMatchService;
 import com.patandmat.otmz.domain.item.application.ItemService;
 import com.patandmat.otmz.domain.item.exception.NoSuchMemberException;
 import com.patandmat.otmz.domain.item.exception.UnauthorizedException;
+import com.patandmat.otmz.domain.member.entity.Member;
+import com.patandmat.otmz.global.auth.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,11 +33,12 @@ public class ItemMatchController {
     private final ItemService itemService;
     private final ItemMatchService itemMatchService;
     @PostMapping("/itemmatch")
-    public ResponseEntity<?> saveItemMatch(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemMatch itemMatch) throws IOException {
+    public ResponseEntity<?> saveItemMatch(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemMatch itemMatch, Authentication authentication) throws IOException {
         // take name, comment
-        Long member_id = 1L;
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        Member member = userDetails.getMember();
         try {
-            itemMatchService.saveItemMatch(file,itemMatch,member_id);
+            itemMatchService.saveItemMatch(file,itemMatch,member.getId());
         } catch (AttributeNotFoundException e) {
             return new ResponseEntity<>("Check Attributes of The Item", HttpStatus.BAD_REQUEST);
         } catch (NoSuchMemberException e) {
@@ -45,11 +49,11 @@ public class ItemMatchController {
     }
 
     @GetMapping("/itemmatch/{id}")
-    public ResponseEntity<?> getItemMatch(@PathVariable Long id) {
-        Long member_id = 1L;
-        // take name, comment
+    public ResponseEntity<?> getItemMatch(@PathVariable Long id, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        Member member = userDetails.getMember();
         try {
-            ItemMatchDto itemMatchDto = itemMatchService.getItemMatch(id,member_id);
+            ItemMatchDto itemMatchDto = itemMatchService.getItemMatch(id,member.getId());
             return new ResponseEntity<>(itemMatchDto, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
@@ -59,11 +63,11 @@ public class ItemMatchController {
     }
 
     @DeleteMapping("/itemmatch/{id}")
-    public ResponseEntity<?> deleteItemMatch(@PathVariable Long id) throws IOException {
-        Long member_id = 1L;
-        // take name, comment
+    public ResponseEntity<?> deleteItemMatch(@PathVariable Long id, Authentication authentication) throws IOException {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        Member member = userDetails.getMember();
         try {
-            itemMatchService.deleteItemMatch(id,member_id);
+            itemMatchService.deleteItemMatch(id,member.getId());
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
@@ -73,11 +77,11 @@ public class ItemMatchController {
     }
 
     @DeleteMapping("/itemmatch")
-    public ResponseEntity<?> deleteMultipleItemMatches(@RequestBody List<Long> ids) throws IOException {
-        Long member_id = 1L;
-        // take name, comment
+    public ResponseEntity<?> deleteMultipleItemMatches(@RequestBody List<Long> ids, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        Member member = userDetails.getMember();
         try {
-            itemMatchService.deleteMultipleItemMatches(ids,member_id);
+            itemMatchService.deleteMultipleItemMatches(ids,member.getId());
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
@@ -102,10 +106,12 @@ public class ItemMatchController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> getItemMatchPage(Pageable pageable) {
-        Long member_id = 1L;
+
+    public ResponseEntity<?> getItemMatchPage(Pageable pageable, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        Member member = userDetails.getMember();
         try {
-            Page<ItemMatchDto> page = itemMatchService.getItemMatchPage(pageable, member_id);
+            Page<ItemMatchDto> page = itemMatchService.getItemMatchPage(pageable, member.getId());
             return new ResponseEntity<>(page, HttpStatus.OK);
         } catch (NoSuchMemberException e) {
             return new ResponseEntity<>("User Doesn't Exist", HttpStatus.BAD_REQUEST);

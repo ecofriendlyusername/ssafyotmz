@@ -37,7 +37,7 @@ public class ItemController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
         Member member = userDetails.getMember();
         try {
-            itemService.saveItem(file,item,category,member_id);
+            itemService.saveItem(file,item,category,member.getId());
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("User Does Not Exist", HttpStatus.BAD_REQUEST);
         } catch (AttributeNotFoundException e) {
@@ -57,11 +57,12 @@ public class ItemController {
     }
 
     @GetMapping("/item/{id}")
-    public ResponseEntity<?> getItem(@PathVariable Long id) {
+    public ResponseEntity<?> getItem(@PathVariable Long id, Authentication authentication) {
         // take name, comment
-        Long member_id = 1L;
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        Member member = userDetails.getMember();
         try {
-            ItemDto itemDto = itemService.getItem(member_id,id);
+            ItemDto itemDto = itemService.getItem(member.getId(),id);
             return new ResponseEntity<>(itemDto, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
@@ -69,11 +70,12 @@ public class ItemController {
     }
 
     @DeleteMapping("/item/{id}")
-    public ResponseEntity<?> deleteItem(@PathVariable Long id) throws IOException {
+    public ResponseEntity<?> deleteItem(@PathVariable Long id, Authentication authentication) throws IOException {
         // take name, comment
-        Long member_id = 1L;
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        Member member = userDetails.getMember();
         try {
-            itemService.deleteItem(member_id,id);
+            itemService.deleteItem(member.getId(),id);
             return new ResponseEntity<>("Success", HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
@@ -83,11 +85,12 @@ public class ItemController {
     }
 
     @DeleteMapping("/items")
-    public ResponseEntity<?> deleteMultipleItems(@RequestBody List<Long> ids) throws IOException {
+    public ResponseEntity<?> deleteMultipleItems(@RequestBody List<Long> ids, Authentication authentication) {
         // take name, comment
-        Long member_id = 1L;
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        Member member = userDetails.getMember();
         try {
-            itemService.deleteMultipleItems(ids,member_id);
+            itemService.deleteMultipleItems(ids,member.getId());
             return new ResponseEntity<>("Success", HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
@@ -112,10 +115,11 @@ public class ItemController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> getItemPageByCategory(Pageable pageable, @PathVariable String category) {
-        Long member_id = 1L;
+    public ResponseEntity<?> getItemPageByCategory(Pageable pageable, @PathVariable String category, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        Member member = userDetails.getMember();
         try {
-            Page<ItemDto> page = itemService.getItems(pageable, category, member_id);
+            Page<ItemDto> page = itemService.getItems(pageable, category, member.getId());
             return new ResponseEntity<>(page, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
