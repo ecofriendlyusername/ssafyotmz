@@ -13,7 +13,6 @@ import java.util.List;
 public interface LookRepository extends JpaRepository<Look, Long> {
 
     int countByMemberId(long memberId);
-
     @Query("SELECT new com.patandmat.otmz.domain.look.api.model.LookCount(l.style, COUNT(*)) FROM Look l WHERE l.member.id = :memberId GROUP BY l.style ORDER BY COUNT(*) DESC")
     List<LookCount> findByMemberIdOrderByStyleDesc(@Param("memberId") long memberId);
 

@@ -1,4 +1,4 @@
-package com.patandmat.otmz.domain.look.api.model;
+package com.patandmat.otmz.domain.look.api;
 
 import com.patandmat.otmz.domain.item.exception.NoSuchMemberException;
 import com.patandmat.otmz.domain.look.application.LookService;
@@ -29,9 +29,8 @@ public class LookController {
     @PostMapping("/look")
     public ResponseEntity<?> saveLook(@RequestPart("imagefile") MultipartFile file, @RequestBody String style, Authentication authentication) throws IOException {
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
-
 
         try {
             lookService.saveLook(file,style,member.getId());
@@ -42,7 +41,6 @@ public class LookController {
         } catch (NoSuchMemberException e) {
             return new ResponseEntity<>("User Doesn't Exist", HttpStatus.BAD_REQUEST);
         }
-
 
         return ResponseEntity.ok().build();
     }

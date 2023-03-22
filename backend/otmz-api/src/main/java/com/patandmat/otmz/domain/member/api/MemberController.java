@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,12 +27,12 @@ import java.util.Map;
 public class MemberController {
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
-    // login
     private final MemberService memberService;
     private final JwtService jwtService;
 
     @GetMapping("/refresh")
     public ResponseEntity<Map<String, Object>> refreshToken(@RequestParam Long id, HttpServletRequest request) {
+
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.ACCEPTED;
         String token = request.getHeader("refresh_token");
@@ -60,6 +59,7 @@ public class MemberController {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("temp");
+
             return new ResponseEntity<>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -68,42 +68,36 @@ public class MemberController {
     @GetMapping("/logout")
     public ResponseEntity<?> logout(@RequestParam Long id) {
         memberService.logout(id);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
     @GetMapping("/mypage")
     @Operation(summary = "mypage", description = "json형식", responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
     public ResponseEntity<MypageDto> getMyPage(Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
-
         MypageDto result = new MypageDto();
         String nickname = member.getNickname();
         int totalStyleCount = memberService.getTotalStyleCount(member.getId());
         int totalItemCount = memberService.getTotalItemCount(member.getId());
-        List<LookCount> list  = memberService.getStyleSummary(member.getId());
+        List<LookCount> list = memberService.getStyleSummary(member.getId());
         List<LookCount> lookCountList = new ArrayList<>();
-        LookCount lookCount = null;
-
-
         int total = 0;
-        for (int i=0; i<list.size(); i++){
+
+        for (int i = 0; i < list.size(); i++) {
             total += list.get(i).getCount();
         }
 
-
-        for (int i=0; i<3; i++){
-
-            double cal = list.get(i).getCount()/(double)total * 100;
-
+        for (int i = 0; i < 3; i++) {
+            double cal = list.get(i).getCount() / (double) total * 100;
             int percentage = (int) Math.round(cal);
 
+            LookCount lookCount = new LookCount();
             lookCount.setStyle(list.get(i).getStyle());
             lookCount.setCount(percentage);
-
             lookCountList.add(lookCount);
         }
 
@@ -112,13 +106,36 @@ public class MemberController {
         result.setTotalStyleCount(totalStyleCount);
         result.setLookCountList(lookCountList);
 
-
-
-
         return new ResponseEntity<>(result, HttpStatus.OK);
-
 
     }
 
+    @GetMapping("/lookdetail")
+    @Operation(summary = "lookdetail", description = "json형식", responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
+    public ResponseEntity<List<LookCount>> getLookDetail(Authentication authentication) {
+        //위 코드랑 중복이 많아서 일단 이렇게 커밋하구 빠른 시일 내에 중복 서비스단으로 넘겨서 제거 할 예정입니다!
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Member member = userDetails.getMember();
+        List<LookCount> list = memberService.getStyleSummary(member.getId());
+        List<LookCount> lookCountList = new ArrayList<>();
+        int total = 0;
 
+        for (int i = 0; i < list.size(); i++) {
+            total += list.get(i).getCount();
+        }
+
+        for (int i = 0; i < list.size(); i++) {
+            double cal = list.get(i).getCount() / (double) total * 100;
+            int percentage = (int) Math.round(cal);
+
+            LookCount lookCount = new LookCount();
+            lookCount.setStyle(list.get(i).getStyle());
+            lookCount.setCount(percentage);
+            lookCountList.add(lookCount);
+        }
+
+        return new ResponseEntity<>(lookCountList, HttpStatus.OK);
+    }
 }
