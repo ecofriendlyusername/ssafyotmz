@@ -2,8 +2,11 @@ package com.patandmat.otmz.domain.auth.application;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.patandmat.otmz.domain.auth.api.model.MemberInfoFromKakao;
+import com.patandmat.otmz.domain.auth.api.model.TokenResponse;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.domain.member.repository.MemberRepository;
+import com.patandmat.otmz.global.auth.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +15,6 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @Slf4j
@@ -38,8 +39,9 @@ public class OAuthService {
 
     private final MemberRepository memberRepository;
 
-    public Map<String, Object> getKakaoAccessToken(String code) {
-        Map<String, Object> map = new HashMap<>();
+    public TokenResponse getKakaoTokens(String code) {
+        String accessToken = null;
+        String refreshToken = null;
 
         try {
             URL url = new URL(authenticationUrl);
@@ -54,9 +56,9 @@ public class OAuthService {
 
             String queries =
                     "grant_type=" + grantType +
-                    "&client_id=" + clientId +
-                    "&redirect_uri=" + redirectUri +
-                    "&code=" + code;
+                            "&client_id=" + clientId +
+                            "&redirect_uri=" + redirectUri +
+                            "&code=" + code;
 
             bw.write(queries);
             bw.flush();
@@ -79,11 +81,8 @@ public class OAuthService {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result.toString());
 
-            String accessToken = element.getAsJsonObject().get("access_token").getAsString();
-            String refreshToken = element.getAsJsonObject().get("refresh_token").getAsString();
-
-            map.put("access_Token", accessToken);
-            map.put("refresh_Token", refreshToken);
+            accessToken = element.getAsJsonObject().get("access_token").getAsString();
+            refreshToken = element.getAsJsonObject().get("refresh_token").getAsString();
 
             log.info("access_token: {}", accessToken);
             log.info("refresh_token: {}", refreshToken);
@@ -94,19 +93,18 @@ public class OAuthService {
             e.printStackTrace();
         }
 
-        return map;
+        return new TokenResponse(accessToken, refreshToken);
     }
 
 
-    public Member getKakaoUser(String token) {
-        //access_token을 이용하여 사용자 정보 조회
+    public MemberInfoFromKakao getKakaoUser(String token) {
         try {
             URL url = new URL(authorizationUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
-            conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
+            conn.setRequestProperty(JwtUtil.HEADER_KEY, JwtUtil.TOKEN_PREFIX + token);
 
             //결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
@@ -136,7 +134,7 @@ public class OAuthService {
 
             br.close();
 
-            return Member
+            return MemberInfoFromKakao
                     .builder()
                     .authId(id)
                     .nickname(nickname)
@@ -148,17 +146,19 @@ public class OAuthService {
         return null;
     }
 
-    public void loginOrJoin(Member member) {
-        Member joinedMember = memberRepository.findByAuthId(member.getAuthId());
+    public Member loginOrJoin(MemberInfoFromKakao memberInfoFromKakao) {
+        Member joinedMember = memberRepository.findByAuthId(memberInfoFromKakao.getAuthId());
 
         if (joinedMember == null) {
             //회원가입
-            memberRepository.save(member);
+            joinedMember = memberRepository.save(memberInfoFromKakao.toEntity());
         } else if (joinedMember.isDeleted()) {
             joinedMember.restore();
-            joinedMember.setNickname(member.getNickname());
+            joinedMember.setNickname(memberInfoFromKakao.getNickname());
             memberRepository.save(joinedMember);
             //(재가입)로그인
         }
+
+        return joinedMember;
     }
 }

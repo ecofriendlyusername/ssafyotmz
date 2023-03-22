@@ -20,7 +20,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Long authId;
 
     @Column(nullable = false)

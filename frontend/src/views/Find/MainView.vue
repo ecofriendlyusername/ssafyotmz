@@ -1,6 +1,7 @@
 <template>
   <div>
     <addDataFormComponent/>
+    
   </div>
   <router-link to='/'>메인페이지</router-link>
 </template>
