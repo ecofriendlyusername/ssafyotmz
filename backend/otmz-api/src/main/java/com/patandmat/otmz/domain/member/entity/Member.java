@@ -1,11 +1,15 @@
 package com.patandmat.otmz.domain.member.entity;
 
 import com.patandmat.otmz.domain.common.BaseEntity;
+import com.patandmat.otmz.domain.item.entity.Item;
+import com.patandmat.otmz.domain.item.entity.ItemMatch;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,9 +32,11 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false)
     private boolean deleted; // 탈퇴여부
-
     private String refreshToken;
-
+    @OneToMany(mappedBy="member", fetch = FetchType.LAZY)
+    private List<Item> items;
+    @OneToMany(mappedBy="member", fetch = FetchType.LAZY)
+    private List<ItemMatch> itemMatchBook;
     @Builder
     public Member(Long authId, String nickname, String profileImagePath){
         this.authId = authId;

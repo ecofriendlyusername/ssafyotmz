@@ -23,7 +23,6 @@ public class SecurityConfig {
     private final WebConfig webMvcConfig;
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
     private final JwtExceptionFilter jwtExceptionFilter;
 
     @Bean
@@ -44,7 +43,6 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions().disable())
                 .csrf().disable()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 
