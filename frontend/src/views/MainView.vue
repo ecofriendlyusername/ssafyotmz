@@ -39,13 +39,13 @@
       로그인 하고 O’t MZ의 서비스를 경험해보세요
     </div>
 
-    <router-link to='/login'>
-      <div id="LoginBtn">
-        <div style="padding:65px; font-size: 20px; ">
-          LOGIN
-        </div>
+
+    <div id="LoginBtn" v-on:click=loginWithKakao()>
+      <div style="padding:65px; font-size: 20px; ">
+        LOGIN
       </div>
-    </router-link>
+    </div>
+
   </div>
 
 
@@ -85,8 +85,31 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
-    name:'MainView',
+  name:'MainView',
+  methods: {
+    loginWithKakao: function () {
+      Kakao.init("4a558f01722d37955f2c7bb1c18170d0")
+      Kakao.Auth.authorize({
+        redirectUri: process.env.VUE_APP_KAKAO_REDIRECT_API_URL
+      })
+    },
+  }, 
+  mounted() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const state = urlParams.get('state');
+    if (code) {
+      console.log(code)
+      axios.get(process.env.VUE_APP_KAKAO_CERTIFIED_API_URL +'?code=' + code)
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(error => console.log(error))
+    }
+    
+  }
 }
 </script>
 
