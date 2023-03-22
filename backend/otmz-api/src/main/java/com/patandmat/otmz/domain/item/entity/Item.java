@@ -37,7 +37,7 @@ public class Item extends BaseEntity {
         this.category = category;
         this.categoryVector = categoryVector;
         this.printVector = printVector;
-        this.fabricVector = categoryVector;
+        this.fabricVector = fabricVector;
         this.member = member;
     }
 }
