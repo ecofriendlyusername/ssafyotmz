@@ -27,7 +27,6 @@ public class MemberService {
         if (member == null || member.isDeleted()) {
             return null;
         }
-
         return member;
     }
 
@@ -57,14 +56,12 @@ public class MemberService {
     @Transactional
     public void deleteMember(Long id) {
         Optional<Member> userOptional = memberRepository.findById(id);
-
         if (userOptional.isPresent()) {
             Member user = userOptional.get();
             user.delete();
             memberRepository.save(user);
         }
     }
-
 
     public Member getMemberById(Long id) {
         return memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
@@ -80,21 +77,20 @@ public class MemberService {
         }
     }
 
-    public int getTotalStyleCount(long memberId){
-
+    public int getTotalStyleCount(long memberId) {
         int totalStyleCount = lookRepository.countByMemberId(memberId);
+
         return totalStyleCount;
-
     }
-
 
     public int getTotalItemCount(Long memberId) {
         int totalItemCount = itemRepository.countByMemberId(memberId);
+
         return totalItemCount;
     }
 
     public List<LookCount> getStyleSummary(Long memberId) {
-        return null;
-
+        List<LookCount> list = lookRepository.findByMemberIdOrderByStyleDesc(memberId);
+        return list;
     }
 }

@@ -22,10 +22,9 @@ public class LookService {
 
     private final ImageFileService imageFileService;
     private final LookRepository lookRepository;
-
     private final MemberRepository memberRepository;
 
-    public void saveLook(MultipartFile file, String style, Long id)throws IOException, AttributeNotFoundException, NoSuchMemberException{
+    public void saveLook(MultipartFile file, String style, Long id) throws IOException, AttributeNotFoundException, NoSuchMemberException {
         ImageFile image = imageFileService.save(file);
         String path = image.getPath();
         try {

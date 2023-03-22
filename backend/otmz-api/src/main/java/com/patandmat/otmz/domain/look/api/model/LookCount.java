@@ -15,7 +15,4 @@ public class LookCount {
     private Style style;
     private long count;
 
-
-
-
 }

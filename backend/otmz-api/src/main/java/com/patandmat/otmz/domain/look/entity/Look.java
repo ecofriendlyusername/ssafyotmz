@@ -19,16 +19,12 @@ public class Look extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @OneToOne
     private ImageFile image;
-
     @ManyToOne
     private Member member;
-
     @Column(nullable = false, length = 600)
     private String styleVector;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Style style;
@@ -39,6 +35,5 @@ public class Look extends BaseEntity {
         this.image = image;
         this.member = member;
         this.styleVector = styleVector;
-
     }
 }
