@@ -2,7 +2,8 @@ package com.patandmat.otmz.domain.item.application;
 
 import com.patandmat.otmz.domain.imageFile.application.ImageFileService;
 import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
-import com.patandmat.otmz.domain.item.dto.ItemDto;
+import com.patandmat.otmz.domain.item.dto.ItemResponseDto;
+import com.patandmat.otmz.domain.item.dto.ItemRequestDto;
 import com.patandmat.otmz.domain.item.entity.Item;
 import com.patandmat.otmz.domain.item.exception.NoSuchMemberException;
 import com.patandmat.otmz.domain.item.exception.UnauthorizedException;
@@ -29,9 +30,8 @@ public class ItemService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void saveItem(MultipartFile file, ItemDto itemDto, String category, Long id) throws IOException, AttributeNotFoundException, NoSuchMemberException {
+    public void saveItem(MultipartFile file, ItemRequestDto itemRequestDto, String category, Long id) throws IOException, AttributeNotFoundException, NoSuchMemberException {
         ImageFile imageFile = imageFileService.save(file);
-        String path = imageFile.getPath();
         try {
             Optional<Member> optionalMember = memberRepository.findById(id);
             if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
@@ -40,48 +40,45 @@ public class ItemService {
             int categoryNum = categoryToNum.getOrDefault(category,-1);
             if (categoryNum == -1) throw new AttributeNotFoundException();
             Item item = Item.builder()
-                    .name(itemDto.getName())
+                    .name(itemRequestDto.getName())
                     .image(imageFile)
-                    .categoryVector(itemDto.getCategoryVector())
-                    .printVector(itemDto.getPrintVector())
-                    .fabricVector(itemDto.getFabricVector())
+                    .categoryVector(itemRequestDto.getCategoryVector())
+                    .printVector(itemRequestDto.getPrintVector())
+                    .fabricVector(itemRequestDto.getFabricVector())
                     .category(categoryNum)
                     .member(member)
                     .build();
             itemRepository.save(item);
         } catch (Exception e) {
-            imageFileService.delete(path);
+            imageFileService.delete(imageFile.getId());
             throw e;
         }
     }
 
-    public ItemDto getItem(Long id, Long item_id) {
+    public ItemResponseDto getItem(Long item_id, Long member_id) {
         Optional<Item> optionalItem = itemRepository.findById(item_id);
         if (!optionalItem.isPresent()) throw new NoSuchElementException();
         Item item = optionalItem.get();
         ImageFile imageFile = item.getImage();
         try {
             byte[] image = imageFileService.loadData(imageFile.getPath());
-            Optional<Member> optionalMember = memberRepository.findById(id);
+            Optional<Member> optionalMember = memberRepository.findById(member_id);
             if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
             Member member = optionalMember.get();
             if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
-            ItemDto itemDto = ItemDto.builder()
+            ItemResponseDto itemResponseDto = ItemResponseDto.builder()
                     .id(item.getId())
                     .name(item.getName())
                     .image(image)
-                    .categoryVector(item.getCategoryVector())
-                    .printVector(item.getPrintVector())
-                    .fabricVector(item.getFabricVector())
                     .category(numToCategory[item.getCategory()])
                     .build();
-            return itemDto;
+            return itemResponseDto;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
     @Transactional
-    public void deleteItem(Long memberId, Long id) throws UnauthorizedException, IOException {
+    public void deleteItem(Long id, Long memberId) throws UnauthorizedException, IOException {
         Optional<Item> optionalItem = itemRepository.findById(id);
         if (!optionalItem.isPresent()) return;
         Item item = optionalItem.get();
@@ -89,7 +86,7 @@ public class ItemService {
         if (member == null || member.getId() != memberId) throw new UnauthorizedException();
         itemRepository.delete(item);
         ImageFile imageFile = item.getImage();
-        imageFileService.delete(imageFile.getPath());
+        imageFileService.delete(imageFile.getId());
     }
 
     public void deleteMultipleItems(List<Long> ids, Long memberId) throws NoSuchMemberException, UnauthorizedException {
@@ -103,7 +100,7 @@ public class ItemService {
             ImageFile imageFile = item.getImage();
             itemRepository.delete(item);
             try {
-                imageFileService.delete(imageFile.getPath());
+                imageFileService.delete(imageFile.getId());
             } catch (IOException e) {
                 // throw new RuntimeException(e);
             }
@@ -119,20 +116,20 @@ public class ItemService {
         int categoryNum = categoryToNum.getOrDefault(category,-1);
         if (categoryNum == -1) throw new AttributeNotFoundException();
         Page<Item> page = itemRepository.findAllByCategoryAndMemberId(categoryNum,id,pageable);
-        Page<ItemDto> itemDtoPage = page.map(this::convertToItemDto);
+        Page<ItemResponseDto> itemDtoPage = page.map(this::convertToItemDto);
         return itemDtoPage;
     }
 
-    public ItemDto convertToItemDto(Item item) {
+    public ItemResponseDto convertToItemDto(Item item) {
         ImageFile imageFile = item.getImage();
-        ItemDto itemDto = ItemDto.builder()
+        ItemResponseDto itemResponseDto = ItemResponseDto.builder()
                 .id(item.getId())
                 .name(item.getName())
+                .category(numToCategory[item.getCategory()])
                 .imageId(imageFile.getId())
                 .build();
-        return itemDto;
+        return itemResponseDto;
     }
-
 
 //    private static final Map<String, Integer> fabricToNum;
 //    private static final Map<String, Integer> printToNum;
