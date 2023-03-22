@@ -32,19 +32,6 @@ public class JwtUtil {
     public static final String HEADER_KEY = "Authorization";
     public static final String ISSUER = "Otmz";
 
-    //토큰 생성
-    public TokenInfo generateToken(String userId, String accessToken, String refreshToken) {
-
-        return TokenInfo.builder()
-                .userId(userId)
-                .grantType(TOKEN_PREFIX)
-                .authorization(accessToken)
-                .refreshToken(refreshToken)
-                .accessTokenExpirationTime(ACCESS_TOKEN_EXPIRE_TIME)
-                .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
-                .build();
-    }
-
     //accessToken 생성
     public String createAccessToken(String userId) {
         return createToken(userId, ACCESS_TOKEN_EXPIRE_TIME);
@@ -59,15 +46,16 @@ public class JwtUtil {
         Date now = new Date();
         Date expires = new Date(now.getTime() + expireTime);
 
-        return Jwts.builder()
-                .setHeaderParam("typ", "JWT")
-                .setHeaderParam("regDate", System.currentTimeMillis() / 1000)
-                .setExpiration(expires)
-                .setSubject(userId)
-                .setIssuer(ISSUER)
-                .setIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
+        return TOKEN_PREFIX +
+                Jwts.builder()
+                        .setHeaderParam("typ", "JWT")
+                        .setHeaderParam("regDate", System.currentTimeMillis() / 1000)
+                        .setExpiration(expires)
+                        .setSubject(userId)
+                        .setIssuer(ISSUER)
+                        .setIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
+                        .signWith(SignatureAlgorithm.HS256, secretKey)
+                        .compact();
     }
 
     // 토큰에서 회원 정보(아이디) 추출

@@ -39,7 +39,11 @@ public class OAuthService {
 
     private final MemberRepository memberRepository;
 
-    public TokenResponse getKakaoTokens(String code) {
+    public TokenResponse getKakaoTokens(String code, String redirectUri) {
+        if (redirectUri == null) {
+            redirectUri = this.redirectUri;
+        }
+
         String accessToken = null;
         String refreshToken = null;
 
