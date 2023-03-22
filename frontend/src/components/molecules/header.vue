@@ -1,5 +1,6 @@
 <template>
   <header>
+    <p v-on:click=displayToken()>aaa</p>
     <div>
       <router-link class="logo" to="/">
         <img src="@/assets/img/logo.png" style="width:65px;">
@@ -36,7 +37,27 @@ export default {
       Kakao.init("4a558f01722d37955f2c7bb1c18170d0")
       Kakao.Auth.authorize({
         redirectUri: 'http://localhost:3000'
-      });
+      })
+    },
+    displayToken() {
+      var token = getCookie('authorize-access-token');
+      if(token) {
+        Kakao.Auth.setAccessToken(token);
+        Kakao.Auth.getStatusInfo()
+        .then(function(res) {
+          if (res.status === 'connected') {
+            document.getElementById('token-result').innerText
+              = 'login success, token: ' + Kakao.Auth.getAccessToken();
+          }
+        })
+        .catch(function(err) {
+          Kakao.Auth.setAccessToken(null);
+        });
+      }
+    },
+    getCookie(name) {
+      var parts = document.cookie.split(name + '=');
+      if (parts.length === 2) { return parts[1].split(';')[0]; }
     }
   }
 }
