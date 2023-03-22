@@ -2,8 +2,9 @@ package com.patandmat.otmz.domain.item.application;
 
 import com.patandmat.otmz.domain.imageFile.application.ImageFileService;
 import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
+import com.patandmat.otmz.domain.item.dto.ItemMatchRequestDto;
 import com.patandmat.otmz.domain.item.entity.ItemMatch;
-import com.patandmat.otmz.domain.item.dto.ItemMatchDto;
+import com.patandmat.otmz.domain.item.dto.ItemMatchResponseDto;
 import com.patandmat.otmz.domain.item.exception.NoSuchMemberException;
 import com.patandmat.otmz.domain.item.exception.UnauthorizedException;
 import com.patandmat.otmz.domain.item.repository.ItemMatchRepository;
@@ -30,42 +31,46 @@ public class ItemMatchService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void saveItemMatch(MultipartFile file, ItemMatch itemMatch, Long id) throws IOException, AttributeNotFoundException, NoSuchMemberException {
+    public void saveItemMatch(MultipartFile file, ItemMatchRequestDto itemMatchRequestDto, Long id) throws IOException, AttributeNotFoundException, NoSuchMemberException {
         Optional<Member> optionalMember = memberRepository.findById(id);
         if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
         Member member = optionalMember.get();
         if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
         ImageFile imageFile = imageFileService.save(file);
-        String path = imageFile.getPath();
         try {
-            itemMatch.setImage(imageFile);
-            itemMatch.setMember(member);
+            ItemMatch itemMatch = ItemMatch.builder().
+                    image(imageFile)
+                    .name(itemMatchRequestDto.getName())
+                    .comment(itemMatchRequestDto.getComment())
+                    .member(member)
+                    .build();
             itemMatchRepository.save(itemMatch);
         } catch (Exception e) {
             e.printStackTrace();
-            imageFileService.delete(path);
+            imageFileService.delete(imageFile.getId());
             throw e;
         }
     }
 
-    public ItemMatchDto getItemMatch(Long id, Long member_id) throws NoSuchMemberException {
-        Optional<Member> optionalMember = memberRepository.findById(id);
+    public ItemMatchResponseDto getItemMatch(Long id, Long member_id) throws NoSuchMemberException, UnauthorizedException {
+        Optional<Member> optionalMember = memberRepository.findById(member_id);
         if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
         Member member = optionalMember.get();
         if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
         Optional<ItemMatch> optionalItem = itemMatchRepository.findById(id);
         if (!optionalItem.isPresent()) throw new NoSuchElementException();
         ItemMatch itemMatch = optionalItem.get();
+        if (itemMatch.getMember().getId() != member_id) throw new UnauthorizedException();
         ImageFile imageFile = itemMatch.getImage();
         try {
             byte[] image = imageFileService.loadData(imageFile.getPath());
-            ItemMatchDto itemMatchDto = ItemMatchDto.builder()
+            ItemMatchResponseDto itemMatchResponseDto = ItemMatchResponseDto.builder()
                     .id(itemMatch.getId())
                     .name(itemMatch.getName())
                     .comment(itemMatch.getComment())
                     .image(image)
                     .build();
-            return itemMatchDto;
+            return itemMatchResponseDto;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -76,19 +81,19 @@ public class ItemMatchService {
         Member member = optionalMember.get();
         if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
         Page<ItemMatch> page = itemMatchRepository.findAllByMemberId(member_id,pageable);
-        Page<ItemMatchDto> itemMatchDtoPage = page.map(this:: convertToItemMatchDto);
+        Page<ItemMatchResponseDto> itemMatchDtoPage = page.map(this:: convertToItemMatchDto);
         return itemMatchDtoPage;
     }
 
-    public ItemMatchDto convertToItemMatchDto(ItemMatch itemMatch) {
+    public ItemMatchResponseDto convertToItemMatchDto(ItemMatch itemMatch) {
         ImageFile imageFile = itemMatch.getImage();
-        ItemMatchDto itemMatchDto = ItemMatchDto.builder()
+        ItemMatchResponseDto itemMatchResponseDto = ItemMatchResponseDto.builder()
                 .id(itemMatch.getId())
                 .name(itemMatch.getName())
                 .imageId(imageFile.getId())
                 .comment(itemMatch.getComment())
                 .build();
-        return itemMatchDto;
+        return itemMatchResponseDto;
     }
 
     public void deleteItemMatch(Long id, Long memberId) throws NoSuchMemberException, IOException {
@@ -101,7 +106,7 @@ public class ItemMatchService {
         if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
         ImageFile imageFile = itemMatch.getImage();
         itemMatchRepository.delete(itemMatchOptional.get());
-        imageFileService.delete(imageFile.getPath());
+        imageFileService.delete(imageFile.getId());
     }
 
     public void deleteMultipleItemMatches(List<Long> ids, Long memberId) throws NoSuchMemberException, UnauthorizedException {
@@ -115,7 +120,7 @@ public class ItemMatchService {
             ImageFile imageFile = itemMatch.getImage();
             itemMatchRepository.delete(itemMatch);
             try {
-                imageFileService.delete(imageFile.getPath());
+                imageFileService.delete(imageFile.getId());
             } catch (IOException e) {
                 // throw new RuntimeException(e);
             }

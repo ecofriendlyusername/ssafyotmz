@@ -1,12 +1,15 @@
 package com.patandmat.otmz.domain.item.api;
 
-import com.patandmat.otmz.domain.item.dto.ItemDto;
+import com.patandmat.otmz.domain.item.dto.ItemResponseDto;
 import com.patandmat.otmz.domain.item.application.ItemService;
+import com.patandmat.otmz.domain.item.dto.ItemRequestDto;
 import com.patandmat.otmz.domain.item.exception.NoSuchMemberException;
 import com.patandmat.otmz.domain.item.exception.UnauthorizedException;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.global.auth.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,9 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -32,10 +33,14 @@ public class ItemController {
     private final String FAIL = "FAIL";
     private final ItemService itemService;
     @PostMapping("/item")
-    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemDto item, @RequestParam String category, Authentication authentication) throws IOException {
+    @Operation(summary= "아이템 저장", description = "아이템을 저장한다. printVector, fabricVector, categoryVector는 각 vector의 JSON을 스트링화해서 보내주면 됨"
+            , responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
+    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemRequestDto item, @RequestParam String category, Authentication authentication) throws IOException {
         // Long member_id = 1L;
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
-        Member member = userDetails.getMember();
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        Member member = customUserDetails.getMember();
         try {
             itemService.saveItem(file,item,category,member.getId());
         } catch (NoSuchElementException e) {
@@ -48,34 +53,34 @@ public class ItemController {
 
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/test")
-    public ResponseEntity<?> test() {
-        Map<String,String> hm = new HashMap<>();
-        hm.put("hello","world");
-        return new ResponseEntity<>(hm,HttpStatus.OK);
-    }
-
     @GetMapping("/item/{id}")
+    @Operation(summary= "아이템 조회", description = "조회하고자하는 아이템의 아이디를 담아서 넘겨준다."
+            , responses = {
+            @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = ItemResponseDto.class)))
+    })
     public ResponseEntity<?> getItem(@PathVariable Long id, Authentication authentication) {
         // take name, comment
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
         try {
-            ItemDto itemDto = itemService.getItem(member.getId(),id);
-            return new ResponseEntity<>(itemDto, HttpStatus.OK);
+            ItemResponseDto itemResponseDto = itemService.getItem(id,member.getId());
+            return new ResponseEntity<>(itemResponseDto, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/item/{id}")
+    @Operation(summary= "아이템 삭제", description = "삭제하고 싶은 아이템의 아이디를 담아서 넘겨준다."
+            , responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
     public ResponseEntity<?> deleteItem(@PathVariable Long id, Authentication authentication) throws IOException {
         // take name, comment
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
         try {
-            itemService.deleteItem(member.getId(),id);
+            itemService.deleteItem(id,member.getId());
             return new ResponseEntity<>("Success", HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
@@ -85,9 +90,13 @@ public class ItemController {
     }
 
     @DeleteMapping("/items")
+    @Operation(summary= "여러개의 아이템 삭제", description = "삭제하고자 하는 아이템들의 아이디들을 ids 배열에 각 코디북들의 아이디를 담아서 넘겨주면 된다."
+            , responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
     public ResponseEntity<?> deleteMultipleItems(@RequestBody List<Long> ids, Authentication authentication) {
         // take name, comment
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
         try {
             itemService.deleteMultipleItems(ids,member.getId());
@@ -116,10 +125,10 @@ public class ItemController {
             @ApiResponse(responseCode = "200", description = "success")
     })
     public ResponseEntity<?> getItemPageByCategory(Pageable pageable, @PathVariable String category, Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
         try {
-            Page<ItemDto> page = itemService.getItems(pageable, category, member.getId());
+            Page<ItemResponseDto> page = itemService.getItems(pageable, category, member.getId());
             return new ResponseEntity<>(page, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
