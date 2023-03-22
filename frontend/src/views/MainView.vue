@@ -6,7 +6,7 @@
       <img src="@/assets/img/main3.png" style="width:100%">
       <img src="@/assets/img/main4.png" style="width:100%">
       
-      <div v-if="this.EndPoint = true">
+      <div v-if="this.EndPoint = true"  v-on:click=loginWithKakao()>
       <div class="fade-in-box">
         <div style="display:flex; align-items: center; margin: 0px 30px;">
           <div>
@@ -29,13 +29,40 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
+  name:'MainView',
   data() {
     return {
       EndPoint: false,
     }
   },
+  methods: {
+    loginWithKakao: function () {
+      Kakao.init("4a558f01722d37955f2c7bb1c18170d0")
+      Kakao.Auth.authorize({
+        redirectUri: process.env.VUE_APP_KAKAO_REDIRECT_API_URL
+      })
+    },
+  }, 
   mounted () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const state = urlParams.get('state');
+    let auth = null;
+    if (code) {
+      console.log(code)
+      axios.get(process.env.VUE_APP_KAKAO_CERTIFIED_API_URL +'?code=' + code + '&redirect_uri=http://localhost:3000')
+      .then(response => {
+        this.$store.commit('setAuth', response.data); // auth 값을 스토어에 저장
+      })
+      .then(() => {
+        console.log(this.$store.state.Auth)
+      })
+      .catch(error => console.log(error))
+    }
+
+
     window.addEventListener('scroll', () => {
     let scrollLocation = document.documentElement.scrollTop; // 현재 스크롤바 위치
     let windowHeight = window.innerHeight; // 스크린 창
