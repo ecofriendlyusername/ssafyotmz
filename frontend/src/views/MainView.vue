@@ -1,20 +1,18 @@
 <template>
   <div style="background-color:black">
-    <img src="@/assets/img/main1.png" style="width:100%">
+    <img src="@/assets/img/main1.png" style="width:100.3%">
     <img src="@/assets/img/main2.png" style="width:100%">
     <img src="@/assets/img/main3.png" style="width:100%">
     <img src="@/assets/img/main4.png" style="width:100%">
 
     <div v-if="this.EndPoint = true" v-on:click=loginWithKakao()>
       <div class="fade-in-box">
-        <div style="display:flex; align-items: center; margin: 0px 30px;">
-          <div>
-            <img src="@/assets/img/카카오톡.png" style="width:25px; margin-top: 5px;">
-          </div>
-          &nbsp;&nbsp;
-          <div>
-            Login with Kakao
-          </div>
+        <div style="display:flex; align-items: center; margin: 0px 10px;">
+            <img src="@/assets/img/카카오톡.png" style="width:38px;">
+          &nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="font-size:18px;">
+              Login with Kakao
+            </span>
         </div>
       </div>
     </div>
@@ -83,7 +81,7 @@ export default {
   display: inline-block;
   margin: 10px 0px 60px 0px;
   border-radius: 10px;
-  background: #FAE100;
+  background: #fae100f8;
   color: #371C1D;
   font-weight: bold;
   padding: 10px;
