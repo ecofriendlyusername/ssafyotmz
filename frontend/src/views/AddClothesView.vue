@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 export default {
   name:'AddClothesView',
   data () {
@@ -31,21 +30,7 @@ export default {
     }
   },
   methods: {
-    createItemWith() {
-      var itemForm = new FormData(document.getElementById('itemForm'))
-      var imageFile = itemForm.get("imagefile")
-      var name = itemForm.get("name")
-      this.createItem(imageFile,name)
-    },
-    createItem(imagefile,item) {
-      axios.post(process.env.VUE_APP_ITEM,{imagefile,item},{headers: {
-        "Content-Type": "application/json;charset=utf-8",
-        "Authorization": process.env.local.TOKEN,
-      }})
-      .then(response => {
-        console.log(response)
-      })
-    }
+    
   }
 }
 </script>
