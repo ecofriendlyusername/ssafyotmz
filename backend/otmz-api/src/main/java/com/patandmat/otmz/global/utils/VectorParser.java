@@ -11,7 +11,7 @@ import java.util.Map;
 public class VectorParser {
 
     public static final String STYLE_KEY = "style";
-    public static final String STYLE_VALUE = "style";
+    public static final String STYLE_VALUE = "score";
 
     // for raw vector
     public static Map<String, Double> parseToMap(String jsonString, String name, String value) {
