@@ -19,5 +19,5 @@ public interface LookRepository extends JpaRepository<Look, Long> {
     @Query("SELECT new com.patandmat.otmz.domain.look.api.model.LookCountDto(l.style, COUNT(*)) FROM Look l WHERE l.member.id = :memberId GROUP BY l.style ORDER BY COUNT(*) DESC")
     List<LookCountDto> findByMemberIdOrderByStyleDesc(@Param("memberId") long memberId);
 
-    Page<Look> findByMemberId(long memberId, Pageable pageable);
+    Page<Look> findAllByMemberId(Long id, Pageable pageable);
 }

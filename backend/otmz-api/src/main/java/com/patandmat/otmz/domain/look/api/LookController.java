@@ -21,8 +21,6 @@ import java.util.NoSuchElementException;
 @RestController
 @RequiredArgsConstructor
 public class LookController {
-    private final String SUCCESS = "SUCCESS";
-    private final String FAIL = "FAIL";
     private final LookService lookService;
 
     @PostMapping("/look")
@@ -32,7 +30,7 @@ public class LookController {
         Member member = userDetails.getMember();
 
         try {
-            lookService.saveLook(file, style, member.getId());
+            lookService.saveLook(file, style, member);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("User Does Not Exist", HttpStatus.BAD_REQUEST);
         } catch (NoSuchMemberException e) {
