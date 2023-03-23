@@ -2,7 +2,7 @@ package com.patandmat.otmz.domain.member.api;
 
 
 import com.patandmat.otmz.domain.auth.application.JwtService;
-import com.patandmat.otmz.domain.look.api.model.LookCount;
+import com.patandmat.otmz.domain.look.api.model.LookCountDto;
 import com.patandmat.otmz.domain.member.api.model.MypageDto;
 import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
@@ -73,7 +73,7 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
-    @Operation(summary = "mypage", description = "json형식", responses = {
+    @Operation(summary = "mypage", description = "json형식 내이름, 내정보, 그리고 스타일 상위 3개 퍼센테이지랑 보여줌.", responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
     public ResponseEntity<MypageDto> getMyPage(Authentication authentication) {
@@ -83,59 +83,84 @@ public class MemberController {
         String nickname = member.getNickname();
         int totalStyleCount = memberService.getTotalStyleCount(member.getId());
         int totalItemCount = memberService.getTotalItemCount(member.getId());
-        List<LookCount> list = memberService.getStyleSummary(member.getId());
-        List<LookCount> lookCountList = new ArrayList<>();
+        List<LookCountDto> list = memberService.getStyleSummary(member.getId());
+        List<LookCountDto> lookCountDtoList = new ArrayList<>();
         int total = 0;
 
-        for (int i = 0; i < list.size(); i++) {
-            total += list.get(i).getCount();
+
+        if (list.size() == 0) {
+            result.setNickname(nickname);
+            result.setTotalItemCount(totalItemCount);
+            result.setTotalStyleCount(totalStyleCount);
+            result.setLookCountDtoList(lookCountDtoList);
+        } else if (list.size() < 3) {
+            for (int i = 0; i < list.size(); i++) {
+                total += list.get(i).getCount();
+            }
+            for (int i = 0; i < list.size(); i++) {
+                double cal = list.get(i).getCount() / (double) total * 100;
+                int percentage = (int) Math.round(cal);
+
+                LookCountDto lookCountDto = new LookCountDto();
+                lookCountDto.setStyle(list.get(i).getStyle());
+                lookCountDto.setCount(percentage);
+                lookCountDtoList.add(lookCountDto);
+            }
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                total += list.get(i).getCount();
+            }
+
+            for (int i = 0; i < 3; i++) {
+                double cal = list.get(i).getCount() / (double) total * 100;
+                int percentage = (int) Math.round(cal);
+
+                LookCountDto lookCountDto = new LookCountDto();
+                lookCountDto.setStyle(list.get(i).getStyle());
+                lookCountDto.setCount(percentage);
+                lookCountDtoList.add(lookCountDto);
+            }
         }
-
-        for (int i = 0; i < 3; i++) {
-            double cal = list.get(i).getCount() / (double) total * 100;
-            int percentage = (int) Math.round(cal);
-
-            LookCount lookCount = new LookCount();
-            lookCount.setStyle(list.get(i).getStyle());
-            lookCount.setCount(percentage);
-            lookCountList.add(lookCount);
-        }
-
         result.setNickname(nickname);
         result.setTotalItemCount(totalItemCount);
         result.setTotalStyleCount(totalStyleCount);
-        result.setLookCountList(lookCountList);
+        result.setLookCountDtoList(lookCountDtoList);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
 
     }
 
     @GetMapping("/lookdetail")
-    @Operation(summary = "lookdetail", description = "json형식", responses = {
+    @Operation(summary = "lookdetail", description = "json형식, 전체 스타일에 관한 퍼센테이지를 보여줌.", responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<List<LookCount>> getLookDetail(Authentication authentication) {
+    public ResponseEntity<List<LookCountDto>> getLookDetail(Authentication authentication) {
         //위 코드랑 중복이 많아서 일단 이렇게 커밋하구 빠른 시일 내에 중복 서비스단으로 넘겨서 제거 할 예정입니다!
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
-        List<LookCount> list = memberService.getStyleSummary(member.getId());
-        List<LookCount> lookCountList = new ArrayList<>();
+        List<LookCountDto> list = memberService.getStyleSummary(member.getId());
+        List<LookCountDto> lookCountDtoList = new ArrayList<>();
         int total = 0;
 
-        for (int i = 0; i < list.size(); i++) {
-            total += list.get(i).getCount();
+        if (list.size() == 0) {
+            return new ResponseEntity<>(lookCountDtoList, HttpStatus.OK);
+
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                total += list.get(i).getCount();
+            }
+
+            for (int i = 0; i < list.size(); i++) {
+                double cal = list.get(i).getCount() / (double) total * 100;
+                int percentage = (int) Math.round(cal);
+
+                LookCountDto lookCountDto = new LookCountDto();
+                lookCountDto.setStyle(list.get(i).getStyle());
+                lookCountDto.setCount(percentage);
+                lookCountDtoList.add(lookCountDto);
+            }
         }
 
-        for (int i = 0; i < list.size(); i++) {
-            double cal = list.get(i).getCount() / (double) total * 100;
-            int percentage = (int) Math.round(cal);
-
-            LookCount lookCount = new LookCount();
-            lookCount.setStyle(list.get(i).getStyle());
-            lookCount.setCount(percentage);
-            lookCountList.add(lookCount);
-        }
-
-        return new ResponseEntity<>(lookCountList, HttpStatus.OK);
+        return new ResponseEntity<>(lookCountDtoList, HttpStatus.OK);
     }
 }
