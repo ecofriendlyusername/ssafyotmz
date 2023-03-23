@@ -2,17 +2,23 @@ package com.patandmat.otmz.domain.member.api;
 
 
 import com.patandmat.otmz.domain.auth.application.JwtService;
+import com.patandmat.otmz.domain.look.api.model.LookCount;
+import com.patandmat.otmz.domain.member.api.model.MypageDto;
 import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
+import com.patandmat.otmz.global.auth.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,12 +27,12 @@ import java.util.Map;
 public class MemberController {
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
-    // login
     private final MemberService memberService;
     private final JwtService jwtService;
 
     @GetMapping("/refresh")
     public ResponseEntity<Map<String, Object>> refreshToken(@RequestParam Long id, HttpServletRequest request) {
+
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.ACCEPTED;
         String token = request.getHeader("refresh_token");
@@ -53,6 +59,7 @@ public class MemberController {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("temp");
+
             return new ResponseEntity<>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -61,26 +68,74 @@ public class MemberController {
     @GetMapping("/logout")
     public ResponseEntity<?> logout(@RequestParam Long id) {
         memberService.logout(id);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/info")
-    @Operation(summary = "유저 정보 얻기.", description = "json형식으로 감. 실제 어떻게 오는지는 response 참고. 키값 userInfo를 통해 유저 정보(객체) 접근 가능. 닉네임(nickname), 비밀번호(password), 돌생일(birthday), 가입일자(joinDate), 아이디(id), 이메일(email)", responses = {
+    @GetMapping("/mypage")
+    @Operation(summary = "mypage", description = "json형식", responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<Map<String, Object>> getMyInfo(@RequestParam Long id) {
-        Member member = memberService.getMemberById(id);
+    public ResponseEntity<MypageDto> getMyPage(Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Member member = userDetails.getMember();
+        MypageDto result = new MypageDto();
+        String nickname = member.getNickname();
+        int totalStyleCount = memberService.getTotalStyleCount(member.getId());
+        int totalItemCount = memberService.getTotalItemCount(member.getId());
+        List<LookCount> list = memberService.getStyleSummary(member.getId());
+        List<LookCount> lookCountList = new ArrayList<>();
+        int total = 0;
 
-        Map<String, Object> resultMap = new HashMap<>();
-        if (member == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            resultMap.put("memberInfo", member);
-            resultMap.put("message", SUCCESS);
-
-            return new ResponseEntity<>(resultMap, HttpStatus.OK);
+        for (int i = 0; i < list.size(); i++) {
+            total += list.get(i).getCount();
         }
+
+        for (int i = 0; i < 3; i++) {
+            double cal = list.get(i).getCount() / (double) total * 100;
+            int percentage = (int) Math.round(cal);
+
+            LookCount lookCount = new LookCount();
+            lookCount.setStyle(list.get(i).getStyle());
+            lookCount.setCount(percentage);
+            lookCountList.add(lookCount);
+        }
+
+        result.setNickname(nickname);
+        result.setTotalItemCount(totalItemCount);
+        result.setTotalStyleCount(totalStyleCount);
+        result.setLookCountList(lookCountList);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
     }
 
+    @GetMapping("/lookdetail")
+    @Operation(summary = "lookdetail", description = "json형식", responses = {
+            @ApiResponse(responseCode = "200", description = "success")
+    })
+    public ResponseEntity<List<LookCount>> getLookDetail(Authentication authentication) {
+        //위 코드랑 중복이 많아서 일단 이렇게 커밋하구 빠른 시일 내에 중복 서비스단으로 넘겨서 제거 할 예정입니다!
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Member member = userDetails.getMember();
+        List<LookCount> list = memberService.getStyleSummary(member.getId());
+        List<LookCount> lookCountList = new ArrayList<>();
+        int total = 0;
 
+        for (int i = 0; i < list.size(); i++) {
+            total += list.get(i).getCount();
+        }
+
+        for (int i = 0; i < list.size(); i++) {
+            double cal = list.get(i).getCount() / (double) total * 100;
+            int percentage = (int) Math.round(cal);
+
+            LookCount lookCount = new LookCount();
+            lookCount.setStyle(list.get(i).getStyle());
+            lookCount.setCount(percentage);
+            lookCountList.add(lookCount);
+        }
+
+        return new ResponseEntity<>(lookCountList, HttpStatus.OK);
+    }
 }
