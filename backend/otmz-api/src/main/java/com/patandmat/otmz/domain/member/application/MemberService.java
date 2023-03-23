@@ -2,7 +2,7 @@ package com.patandmat.otmz.domain.member.application;
 
 
 import com.patandmat.otmz.domain.item.repository.ItemRepository;
-import com.patandmat.otmz.domain.look.api.model.LookCount;
+import com.patandmat.otmz.domain.look.api.model.LookCountDto;
 import com.patandmat.otmz.domain.look.repository.LookRepository;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.domain.member.repository.MemberRepository;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -89,8 +88,9 @@ public class MemberService {
         return totalItemCount;
     }
 
-    public List<LookCount> getStyleSummary(Long memberId) {
-        List<LookCount> list = lookRepository.findByMemberIdOrderByStyleDesc(memberId);
+    public List<LookCountDto> getStyleSummary(Long memberId) {
+        List<LookCountDto> list = lookRepository.findByMemberIdOrderByStyleDesc(memberId);
+
         return list;
     }
 }

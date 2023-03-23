@@ -3,10 +3,11 @@ package com.patandmat.otmz.domain.item.api;
 import com.patandmat.otmz.domain.item.dto.ItemMatchResponseDto;
 import com.patandmat.otmz.domain.item.dto.ItemMatchRequestDto;
 import com.patandmat.otmz.domain.item.application.ItemMatchService;
-import com.patandmat.otmz.domain.item.exception.NoSuchMemberException;
-import com.patandmat.otmz.domain.item.exception.UnauthorizedException;
+
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.global.auth.CustomUserDetails;
+import com.patandmat.otmz.global.exception.NoSuchMemberException;
+import com.patandmat.otmz.global.exception.UnauthorizedException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -5,11 +5,12 @@ import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
 import com.patandmat.otmz.domain.item.dto.ItemMatchRequestDto;
 import com.patandmat.otmz.domain.item.entity.ItemMatch;
 import com.patandmat.otmz.domain.item.dto.ItemMatchResponseDto;
-import com.patandmat.otmz.domain.item.exception.NoSuchMemberException;
-import com.patandmat.otmz.domain.item.exception.UnauthorizedException;
+
 import com.patandmat.otmz.domain.item.repository.ItemMatchRepository;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.domain.member.repository.MemberRepository;
+import com.patandmat.otmz.global.exception.NoSuchMemberException;
+import com.patandmat.otmz.global.exception.UnauthorizedException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
