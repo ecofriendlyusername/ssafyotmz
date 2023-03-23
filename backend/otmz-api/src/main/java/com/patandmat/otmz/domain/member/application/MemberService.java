@@ -6,6 +6,7 @@ import com.patandmat.otmz.domain.look.api.model.LookCount;
 import com.patandmat.otmz.domain.look.repository.LookRepository;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.domain.member.repository.MemberRepository;
+import com.patandmat.otmz.global.utils.VectorParser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -92,5 +93,21 @@ public class MemberService {
     public List<LookCount> getStyleSummary(Long memberId) {
         List<LookCount> list = lookRepository.findByMemberIdOrderByStyleDesc(memberId);
         return list;
+    }
+
+    public void updateStyleStat(Member member, String styleVector) {
+        Map<String, Double> styleMap = VectorParser.parseToMap(styleVector, VectorParser.STYLE_KEY, VectorParser.STYLE_VALUE);
+
+        Map<String, Double> memberStyleStatMap;
+
+        if (member.getStyleStat() != null) {
+            memberStyleStatMap = VectorParser.parseToMap(member.getStyleStat());
+            memberStyleStatMap.replaceAll((style, score) -> (memberStyleStatMap.get(style) + styleMap.getOrDefault(style, 0d))/2);
+        } else {
+            memberStyleStatMap = styleMap;
+        }
+
+        member.setStyleStat(VectorParser.parseToString(memberStyleStatMap));
+        memberRepository.save(member);
     }
 }

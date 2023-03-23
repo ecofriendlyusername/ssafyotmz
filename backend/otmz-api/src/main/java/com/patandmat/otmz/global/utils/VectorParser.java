@@ -1,5 +1,6 @@
 package com.patandmat.otmz.global.utils;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -36,5 +37,10 @@ public class VectorParser {
         }
 
         return map;
+    }
+
+    public static String parseToString(Map<String, Double> map) {
+        Gson gson = new Gson();
+        return gson.toJson(map);
     }
 }

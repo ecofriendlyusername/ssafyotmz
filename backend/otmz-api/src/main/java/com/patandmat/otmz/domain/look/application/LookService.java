@@ -2,7 +2,6 @@ package com.patandmat.otmz.domain.look.application;
 
 import com.patandmat.otmz.domain.imageFile.application.ImageFileService;
 import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
-import com.patandmat.otmz.domain.item.entity.Item;
 import com.patandmat.otmz.domain.item.exception.NoSuchMemberException;
 import com.patandmat.otmz.domain.look.entity.Look;
 import com.patandmat.otmz.domain.look.repository.LookRepository;
@@ -24,7 +23,7 @@ public class LookService {
     private final LookRepository lookRepository;
     private final MemberRepository memberRepository;
 
-    public void saveLook(MultipartFile file, String style, Long id) throws IOException, AttributeNotFoundException, NoSuchMemberException {
+    public void saveLook(MultipartFile file, String styleVector, Long id) throws IOException, AttributeNotFoundException, NoSuchMemberException {
         ImageFile image = imageFileService.save(file);
         String path = image.getPath();
         try {
@@ -34,7 +33,7 @@ public class LookService {
             if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
             Look look = Look.builder()
                     .image(image)
-                    .styleVector(style)
+                    .styleVector(styleVector)
                     .member(member)
                     .build();
             lookRepository.save(look);
