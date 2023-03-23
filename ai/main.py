@@ -12,7 +12,11 @@ from starlette.middleware.cors import CORSMiddleware
 origins = [
     "http://127.0.0.1",
     "http://127.0.0.1:3000",
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "https://127.0.0.1:3000",
+    "https://localhost:3000",
+    "http://j8c105.p.ssafy.io",
+    "https://j8c105.p.ssafy.io"
 ]
 
 app = FastAPI()
