@@ -70,7 +70,6 @@ const routes = [
         path: 'Result',
         name: 'FindResultView',
         component: FindResultView,
-        props: true
       },
       {
         path: 'Error',
