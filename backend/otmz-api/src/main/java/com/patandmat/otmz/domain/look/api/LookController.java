@@ -4,8 +4,10 @@ import com.patandmat.otmz.domain.item.exception.NoSuchMemberException;
 import com.patandmat.otmz.domain.look.api.model.RecommendedLookResponse;
 import com.patandmat.otmz.domain.look.application.LookRecommendService;
 import com.patandmat.otmz.domain.look.application.LookService;
+import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.global.auth.CustomUserDetails;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +25,18 @@ import java.util.NoSuchElementException;
 public class LookController {
     private final LookService lookService;
 
+    private final MemberService memberService;
+
     private final LookRecommendService lookRecommendService;
 
     @PostMapping("/look")
-    public ResponseEntity<?> saveLook(@RequestPart("imagefile") MultipartFile file, @RequestBody String style, Authentication authentication) throws IOException {
+    public ResponseEntity<?> saveLook(@RequestPart("imagefile") MultipartFile file, @RequestBody String styleVector, Authentication authentication) throws IOException {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
 
         try {
-            lookService.saveLook(file, style, member.getId());
+            lookService.saveLook(file, styleVector, member.getId());
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("User Does Not Exist", HttpStatus.BAD_REQUEST);
         } catch (AttributeNotFoundException e) {
@@ -40,6 +44,8 @@ public class LookController {
         } catch (NoSuchMemberException e) {
             return new ResponseEntity<>("User Doesn't Exist", HttpStatus.BAD_REQUEST);
         }
+
+        memberService.updateStyleStat(member, styleVector);
 
         return ResponseEntity.ok().build();
     }
