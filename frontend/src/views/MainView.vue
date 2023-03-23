@@ -45,7 +45,7 @@ export default {
     let auth = null;
     if (code) {
       console.log(code)
-      axios.get(process.env.VUE_APP_KAKAO_CERTIFIED_API_URL + '?code=' + code + '&redirect_uri=http://localhost:3000')
+      axios.get(process.env.VUE_APP_KAKAO_CERTIFIED_API_URL + '?code=' + code)
         .then(response => {
           this.$store.commit('setAuth', response.data); // auth 값을 스토어에 저장
         })
