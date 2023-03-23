@@ -1,7 +1,9 @@
 package com.patandmat.otmz.domain.look.api;
 
+import com.patandmat.otmz.domain.look.api.model.LookListDto;
 import com.patandmat.otmz.domain.look.api.model.LookResponseDto;
 import com.patandmat.otmz.domain.look.application.LookService;
+import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.global.auth.CustomUserDetails;
 import com.patandmat.otmz.global.exception.NoSuchMemberException;
@@ -20,10 +22,12 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/look")
 public class LookController {
     private final LookService lookService;
+    private final MemberService memberService;
 
-    @PostMapping("/look")
+    @PostMapping("/add")
     public ResponseEntity<?> saveLook(@RequestPart("imagefile") MultipartFile file, @RequestBody String style, Authentication authentication) throws IOException {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
@@ -41,22 +45,28 @@ public class LookController {
     }
 
 
-    @GetMapping("/looks")
+    @GetMapping("/list")
     public ResponseEntity<?> getLookPage(Pageable pageable, Authentication authentication) throws AttributeNotFoundException, NoSuchMemberException {
 
+        LookListDto result = new LookListDto();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
+        int totalStyle = lookService.getCountoflooks(member.getId());
+        String nickname = member.getNickname();
+
+        result.setTotalStyle(totalStyle);
+        result.setNickname(nickname);
 
         try {
             Page<LookResponseDto> page = lookService.getLooks(pageable, member.getId());
-
-            return new ResponseEntity<>(page, HttpStatus.OK);
+            result.setPage(page);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (NoSuchElementException e) {
 
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } catch (AttributeNotFoundException e) {
 
-            return new ResponseEntity<>("Wrong Category Value", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Wrong Style Value", HttpStatus.BAD_REQUEST);
         } catch (NoSuchMemberException e) {
 
             return new ResponseEntity<>("User Doesn't Exist", HttpStatus.BAD_REQUEST);

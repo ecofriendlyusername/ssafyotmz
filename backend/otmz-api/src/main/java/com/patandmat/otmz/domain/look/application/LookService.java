@@ -62,4 +62,7 @@ public class LookService {
     }
 
 
+    public int getCountoflooks(Long id) {
+        return lookRepository.countByMemberId(id);
+    }
 }
