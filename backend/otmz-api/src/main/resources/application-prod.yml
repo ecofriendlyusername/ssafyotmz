@@ -13,4 +13,4 @@ file:
     path: /app
 oauth:
   kakao:
-    redirectUri: https://j8c105.p.ssafy.io
+    redirectUri: https://j8c105.p.ssafy.io/
