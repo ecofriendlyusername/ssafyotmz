@@ -54,7 +54,8 @@ export default {
       })
       .then(response => {
         console.log(response.data);
-        this.result = response.data
+        console.log(this.file);
+        this.$store.commit('SET_RESULT', {img_path: this.file, data: response.data});
         this.$router.push('/Find/result')
       })
       .catch(error => {
