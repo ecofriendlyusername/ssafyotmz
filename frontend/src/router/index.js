@@ -17,6 +17,8 @@ import CodybookView from "@/views/CodybookView.vue";
 
 import RecomView from "@/views/RecomView.vue";
 
+import showStoreView from "@/views/showStoreView.vue"
+
 const routes = [
   {
     path: '/',
@@ -87,6 +89,11 @@ const routes = [
     path: '/Recom',
     name: 'RecomView',
     component: RecomView
+  },
+  {
+    path: '/store',
+    name: 'showStoreView',
+    component: showStoreView
   },
   
 ]
