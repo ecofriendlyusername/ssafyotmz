@@ -1,6 +1,6 @@
 package com.patandmat.otmz.domain.member.api.model;
 
-import com.patandmat.otmz.domain.look.api.model.LookCount;
+import com.patandmat.otmz.domain.look.api.model.LookCountDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +16,7 @@ public class MypageDto {
     private int totalStyleCount;
     private int totalItemCount;
 
-    private List<LookCount> lookCountList;
+    private List<LookCountDto> lookCountDtoList;
 
 
 

@@ -1,4 +1,4 @@
-package com.patandmat.otmz.domain.look.exception;
+package com.patandmat.otmz.global.exception;
 
 public class UnauthorizedException extends Exception {
     public UnauthorizedException() {
