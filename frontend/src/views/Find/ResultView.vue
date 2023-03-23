@@ -29,8 +29,8 @@ export default {
         container: '#kakaotalk-sharing-btn',
         templateId: 91677,
         templateArgs: {
-          img_path: 'http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg',
-          username: this.$store.state.Auth.nickname,
+          img_path: this.imgsrc,
+          username: this.$store.state.Auth.nickname + this.imgsrc,
           style: this.result['data']['1'].style,
         },
       })

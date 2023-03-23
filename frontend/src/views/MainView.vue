@@ -92,7 +92,7 @@ export default {
         })
         .then(() => {
           console.log(this.$store.state.Auth)
-          this.Auth = this.$store.state.Auth
+          this.Auth = this.$store.state.Auth  
         })
         .catch(error => console.log(error))
     }
