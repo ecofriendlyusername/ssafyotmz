@@ -1,165 +1,160 @@
 <template>
-  <div id="MainPage">
-    <!-- 1div -->
-    <div style="display:flex; justify-content:space-around; color: #EAE1D3;">
-      <div style="margin-top: 10px;">
-        <h1 style="font-size:100px;">1</h1>
-      </div>
-      <div>
-        <h2>WHAT'S MY STYLE</h2>
-        <p>본인의 사진을 올리고 <br> 스타일을 판별 받아보세요 </p>
-      </div>
-    </div>
+  <div style="background-color:black">
+    <img src="@/assets/img/main1.png" style="width:100.3%">
+    <img src="@/assets/img/main2.png" style="width:100%">
+    <img src="@/assets/img/main3.png" style="width:100%">
+    <img src="@/assets/img/main4.png" style="width:100%">
 
-    <!-- 2div -->
-    <div style="display:flex; justify-content:space-around; color: #EAE1D3;">
-      <div style="margin-top: 10px;">
-        <h1 style="font-size:100px;">2</h1>
-      </div>
-      <div>
-        <h2>디지털 옷장</h2>
-        <p>내 옷장 속 옷들을 등록하고<br>간편하게 코디를 해보세요</p>
-      </div>
-    </div>
-
-    <!-- 3div -->
-    <div style="display:flex; justify-content:space-around; color: #EAE1D3;">
-      <div style="margin-top: 10px;">
-        <h1 style="font-size:100px;">3</h1>
-      </div>
-      <div>
-        <h2>가상착장</h2>
-        <p>“이 옷 어울릴까?” <br>O’tMZ의 가상착장 서비스를 경험하고
-          <br>나에게 어울리는 옷을 찾아보세요</p>
-      </div>
-    </div>
-
-    <!-- 4div -->
-    <div style="display:flex; margin-top: 60px; justify-content:space-around; color: white;">
-      로그인 하고 O’t MZ의 서비스를 경험해보세요
-    </div>
-
-
-    <div id="LoginBtn" v-on:click=loginWithKakao()>
-      <div style="padding:65px; font-size: 20px; ">
-        LOGIN
-      </div>
-    </div>
-
-  </div>
-
-
-  <!-- 임의로 if 넣어놓음 -->
-  <div v-if="user==true" id="MainPage2">
-    <div id="WeatherBox">
-      <p style="font-weight:bold;">
-        오늘의 날씨에 어울리는 옷
-      </p>
-      
-      <p>
-        현재 온도
-        <br>
-        체감 온도 
-      </p>
-      
-      <div style="display:flex; justify-content: center; padding: 5px;">
-        <div id="ItemBox">
-          1
-        </div>
-        <div id="ItemBox">
-          2
-        </div>
-        <div id="ItemBox">
-          3
+    <div v-if="this.EndPoint = true" v-on:click=loginWithKakao()>
+      <div class="fade-in-box">
+        <div style="display:flex; align-items: center; margin: 0px 10px;">
+            <img src="@/assets/img/카카오톡.png" style="width:38px;">
+          &nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="font-size:18px;">
+              Login with Kakao
+            </span>
         </div>
       </div>
-      
-
-
     </div>
   </div>
-
-  <!-- 메인페이지
-    <br>
-    <router-link to='/Find'>내 스타일 찾기</router-link> -->
 </template>
 
 <script>
 import axios from "axios";
 export default {
-  name:'MainView',
+  name: 'MainView',
+  data() {
+    return {
+      EndPoint: false,
+      Auth: this.$store.state.Auth
+    }
+  },
   methods: {
     loginWithKakao: function () {
-      Kakao.init("4a558f01722d37955f2c7bb1c18170d0")
+      Kakao.init(process.env.VUE_APP_KAKAO_JAVASCRIPT_API_URL)
       Kakao.Auth.authorize({
         redirectUri: process.env.VUE_APP_KAKAO_REDIRECT_API_URL
       })
     },
-  }, 
+  },
   mounted() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const state = urlParams.get('state');
+    let auth = null;
     if (code) {
       console.log(code)
-      axios.get(process.env.VUE_APP_KAKAO_CERTIFIED_API_URL +'?code=' + code)
-      .then(response => {
-        console.log(response.data)
-      })
-      .catch(error => console.log(error))
+      axios.get(process.env.VUE_APP_KAKAO_CERTIFIED_API_URL + '?code=' + code + '&redirect_uri=http://localhost:3000')
+        .then(response => {
+          this.$store.commit('setAuth', response.data); // auth 값을 스토어에 저장
+        })
+        .then(() => {
+          console.log(this.$store.state.Auth)
+        })
+        .catch(error => console.log(error))
     }
-    
+
+
+    window.addEventListener('scroll', () => {
+      let scrollLocation = document.documentElement.scrollTop; // 현재 스크롤바 위치
+      let windowHeight = window.innerHeight; // 스크린 창
+      let fullHeight = document.body.scrollHeight; //  margin 값은 포함 x
+
+      if (scrollLocation + windowHeight >= fullHeight) {
+        console.log('끝')
+        // alert('dd')
+        this.EndPoint = true
+        console.log(this.EndPoint)
+      } else {
+        this.EndPoint = false
+        console.log(this.EndPoint)
+      }
+    })
   }
+
 }
+
 </script>
 
 <style>
-@font-face {
-     font-family: 'S-CoreDream-3Light';
-     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff') format('woff');
-     font-weight: normal;
-     font-style: normal;
-}
-
-#MainPage {
-  background: linear-gradient(#C92D1F, #870E09);
-  height: 100%;
-  font-family: 'S-CoreDream-3Light';
-}
-
-#MainPage2 {
-  height: 100%;
-  font-family: 'S-CoreDream-3Light';
-}
-
-#WeatherBox {
-  border: 5px solid #A71A0E;
-  margin: 20px;
-  border-radius: 25px;
-}
-
-#ItemBox {
-  background-color: black;
-  border-radius: 10px;
-  width: 100px;
-  height: 30px;
-  margin: 0px 0px 15px 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-weight: bold;
-}
-
-#LoginBtn {
+.fade-in-box {
   display: inline-block;
-  margin-top: 60px;
-  width: 180px;
-  height: 100px;
-  border-radius: 100px 100px 0px 0px;
-  border: 1.8px solid white;
-  color: white;
-  /* position: absolute;
-  bottom: 40px; */
+  margin: 10px 0px 60px 0px;
+  border-radius: 10px;
+  background: #fae100f8;
+  color: #371C1D;
+  font-weight: bold;
+  padding: 10px;
+  animation: fadein 4.5s;
+  -moz-animation: fadein 4.5s;
+  /* Firefox */
+  -webkit-animation: fadein 4.5s;
+  /* Safari and Chrome */
+  -o-animation: fadein 4.5s;
+  /* Opera */
 }
-</style>
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadein {
+
+  /* Firefox */
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadein {
+
+  /* Safari and Chrome */
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes fadein {
+
+  /* Opera */
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+
+
+
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(150px);
+}
+
+.fade-enter-active {
+  transition: all 1s ease;
+}
+
+.fade-enter-to {
+  opacity: 1;
+  transform: translateY(0px);
+}</style>
