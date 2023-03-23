@@ -10,7 +10,6 @@ import lombok.*;
 public class LookResponseDto {
     private Long id;
     private Style style;
-    private byte[] image;
     private String path;
     private Long imageId;
     private String name;
