@@ -12,7 +12,11 @@ from starlette.middleware.cors import CORSMiddleware
 origins = [
     "http://127.0.0.1",
     "http://127.0.0.1:3000",
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "https://127.0.0.1:3000",
+    "https://localhost:3000",
+    "http://j8c105.p.ssafy.io",
+    "https://j8c105.p.ssafy.io"
 ]
 
 app = FastAPI()
@@ -65,11 +69,17 @@ async def remove_bg(image: UploadFile = File(...)):
 @app.post("/ai/v1/style")
 async def style_classification(image: UploadFile = File(...)):
     
+    ##test
+    
+    filename = "./dummy/test12.jpg"
+
+    img = Image.open(filename)
+    
     """inference""" 
-    img = await image.read()
-    img = io.BytesIO(img)
-    #open image
-    img = Image.open(img).convert('RGB')
+    # img = await image.read()
+    # img = io.BytesIO(img)
+    # #open image
+    # img = Image.open(img).convert('RGB')
     #transformation
     if val_transform is not None:
     
@@ -93,7 +103,7 @@ async def style_classification(image: UploadFile = File(...)):
     
     for i in range(num_classes_style-1,-1,-1):
         
-        result[10-i] = {"style":change_class_style[sorted_pred[0][i]],
+        result[23-i] = {"style":change_class_style[sorted_pred[0][i]],
                         "score":round((percentage_output[0][sorted_pred[0][i]].item())*100, 4)}
     
     return result
