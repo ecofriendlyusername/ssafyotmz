@@ -1,5 +1,6 @@
 <template>
-  <div style="background-color:black">
+  <div v-if="Auth.memberId">{{ Auth }}</div>
+  <div v-else style="background-color:black">
     <img src="@/assets/img/main1.png" style="width:100.3%">
     <img src="@/assets/img/main2.png" style="width:100%">
     <img src="@/assets/img/main3.png" style="width:100%">
@@ -50,10 +51,10 @@ export default {
         })
         .then(() => {
           console.log(this.$store.state.Auth)
+          this.Auth = this.$store.state.Auth
         })
         .catch(error => console.log(error))
     }
-
 
     window.addEventListener('scroll', () => {
       let scrollLocation = document.documentElement.scrollTop; // 현재 스크롤바 위치
