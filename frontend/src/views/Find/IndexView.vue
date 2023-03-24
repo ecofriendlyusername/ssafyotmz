@@ -43,6 +43,7 @@ export default {
     font-size: 23px;
     font-weight: bold;
     font-family: 'TheJamsil5Bold';
+    color: black;
 }
 
 #PictureIndex {
