@@ -90,7 +90,7 @@ public class ItemMatchController {
         }
     }
 
-    @DeleteMapping("/itemmatch")
+    @DeleteMapping("/itemmatches")
     @Operation(summary= "여러개의 코디북 삭제", description = "여러개의 코디북을 삭제하고 싶다면 ids 배열에 각 코디북들의 아이디를 담아서 넘겨주면 된다."
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
@@ -110,7 +110,7 @@ public class ItemMatchController {
         }
     }
 
-    @GetMapping("/itemmatchpage")
+    @GetMapping("/itemmatches")
     @Operation(summary= "여러 코디북들을 페이지 안에 넣어 돌려줌(사진 파일은 보내지 않음)", description = "각 코디북의 사진을 제외한 정보들을 보내주며 사진을 얻기 위해서는 imageId(사진 아이디)로 api에 요청하면 됨. " +
             "<br><br> 이미지 요청 endpoint -> http://(host)/api/v1/images/{id}" +
             "<br><br> page 관련 정보를 쿼리 파라미터로 보내면 해당 페이지를 보내줌. " +
