@@ -8,8 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -52,6 +56,22 @@ public class ImageFileServiceImpl implements ImageFileService {
     }
 
     @Override
+    @Transactional
+    public void delete(Long id) throws IOException {
+        Optional<ImageFile> imageFileOptional = imageFileRepository.findById(id);
+        if (!imageFileOptional.isPresent()) return;
+
+        ImageFile imageFile = imageFileOptional.get();
+        String path = imageFile.getPath();
+
+        imageFileRepository.delete(imageFile);
+
+        File f = new File(absolutePath+path);
+        if (!f.exists()) return;
+        Files.delete(Path.of(absolutePath,path));
+    }
+
+    @Override
     public byte[] loadData(String path) throws Exception {
         FileInputStream inputStream = null;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -73,7 +93,6 @@ public class ImageFileServiceImpl implements ImageFileService {
             fileArray = outputStream.toByteArray();
             inputStream.close();
             outputStream.close();
-
         }
         catch (IOException e) {
             throw new Exception("파일을 변환하는데 문제가 발생했습니다.");
