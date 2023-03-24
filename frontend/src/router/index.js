@@ -9,6 +9,7 @@ import MyPageCodybookView from "@/views/MyPage/CodybookView.vue";
 import MyPageStyleView from "@/views/MyPage/StyleView.vue";
 import AddClothesView from "@/views/AddClothesView.vue";
 
+import FindIndexView from "@/views/Find/IndexView.vue";
 import FindMainView from "@/views/Find/MainView.vue";
 import FindResultView from "@/views/Find/ResultView.vue";
 import FindErrorView from "@/views/Find/ErrorView.vue";
@@ -63,6 +64,11 @@ const routes = [
   {
     path: '/Find',
     children:[
+      {
+        path:'index',
+        name: 'FindIndexView',
+        component: FindIndexView
+      },
       {
         path:'',
         name: 'FindMainView',
