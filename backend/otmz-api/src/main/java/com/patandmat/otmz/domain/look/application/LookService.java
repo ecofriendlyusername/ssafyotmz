@@ -24,20 +24,19 @@ public class LookService {
     private final LookRepository lookRepository;
 
     @Transactional
-    public void saveLook(MultipartFile file, String style, Member member) throws NoSuchMemberException {
+    public void saveLook(MultipartFile file, String styleVector, Member member) throws NoSuchMemberException {
         ImageFile image = imageFileService.save(file);
 
         try {
             Look look = Look.builder()
                     .image(image)
-                    .styleVector(style)
+                    .styleVector(styleVector)
                     .member(member)
                     .build();
             lookRepository.save(look);
         } catch (Exception e) {
             throw e;
         }
-
     }
 
     public Page getLooks(Pageable pageable, Long id) throws AttributeNotFoundException, NoSuchMemberException {
@@ -62,7 +61,7 @@ public class LookService {
     }
 
 
-    public int getCountoflooks(Long id) {
+    public int getCountOfLooks(Long id) {
         return lookRepository.countByMemberId(id);
     }
 }
