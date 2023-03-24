@@ -26,6 +26,7 @@
         </div>
 
         <br>
+
         <!-- 버튼 -->
         <button class="btn-3">
         MY STYLE <span>FIND</span>
@@ -69,13 +70,10 @@ font-size: 30px;
 #Loading::before {
     content: "ㆍㆍㆍ";
   position: absolute;
-  /* top: 0;
-  left: 0; */
-  /* width: 100%;
-  height: 100%; */
+
   color: white;
   overflow: hidden;
-  /* border-right: 1px solid black; */
+
   animation: typing 3s steps(31) ;
 }
 @keyframes typing{
@@ -113,10 +111,11 @@ font-size: 30px;
 
 
 .btn-3 {
+    font-family: 'BookkMyungjo-Bd';
   padding: 10px 24px;
-  background: #ebebeb;
+  background: #dadada;
   color: rgb(0, 0, 0);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: bold;
   border: none;
   outline: none;
@@ -135,9 +134,6 @@ font-size: 30px;
 .btn-3:hover span {
   opacity: 1;
   margin-left: 2px;
-}
-.btn-3:hover {
-  box-shadow: 0px 0px 70px #ffffffab;
 }
 
 @keyframes fadein {
