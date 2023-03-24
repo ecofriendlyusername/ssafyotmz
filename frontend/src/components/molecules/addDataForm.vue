@@ -47,14 +47,15 @@ export default {
       }
       const formData = new FormData();
       formData.append('image', this.file);
-      axios.post('http://127.0.0.1:8000/ai/v1/style', formData, {
+      axios.post(process.env.VUE_APP_KAKAO_PREDICTION_API_URL, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
       .then(response => {
         console.log(response.data);
-        this.result = response.data
+        console.log(this.file);
+        this.$store.commit('SET_RESULT', {img_path: this.file, data: response.data});
         this.$router.push('/Find/result')
       })
       .catch(error => {
