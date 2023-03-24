@@ -1,13 +1,18 @@
 <template>
   <div>
-    <div v-if="!image" id="PhotoBox">
-      <img src="@/assets/img/T.png" style="width:250px; margin-top:25px;">
+    <div id="BackgroundCard">
+      <div id="InnerCard">
+        <img style="width:100%; border-radius: 20px; max-height: 325px; " :src="image" />
+      </div>
+
+      <p id="CardText">전신이 나온 사진을 선택해주세요</p>
+      
+      <img src="@/assets/img/UploadBtn.png" id="UploadBtn">
     </div>
 
-    <div v-if="image" id="PhotoBox">
-      <img style="width:250px; border-radius: 40px;" :src="image" />
-    </div>
-    <p v-else style="color:#C92D1F; font-size: 18px; margin-top: -20px;">전신이 나온 사진을 선택해주세요</p>
+    <img src="@/assets/img/StartBtn.png" id="StartBtn">
+
+
 
     <form @submit.prevent="uploadImage">
       <label for="cameraInput" class="file-label">파일 선택</label>
@@ -15,7 +20,7 @@
       <label for="fileInput" class="file-label">파일 선택</label>
       <input id="fileInput" type="file" name="image" @change="fileUpload">
 
-      <br>|<br>|<br>|<br><br>  
+
 
       <button type="submit">스타일 판별하기</button>
     </form>
@@ -47,7 +52,7 @@ export default {
       }
       const formData = new FormData();
       formData.append('image', this.file);
-      axios.post(process.env.VUE_APP_KAKAO_PREDICTION_API_URL, formData, {
+      axios.post('http://127.0.0.1:8000/ai/v1/style', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -68,6 +73,35 @@ export default {
 </script>
 
 <style>
+#BackgroundCard {
+  display: inline-block;
+  margin-top: 20px;
+  width: 85%;
+  height: 580px;
+  /* background-color: red; */
+  background-image: url("@/assets/img/UploadCard.png");
+  background-size: 98% 88%;
+  background-repeat: no-repeat;
+}
+
+
+
+@font-face {
+    font-family: 'NanumSquareNeo-Variable';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+#CardText {
+  display:inline-block;
+  margin-top: 5%;
+  margin-left: 4%;
+  font-size: 87%;
+  font-family: 'NanumSquareNeo-Variable';
+  font-weight: bold;
+}
+
 input[type="file"] {
   opacity: 0;
   position: absolute;
@@ -79,12 +113,33 @@ button {
   margin-left: 10px;
 }
 
-#PhotoBox {
-  margin: 30px;
+#InnerCard {
   display: inline-block;
-  width: 280px;
-  height: 400px;
-  border: 1px solid #C92D1F;
-  border-radius: 40px;
+  object-fit: cover;
+  margin-top: 17%;
+  margin-left: 4%;
+  width:80%;
+  height: 325px;
+  /* height: 50%; */
+
+  background-color: white;
+  border: 1px solid #a7a7a7;
+  border-radius: 20px;
 }
+
+#UploadBtn {
+  display:inline-block;
+  margin-top: -5px;
+  margin-left: 4%;
+  width: 58%; 
+}
+
+#StartBtn {
+  width: 45%;
+  margin-left: 4%;
+  margin-top: -15%;
+}
+
+
+
 </style>
