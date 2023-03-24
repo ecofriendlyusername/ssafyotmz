@@ -5,21 +5,35 @@ import lombok.Getter;
 @Getter
 
 public enum Style {
-
-    TRADITIONAL("트레디셔널"),
-    MANNISH("매니시"),
-    FEMININE("페미닌"),
-    ETHNIC("에스닉"),
-    CONTEMPORARY("컨템포러리"),
-    NATURAL("내추럴"),
-    GENDER_FLUID("젠더프루이드"),
-    SPORTY("스포티"),
-    SUBCULTURE("서브컬쳐"),
-    CASUAL("캐주얼");
+    CLASSIC("classic", "클래식"),
+    PREPPY("preppy", "프레피"),
+    MANNISH("mannish", "매니시"),
+    TOMBOY("tomboy", "톰보이"),
+    FEMININE("feminine", "페미닌"),
+    ROMANTIC("romantic", "로맨틱"),
+    SEXY("sexy", "섹시"),
+    HIPPIE("hippie", "히피"),
+    WESTERN("western", "웨스턴"),
+    ORIENTAL("oriental", "오리엔탈"),
+    MODERN("modern", "모던"),
+    SOPHISTICATED("sophisticated", "소피스트케이티드"),
+    AVANTGRADE("avantgarde", "아방가르드"),
+    COUNTRY("country", "컨트리"),
+    RESORT("resort", "리조트"),
+    GENDERLESS("genderless", "젠더리스"),
+    SPORTY("sporty", "스포티"),
+    RETRO("retro", "레트로"),
+    HIPHOP("hiphop", "힙합"),
+    KITSCH("kitsch", "키치"),
+    PUNK("punk", "펑크"),
+    STREET("street", "스트릿"),
+    MILITARY("military", "밀리터리");
 
     private final String value;
+    private final String name;
 
-    Style(String value) {
+    Style(String value, String name) {
         this.value = value;
+        this.name = name;
     }
 }

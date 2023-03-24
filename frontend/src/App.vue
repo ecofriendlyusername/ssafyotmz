@@ -1,22 +1,17 @@
 <template>
-  <div id="app">
-    | <router-link to="/util/start">Home</router-link> |
-    <router-link to="/util/result">result</router-link> |
-    <router-link to="/watermark">watermark</router-link> |
-    <router-link to="/modal">modal_img</router-link> |
-    
-    <router-view/>
-  </div>
+  <headerComponent/>
+
+  <router-view/>
 </template>
 
 <script>
+import headerComponent from "@/components/molecules/header.vue";
 
-  export default {
-    name: 'App',
-    components: {
-
-    },
-  }
+export default {
+  components: {
+    headerComponent,
+  },
+}
 </script>
 
 <style>
@@ -28,4 +23,16 @@
   color: #2c3e50;
 }
 
+nav {
+  padding: 30px;
+}
+
+nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+nav a.router-link-exact-active {
+  color: #42b983;
+}
 </style>
