@@ -1,27 +1,63 @@
 <template>
   <div v-if="Auth.memberId">{{ Auth }}</div>
-  <div v-else style="background-color:black">
-    <img src="@/assets/img/main1.png" style="width:100.3%">
-    <img src="@/assets/img/main2.png" style="width:100%">
-    <img src="@/assets/img/main3.png" style="width:100%">
-    <img src="@/assets/img/main4.png" style="width:100%">
+  <div v-else style="background-color:black" class="main">
+    <div id="start-div" style="height:820px; background-color:#FBFBFD">
+      <img data-aos="zoom-in" data-aos-duration="2000" src="@/assets/img/main1.png" style="width:100.3%">
+    </div>
+    
+    <div id="first-div"></div>
+    <img src="@/assets/img/main2.png"
+      data-aos="fade-up"
+      data-aos-anchor="#first-div"
+      data-aos-duration="380"
+      style="width:100%">
 
-    <div v-if="this.EndPoint = true" v-on:click=loginWithKakao()>
-      <div class="fade-in-box">
-        <div style="display:flex; align-items: center; margin: 0px 10px;">
-            <img src="@/assets/img/카카오톡.png" style="width:38px;">
-          &nbsp;&nbsp;&nbsp;&nbsp;
-            <span style="font-size:18px;">
+    <div id="second-div" style="height:820px; background-color:#FBFBFD">
+      <img src="@/assets/img/main3.png" 
+      data-aos="fade-up"
+      data-aos-anchor="#second-div"
+      data-aos-duration="380"
+      style="width:100%; ">
+    </div>  
+
+    <div id="third-div"></div>
+    <img src="@/assets/img/main4.png"
+      data-aos="zoom-in"
+      data-aos-anchor="#third-div"
+      data-aos-duration="380"
+      style="width:100%">
+
+
+    <div style="height:0px" id="last-div"></div>
+
+    <div
+      data-aos="fade-up"
+      data-aos-duration="500"
+      data-aos-anchor="#last-div"
+      v-on:click=loginWithKakao()>
+    <div class="fade-in-box">
+        <div style="display:flex; justify-content: center; align-items: center;  margin: 0px 10px;">
+            <img src="@/assets/img/카카오톡.png" style="width:15%;">
+              &nbsp;&nbsp;&nbsp;&nbsp;
+            <span style="font-size:95%;">
               Login with Kakao
             </span>
         </div>
       </div>
     </div>
+
+
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import AOS from 'aos';
+import 'aos/dist/aos.css'; // You can also use <link> for styles
+AOS.init();
+
+
+
 export default {
   name: 'MainView',
   data() {
@@ -29,6 +65,11 @@ export default {
       EndPoint: false,
       Auth: this.$store.state.Auth
     }
+  },
+  created(){
+    AOS.init({
+    duration: 2400,
+    })
   },
   methods: {
     loginWithKakao: function () {
@@ -51,26 +92,29 @@ export default {
         })
         .then(() => {
           console.log(this.$store.state.Auth)
-          this.Auth = this.$store.state.Auth
+          this.Auth = this.$store.state.Auth  
         })
         .catch(error => console.log(error))
     }
 
-    window.addEventListener('scroll', () => {
-      let scrollLocation = document.documentElement.scrollTop; // 현재 스크롤바 위치
-      let windowHeight = window.innerHeight; // 스크린 창
-      let fullHeight = document.body.scrollHeight; //  margin 값은 포함 x
+ 
 
-      if (scrollLocation + windowHeight >= fullHeight) {
-        console.log('끝')
-        // alert('dd')
-        this.EndPoint = true
-        console.log(this.EndPoint)
-      } else {
-        this.EndPoint = false
-        console.log(this.EndPoint)
-      }
-    })
+
+    // window.addEventListener('scroll', () => {
+    //   let scrollLocation = document.documentElement.scrollTop; // 현재 스크롤바 위치
+    //   let windowHeight = window.innerHeight; // 스크린 창
+    //   let fullHeight = document.body.scrollHeight; //  margin 값은 포함 x
+
+    //   if (scrollLocation + windowHeight >= fullHeight) {
+    //     console.log('끝')
+    //     alert('dd')
+    //     this.EndPoint = true
+    //     console.log(this.EndPoint)
+    //   } else {
+    //     this.EndPoint = false
+    //     console.log(this.EndPoint)
+    //   }
+    // })
   }
 
 }
@@ -82,66 +126,12 @@ export default {
   display: inline-block;
   margin: 10px 0px 60px 0px;
   border-radius: 10px;
+  width: 55%;
   background: #fae100f8;
   color: #371C1D;
   font-weight: bold;
   padding: 10px;
-  animation: fadein 4.5s;
-  -moz-animation: fadein 4.5s;
-  /* Firefox */
-  -webkit-animation: fadein 4.5s;
-  /* Safari and Chrome */
-  -o-animation: fadein 4.5s;
-  /* Opera */
 }
-
-@keyframes fadein {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@-moz-keyframes fadein {
-
-  /* Firefox */
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@-webkit-keyframes fadein {
-
-  /* Safari and Chrome */
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@-o-keyframes fadein {
-
-  /* Opera */
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-
 
 
 

@@ -5,11 +5,12 @@ import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
 import com.patandmat.otmz.domain.item.dto.ItemResponseDto;
 import com.patandmat.otmz.domain.item.dto.ItemRequestDto;
 import com.patandmat.otmz.domain.item.entity.Item;
-import com.patandmat.otmz.domain.item.exception.NoSuchMemberException;
-import com.patandmat.otmz.domain.item.exception.UnauthorizedException;
+
 import com.patandmat.otmz.domain.item.repository.ItemRepository;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.domain.member.repository.MemberRepository;
+import com.patandmat.otmz.global.exception.NoSuchMemberException;
+import com.patandmat.otmz.global.exception.UnauthorizedException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,7 +38,7 @@ public class ItemService {
             if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
             Member member = optionalMember.get();
             if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
-            int categoryNum = categoryToNum.getOrDefault(category,-1);
+            int categoryNum = categoryToNum.getOrDefault(category, -1);
             if (categoryNum == -1) throw new AttributeNotFoundException();
             Item item = Item.builder()
                     .name(itemRequestDto.getName())
@@ -77,6 +78,7 @@ public class ItemService {
             throw new RuntimeException(e);
         }
     }
+
     @Transactional
     public void deleteItem(Long id, Long memberId) throws UnauthorizedException, IOException {
         Optional<Item> optionalItem = itemRepository.findById(id);
@@ -113,9 +115,9 @@ public class ItemService {
         Member member = optionalMember.get();
         if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
 
-        int categoryNum = categoryToNum.getOrDefault(category,-1);
+        int categoryNum = categoryToNum.getOrDefault(category, -1);
         if (categoryNum == -1) throw new AttributeNotFoundException();
-        Page<Item> page = itemRepository.findAllByCategoryAndMemberId(categoryNum,id,pageable);
+        Page<Item> page = itemRepository.findAllByCategoryAndMemberId(categoryNum, id, pageable);
         Page<ItemResponseDto> itemDtoPage = page.map(this::convertToItemDto);
         return itemDtoPage;
     }
@@ -131,23 +133,23 @@ public class ItemService {
         return itemResponseDto;
     }
 
-//    private static final Map<String, Integer> fabricToNum;
+    //    private static final Map<String, Integer> fabricToNum;
 //    private static final Map<String, Integer> printToNum;
     private static final Map<String, Integer> categoryToNum;
-//
+    //
 //    private static final String[] numToFabric = {"fur","mouton","suede","angora","corduroy","sequin/glitter","denim","jersey","tweed","velvet","vinyl/pvc","wool/cashmere","synthetic/polyester","knit","lace","linen","mesh","fleece","neoprene","silk","spandex","jacquard","leather","cotton","chiffon"};
 //    private static final String[] numToPrint = {"check","stripe","zigzag","leopard","zebra","dot","camouflage","paisley","argyle","floral","lettering","skull","tie-dye","gradation","solid","graphic","Hound's touth","gingham"};
 // private static final String[] numToCategory = {"tops","blouses","casual-tops","knitwear","shirts","vests","coats","jackets","jumpers","paddings","jeans","pants","skirts","dresses","jumpsuits","swimwear"};
-    private static final String[] numToCategory = {"outer","upper","lower","dress","etc"};
+    private static final String[] numToCategory = {"outer", "upper", "lower", "dress", "etc"};
 
-//
+    //
     static {
         categoryToNum = new HashMap<>();
-        categoryToNum.put("outer",1);
-        categoryToNum.put("upper",2);
-        categoryToNum.put("lower",3);
-        categoryToNum.put("dress",4);
-        categoryToNum.put("etc",5);
+        categoryToNum.put("outer", 1);
+        categoryToNum.put("upper", 2);
+        categoryToNum.put("lower", 3);
+        categoryToNum.put("dress", 4);
+        categoryToNum.put("etc", 5);
 //        categoryToNum.put("shirts",4);
 //        categoryToNum.put("vests",5);
 //        categoryToNum.put("coats",6);

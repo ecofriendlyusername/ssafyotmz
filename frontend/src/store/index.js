@@ -3,6 +3,10 @@ import axios from 'axios';
 
 export default createStore({
   state: {
+    result: {
+      img_path: null,
+      data: null,
+    },
     Auth: {
       accessToken: null,
       refreshToken: null,
@@ -29,6 +33,9 @@ export default createStore({
     },
   },
   getters: {
+    getResult(state){
+      return state.result
+    },
     getAuth(state){
       return state.Auth
     },
@@ -46,6 +53,9 @@ export default createStore({
     },
   },
   mutations: {
+    SET_RESULT(state, result){
+      state.result = result
+    },
     setAuth(state, Auth){
       state.Auth = Auth
     },
@@ -63,6 +73,9 @@ export default createStore({
     },
   },
   actions: {
+    SET_RESULT(state, payload){
+      state.result = payload
+    },
     setAuth(state, Auth){
       state.Auth = Auth
     },
