@@ -171,7 +171,7 @@ num_classes_style = 23
 
 #adj = "./style/custom_adj_final.pkl"
 
-adj = "./style/adj_file.pkl"
+adj = "./style/adj_file_v2.pkl"
 
 model_style = gcn_resnet101(num_classes=num_classes_style, t=0.03, adj_file=adj)
 
@@ -189,11 +189,11 @@ val_transform = transforms.Compose([
 
 """# best model"""
 
-# resume = "./style/model_best.pth.tar"
+resume = "./style/style_best_model.pth"
 
-# checkpoint = torch.load(resume, map_location=torch.device('cpu'))
+checkpoint = torch.load(resume, map_location=torch.device('cpu'))
 
-# model_style.load_state_dict(checkpoint['state_dict'])
+model_style.load_state_dict(checkpoint)
 
 model_style.eval()
 
