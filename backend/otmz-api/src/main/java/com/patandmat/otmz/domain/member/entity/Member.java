@@ -41,7 +41,7 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<ItemMatch> itemMatchBook;
 
-    @Column
+    @Column(length = 2000)
     private String styleStat;
 
     @Builder

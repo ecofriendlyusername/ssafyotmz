@@ -1,19 +1,34 @@
 package com.patandmat.otmz.domain.look.api.model;
 
-import com.patandmat.otmz.domain.look.entity.Look;
-import lombok.AllArgsConstructor;
+import com.patandmat.otmz.domain.look.entity.Style;
+import lombok.Builder;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
-public class RecommendedLookResponse implements Comparable<RecommendedLookResponse> {
+public class RecommendedLookResponse {
 
-    private final Look look;
+    private Long id;
 
-    private final Double similarity;
+    private Long imageId;
 
-    @Override
-    public int compareTo(RecommendedLookResponse other) {
-        return (int) (other.similarity - this.similarity);
+    private String imagePath;
+
+    private Long memberId;
+
+    private String memberNickname;
+
+    private Style style;
+
+    private Double similarity;
+
+    @Builder
+    public RecommendedLookResponse(Long id, Long imageId, String imagePath, Long memberId, String memberNickname, Style style, Double similarity) {
+        this.id = id;
+        this.imageId = imageId;
+        this.imagePath = imagePath;
+        this.memberId = memberId;
+        this.memberNickname = memberNickname;
+        this.style = style;
+        this.similarity = similarity;
     }
 }

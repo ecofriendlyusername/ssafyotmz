@@ -1,5 +1,6 @@
 package com.patandmat.otmz.domain.look.application;
 
+import com.patandmat.otmz.domain.look.api.model.RecommendedLook;
 import com.patandmat.otmz.domain.look.api.model.RecommendedLookResponse;
 import com.patandmat.otmz.domain.look.entity.Look;
 import com.patandmat.otmz.domain.look.repository.LookRepository;
@@ -23,19 +24,33 @@ public class LookRecommendServiceImpl implements LookRecommendService {
         String stats = member.getStyleStat();
         Map<String, Double> memberStyleStats = VectorParser.parseToMap(stats);
 
-        List<Look> looks = lookRepository.findAll();
+        List<Look> looks = lookRepository.findAllByMemberIdNot(member.getId());
 
-        List<RecommendedLookResponse> result = looks.parallelStream()
+        List<RecommendedLook> recommendedLooks = looks.parallelStream()
                 .map((look -> new Object[]{look, VectorParser.parseToMap(look.getStyleVector(), VectorParser.STYLE_KEY, VectorParser.STYLE_VALUE)}))
-                .map(data -> new RecommendedLookResponse((Look) data[0], SimilarityMeasurer.getCosineSimilarity(memberStyleStats, (Map<String, Double>) data[1])))
+                .map(data -> new RecommendedLook((Look) data[0], SimilarityMeasurer.getCosineSimilarity(memberStyleStats, (Map<String, Double>) data[1])))
                 .toList().stream().sorted().toList();
 
-        size = Math.min(size, result.size());
+        int start = 0;
+        int end = Math.min(size, recommendedLooks.size());
 
         if (reversed) {
-            return result.subList(result.size() - size, result.size());
+            start = recommendedLooks.size() - end;
+            end = recommendedLooks.size();
         }
 
-        return result.subList(0, size);
+        return recommendedLooks.subList(start, end)
+                .stream()
+                .map(recommendedLook -> RecommendedLookResponse
+                        .builder()
+                        .id(recommendedLook.getLook().getId())
+                        .memberId(recommendedLook.getLook().getMember().getId()) // TODO N+1문제
+                        .memberNickname(recommendedLook.getLook().getMember().getNickname())
+                        .imageId(recommendedLook.getLook().getImage().getId())
+                        .imagePath(recommendedLook.getLook().getImage().getPath())
+                        .style(recommendedLook.getLook().getStyle())
+                        .similarity(recommendedLook.getSimilarity())
+                        .build())
+                .toList();
     }
 }
