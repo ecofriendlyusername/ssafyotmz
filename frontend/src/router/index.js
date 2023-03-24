@@ -11,6 +11,7 @@ import AddClothesView from "@/views/AddClothesView.vue";
 
 import FindIndexView from "@/views/Find/IndexView.vue";
 import FindMainView from "@/views/Find/MainView.vue";
+import FindLoadingView from "@/views/Find/LoadingView.vue";
 import FindResultView from "@/views/Find/ResultView.vue";
 import FindErrorView from "@/views/Find/ErrorView.vue";
 
@@ -73,6 +74,11 @@ const routes = [
         path:'',
         name: 'FindMainView',
         component: FindMainView
+      },
+      {
+        path:'loading',
+        name: 'FindLoadingView',
+        component: FindLoadingView
       },
       {
         path: 'Result',
