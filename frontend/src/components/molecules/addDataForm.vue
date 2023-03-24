@@ -6,24 +6,15 @@
       </div>
 
       <p id="CardText">전신이 나온 사진을 선택해주세요</p>
-      
-      <img src="@/assets/img/UploadBtn.png" id="UploadBtn">
+      <label for="fileInput" class="file-label">
+        <img src="@/assets/img/UploadBtn.png" id="UploadBtn">
+        <input id="fileInput" type="file" name="image" @change="fileUpload">
+      </label>
     </div>
 
-    <img src="@/assets/img/StartBtn.png" id="StartBtn">
+    <img src="@/assets/img/StartBtn.png" id="StartBtn" v-on:click=uploadImage()>
 
-
-
-    <form @submit.prevent="uploadImage">
-      <label for="cameraInput" class="file-label">파일 선택</label>
-      <input id="cameraInput" type="file" name="image" @change="fileUpload"> |
-      <label for="fileInput" class="file-label">파일 선택</label>
-      <input id="fileInput" type="file" name="image" @change="fileUpload">
-
-
-
-      <button type="submit">스타일 판별하기</button>
-    </form>
+    <br>
     <router-link to='Find/result'>결과 보기</router-link>
   </div>
 </template>
@@ -47,28 +38,62 @@ export default {
     },
 
     uploadImage() {
+      // 예외처리
       if (this.file == null) {
         return;
       }
+      // 폼 데이터 만들기 - 위에서 form 양식 쓸 필요 없으니까 지우기
       const formData = new FormData();
       formData.append('image', this.file);
-      axios.post('http://127.0.0.1:8000/ai/v1/style', formData, {
+
+      // api요청으로 이미지 분석하기
+      axios.post(process.env.VUE_APP_KAKAO_PREDICTION_API_URL, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
+      // 결과 받아서 저장
       .then(response => {
-        console.log(response.data);
-        console.log(this.file);
-        this.$store.commit('SET_RESULT', {img_path: this.file, data: response.data});
-        this.$router.push('/Find/result')
+        // 검출 결과 저장
+        this.result = response.data;
+        formData.append('result', this.result);
+      })
+      // 워터마크 찍기
+      .then(() => {
+        const reader = new FileReader();
+        reader.onload(evnet => {
+          const tmp_img = this.file
+          tmp_img.onload(() => {
+            watermark([tmp_img, require('@/assets/img/watermark/logo.png')])
+            .image(watermark.image.upperRight(0.5))
+            .then((img) => {
+              formData.image = img
+            });
+          });
+        });
+      })
+      // 이미지 서버에 저장하기
+      .then(() => {
+        axios.post('URL', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }).catch(error =>{
+          console.log(error)
+          this.$router.push('/Find/Error')
+        })
+      })
+      // 상태에 저장 경로 저장하고 라우트 이동
+      .then(() => {
+        this.$store.commit('SET_RESULT', {img_path: 'serverFilePath + fileName', data: this.result});
+        this.$router.push('/Find/result');
       })
       .catch(error => {
         console.log(error);
         this.$router.push('/Find/Error')
       });
     },
-  },
+  }
 }
 </script>
 
