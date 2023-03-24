@@ -32,13 +32,20 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false)
     private boolean deleted; // 탈퇴여부
+
     private String refreshToken;
-    @OneToMany(mappedBy="member", fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Item> items;
-    @OneToMany(mappedBy="member", fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<ItemMatch> itemMatchBook;
+
+    @Column(length = 2000)
+    private String styleStat;
+
     @Builder
-    public Member(Long authId, String nickname, String profileImagePath){
+    public Member(Long authId, String nickname, String profileImagePath) {
         this.authId = authId;
         this.nickname = nickname;
         this.profileImagePath = profileImagePath;

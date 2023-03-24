@@ -2,6 +2,8 @@ package com.patandmat.otmz.domain.look.api;
 
 import com.patandmat.otmz.domain.look.api.model.LookListDto;
 import com.patandmat.otmz.domain.look.api.model.LookResponseDto;
+import com.patandmat.otmz.domain.look.api.model.RecommendedLookResponse;
+import com.patandmat.otmz.domain.look.application.LookRecommendService;
 import com.patandmat.otmz.domain.look.application.LookService;
 import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
@@ -18,40 +20,57 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/look")
+@RequestMapping("/looks")
 public class LookController {
     private final LookService lookService;
     private final MemberService memberService;
 
-    @PostMapping("/add")
-    public ResponseEntity<?> saveLook(@RequestPart("imagefile") MultipartFile file, @RequestBody String style, Authentication authentication) throws IOException {
+    private final LookRecommendService lookRecommendService;
+
+    @PostMapping("")
+    public ResponseEntity<?> saveLook(@RequestPart("imageFile") MultipartFile file, @RequestPart("styleVector") String styleVector, Authentication authentication) throws IOException {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
 
         try {
-            lookService.saveLook(file, style, member);
+            lookService.saveLook(file, styleVector, member);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("User Does Not Exist", HttpStatus.BAD_REQUEST);
         } catch (NoSuchMemberException e) {
             return new ResponseEntity<>("User Doesn't Exist", HttpStatus.BAD_REQUEST);
         }
 
+        memberService.updateStyleStat(member, styleVector);
+
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/recommended")
+    public ResponseEntity<List<RecommendedLookResponse>> recommendLooks(Authentication authentication,
+                                                                        @RequestParam(required = false, defaultValue = "3") Integer size,
+                                                                        @RequestParam(required = false, defaultValue = "false") boolean reversed) {
 
-    @GetMapping("/list")
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Member member = userDetails.getMember();
+
+        List<RecommendedLookResponse> looks = lookRecommendService.getRecommendedLooks(member, size, reversed);
+
+        return ResponseEntity.ok(looks);
+    }
+
+    @GetMapping("")
     public ResponseEntity<?> getLookPage(Pageable pageable, Authentication authentication) throws AttributeNotFoundException, NoSuchMemberException {
 
         LookListDto result = new LookListDto();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
-        int totalStyle = lookService.getCountoflooks(member.getId());
+        int totalStyle = lookService.getCountOfLooks(member.getId());
         String nickname = member.getNickname();
 
         result.setTotalStyle(totalStyle);

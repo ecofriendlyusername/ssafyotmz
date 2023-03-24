@@ -20,4 +20,6 @@ public interface LookRepository extends JpaRepository<Look, Long> {
     List<LookCountDto> findByMemberIdOrderByStyleDesc(@Param("memberId") long memberId);
 
     Page<Look> findAllByMemberId(Long id, Pageable pageable);
+
+    List<Look> findAllByMemberIdNot(Long memberId);
 }
