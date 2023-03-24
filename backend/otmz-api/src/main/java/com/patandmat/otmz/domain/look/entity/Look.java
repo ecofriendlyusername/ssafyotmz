@@ -22,7 +22,7 @@ public class Look extends BaseEntity {
     private ImageFile image;
     @ManyToOne
     private Member member;
-    @Column(nullable = false, length = 600)
+    @Column(nullable = false, length = 2000)
     private String styleVector;
     @Enumerated(EnumType.STRING)
     @Column(nullable = true) // TODO

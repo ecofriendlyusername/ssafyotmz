@@ -32,8 +32,8 @@ public class LookController {
 
     private final LookRecommendService lookRecommendService;
 
-    @PostMapping("/")
-    public ResponseEntity<?> saveLook(@RequestPart("imagefile") MultipartFile file, @RequestBody String styleVector, Authentication authentication) throws IOException {
+    @PostMapping("")
+    public ResponseEntity<?> saveLook(@RequestPart("imageFile") MultipartFile file, @RequestPart("styleVector") String styleVector, Authentication authentication) throws IOException {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
@@ -64,7 +64,7 @@ public class LookController {
         return ResponseEntity.ok(looks);
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<?> getLookPage(Pageable pageable, Authentication authentication) throws AttributeNotFoundException, NoSuchMemberException {
 
         LookListDto result = new LookListDto();
