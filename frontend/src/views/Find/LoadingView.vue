@@ -122,6 +122,7 @@ font-size: 30px;
   outline: none;
   border-radius: 100px 0px 100px 100px;
   transition: all 0.3s;
+  animation: fadein 9s;
 }
 
 .btn-3 span {
@@ -137,6 +138,18 @@ font-size: 30px;
 }
 .btn-3:hover {
   box-shadow: 0px 0px 70px #ffffffab;
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    30% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 </style>
