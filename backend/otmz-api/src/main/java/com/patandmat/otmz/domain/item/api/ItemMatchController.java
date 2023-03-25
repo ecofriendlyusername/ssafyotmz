@@ -95,7 +95,7 @@ public class ItemMatchController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> deleteMultipleItemMatches(@RequestBody List<Long> ids, Authentication authentication) {
+    public ResponseEntity<?> deleteMultipleItemMatches(@RequestParam List<Long> ids, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
         try {
