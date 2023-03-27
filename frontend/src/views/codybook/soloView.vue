@@ -11,6 +11,7 @@
     현재 코디북에 등록된 옷
   </div>
   <hr>
+  <router-link to='/Codybook/live'>라이브 하기</router-link> |
   <router-link to='/'>메인페이지</router-link>
 </template>
 
