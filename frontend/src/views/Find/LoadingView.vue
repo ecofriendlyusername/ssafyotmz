@@ -28,9 +28,11 @@
         <br>
 
         <!-- 버튼 -->
-        <button class="btn-3">
-        MY STYLE <span>FIND</span>
-        </button>
+        <router-link to="/find/result">
+          <button class="btn-3">
+            MY STYLE <span>FIND</span>
+          </button>
+      </router-link>
 
 
 
@@ -39,12 +41,8 @@
 
 <script>
 export default {
-
     
 }
-
-
-
 
 </script>
 
