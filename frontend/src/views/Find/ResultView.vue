@@ -6,7 +6,6 @@
     <p>{{ result['data'][1].style }} 스타일은 어쩌고 저쩌고</p>
     
     <hr>
-    <router-link to=''>스타일 저장하기</router-link> |
     <div v-on:click=shareKakao() id="kakaotalk-sharing-btn">스타일 공유하기</div> |
     <router-link to='/Recom'>다른 스타일 보기</router-link>
   </div>
