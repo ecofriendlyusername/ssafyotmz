@@ -6,20 +6,17 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ItemResponseDto extends BaseEntity {
-    private Long id;
+public class ItemResponseDto {
 
+    private Long id;
     private String name;
-    private byte[] image;
-    private String path;
     private Long imageId;
     private String category;
 
     @Builder
-    public ItemResponseDto(Long id, String name, byte[] image, Long imageId, String category) {
+    public ItemResponseDto(Long id, String name, Long imageId, String category) {
         this.id = id;
         this.name = name;
-        this.image = image;
         this.imageId = imageId;
         this.category = category;
     }

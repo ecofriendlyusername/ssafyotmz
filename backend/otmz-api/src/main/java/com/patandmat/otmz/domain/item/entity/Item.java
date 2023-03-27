@@ -20,24 +20,15 @@ public class Item extends BaseEntity {
     private int category;
     @OneToOne
     private ImageFile image;
-    @Column(nullable = false, length = 600)
-    private String categoryVector;
-    @Column(nullable = false, length = 600)
-    private String printVector;
-    @Column(nullable = false, length = 600)
-    private String fabricVector;
     @ManyToOne
     private Member member;
 
     @Builder
-    public Item(Long id, String name, ImageFile image, int category, String categoryVector, String printVector, String fabricVector, Member member) {
+    public Item(Long id, String name, ImageFile image, int category, Member member) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.category = category;
-        this.categoryVector = categoryVector;
-        this.printVector = printVector;
-        this.fabricVector = fabricVector;
         this.member = member;
     }
 }
