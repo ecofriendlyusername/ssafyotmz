@@ -65,9 +65,9 @@ async def remove_bg(image: UploadFile = File(...)):
 @app.post("/ai/v1/style")
 async def style_classification(image: UploadFile = File(...)):
 
-    # filename = "./dummy/test12.jpg"
+    #filename = "./dummy/test12.jpg"
 
-    img = Image.open(filename).convert('RGB')
+    #img = Image.open(filename).convert('RGB')
 
     """inference"""
     img = await image.read()
