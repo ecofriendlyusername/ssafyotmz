@@ -2,9 +2,11 @@ package com.patandmat.otmz.domain.look.api;
 
 import com.patandmat.otmz.domain.look.api.model.LookListDto;
 import com.patandmat.otmz.domain.look.api.model.LookResponseDto;
+import com.patandmat.otmz.domain.look.api.model.LookSaveResponse;
 import com.patandmat.otmz.domain.look.api.model.RecommendedLookResponse;
 import com.patandmat.otmz.domain.look.application.LookRecommendService;
 import com.patandmat.otmz.domain.look.application.LookService;
+import com.patandmat.otmz.domain.look.entity.Look;
 import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.global.auth.CustomUserDetails;
@@ -34,12 +36,12 @@ public class LookController {
 
     @PostMapping("")
     public ResponseEntity<?> saveLook(@RequestPart("imageFile") MultipartFile file, @RequestPart("styleVector") String styleVector, Authentication authentication) throws IOException {
-
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
+        Look look;
 
         try {
-            lookService.saveLook(file, styleVector, member);
+            look = lookService.saveLook(file, styleVector, member);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("User Does Not Exist", HttpStatus.BAD_REQUEST);
         } catch (NoSuchMemberException e) {
@@ -48,7 +50,7 @@ public class LookController {
 
         memberService.updateStyleStat(member, styleVector);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(new LookSaveResponse(look.getId(), look.getImage().getId()));
     }
 
     @GetMapping("/recommended")

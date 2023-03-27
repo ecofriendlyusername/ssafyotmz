@@ -6,11 +6,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
 
 file:
   image:
-    path: /app
+    path: /app/
 oauth:
   kakao:
     redirectUri: https://j8c105.p.ssafy.io/

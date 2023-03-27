@@ -24,7 +24,7 @@ public class LookService {
     private final LookRepository lookRepository;
 
     @Transactional
-    public void saveLook(MultipartFile file, String styleVector, Member member) throws NoSuchMemberException {
+    public Look saveLook(MultipartFile file, String styleVector, Member member) throws NoSuchMemberException {
         ImageFile image = imageFileService.save(file);
 
         try {
@@ -34,6 +34,7 @@ public class LookService {
                     .member(member)
                     .build();
             lookRepository.save(look);
+            return look;
         } catch (Exception e) {
             throw e;
         }
