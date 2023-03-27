@@ -43,9 +43,6 @@ public class ItemService {
             Item item = Item.builder()
                     .name(itemRequestDto.getName())
                     .image(imageFile)
-                    .categoryVector(itemRequestDto.getCategoryVector())
-                    .printVector(itemRequestDto.getPrintVector())
-                    .fabricVector(itemRequestDto.getFabricVector())
                     .category(categoryNum)
                     .member(member)
                     .build();
@@ -60,9 +57,7 @@ public class ItemService {
         Optional<Item> optionalItem = itemRepository.findById(item_id);
         if (!optionalItem.isPresent()) throw new NoSuchElementException();
         Item item = optionalItem.get();
-        ImageFile imageFile = item.getImage();
         try {
-            byte[] image = imageFileService.loadData(imageFile.getPath());
             Optional<Member> optionalMember = memberRepository.findById(member_id);
             if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
             Member member = optionalMember.get();
@@ -70,8 +65,7 @@ public class ItemService {
             ItemResponseDto itemResponseDto = ItemResponseDto.builder()
                     .id(item.getId())
                     .name(item.getName())
-                    .image(image)
-                    .category(numToCategory[item.getCategory()])
+                    .category(numToCategory[item.getCategory() - 1])
                     .build();
             return itemResponseDto;
         } catch (Exception e) {
@@ -110,10 +104,10 @@ public class ItemService {
     }
 
     public Page getItems(Pageable pageable, String category, Long id) throws AttributeNotFoundException, NoSuchMemberException {
-        Optional<Member> optionalMember = memberRepository.findById(id);
-        if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
-        Member member = optionalMember.get();
-        if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
+//        Optional<Member> optionalMember = memberRepository.findById(id);
+//        if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
+//        Member member = optionalMember.get();
+//        if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
 
         int categoryNum = categoryToNum.getOrDefault(category, -1);
         if (categoryNum == -1) throw new AttributeNotFoundException();
@@ -127,7 +121,7 @@ public class ItemService {
         ItemResponseDto itemResponseDto = ItemResponseDto.builder()
                 .id(item.getId())
                 .name(item.getName())
-                .category(numToCategory[item.getCategory()])
+                .category(numToCategory[item.getCategory() - 1])
                 .imageId(imageFile.getId())
                 .build();
         return itemResponseDto;
