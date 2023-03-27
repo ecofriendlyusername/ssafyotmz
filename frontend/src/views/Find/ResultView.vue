@@ -53,6 +53,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.result)
     this.imgsrc = URL.createObjectURL(this.result['img_path']);
     // 여기 아래에 워터마크 찍는 코드 붙여야 함
 
