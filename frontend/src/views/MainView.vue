@@ -75,7 +75,7 @@ export default {
     loginWithKakao: function () {
       Kakao.init(process.env.VUE_APP_KAKAO_JAVASCRIPT_API_URL)
       Kakao.Auth.authorize({
-        redirectUri: process.env.VUE_APP_KAKAO_REDIRECT_API_URL
+        redirectUri: process.env.VUE_APP_KAKAO_REDIRECT_API_URL + '/'
       })
     },
   },
