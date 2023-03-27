@@ -47,7 +47,7 @@ export default {
       formData.append('image', this.file);
 
       // api요청으로 이미지 분석하기
-      axios.post(process.env.VUE_APP_KAKAO_PREDICTION_API_URL, formData, {
+      axios.post(process.env.VUE_APP_PREDICTION_API_URL, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
