@@ -14,7 +14,8 @@ import FindLoadingView from "@/views/Find/LoadingView.vue";
 import FindResultView from "@/views/Find/ResultView.vue";
 import FindErrorView from "@/views/Find/ErrorView.vue";
 
-import CodybookView from "@/views/CodybookView.vue";
+import CodybookView from "@/views/codybook/mainView.vue";
+import CodybookLiveView from "@/views/codybook/liveView.vue";
 
 import RecomView from "@/views/RecomView.vue";
 
@@ -44,11 +45,6 @@ const routes = [
         name: 'MyPageClosetView',
         component: MyPageClosetView
       },
-      {
-        path: 'codybook',
-        name: 'MyPageCodybookView',
-        component: MyPageCodybookView
-      }
     ]
   },
   {
@@ -88,8 +84,18 @@ const routes = [
   },
   {
     path: '/Codybook',
-    name: 'CodybookView',
-    component: CodybookView
+    children:[
+      {
+        path: '',
+        name: 'MyPageCodybookView',
+        component:MyPageCodybookView,
+      },
+      {
+        path: 'live',
+        name: 'CodybookLiveView',
+        component:CodybookLiveView,
+      }
+    ]
   },
   {
     path: '/Recom',
