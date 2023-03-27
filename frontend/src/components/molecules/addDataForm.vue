@@ -69,7 +69,7 @@ export default {
       .then(response => {
         // 검출 결과 저장
         this.result = response.data;
-        formData.append('styleVector', JSON.stringify(this.result));
+        formData.append('styleVector', this.result);
       })
       // 워터마크 찍기
       // .then(() => {
@@ -95,25 +95,7 @@ export default {
       //   }
       //   reader.readAsDataURL(this.file)
       // })
-      // // (워터마크 찍힌 이미지 + 결과값) 서버에 저장하기
-      .then(() => {
-        axios.post('http://localhost:8080/api/v1/looks', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': this.$store.state.Auth['accessToken']
-          }
-        })
-        .then((response) => {
-          // 파일 저장하는 api 리턴값으로 파일 경로 달라고 해야 함
-          // this.image = response.data
-          console.log(response.data)
-        })
-        .catch(error =>{
-          console.log(error)
-          this.$router.push('/Find/Error')
-        })
-      })
-      // 상태에 저장 경로 저장하고 라우트 이동
+      // 상태에 저장하고 라우트 이동
       .then(() => {
         this.$store.commit('SET_RESULT', {img_path: this.file, data: this.result});
         this.$router.push('/Find/loading');
