@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import MainView from "@/views/MainView.vue";
-import loginView from "@/views/loginView.vue";
 
 import MyPageView from "@/views/MyPage/mainView.vue";
 import MyPageClosetView from "@/views/MyPage/ClosetView.vue";
@@ -26,11 +25,6 @@ const routes = [
     path: '/',
     name: 'Main',
     component: MainView
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component:loginView 
   },
   {
     path: '/MyPage',
