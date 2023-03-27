@@ -11,7 +11,7 @@
     <ul v-if="showMenu" class="menu">
       <li><router-link to='/MyPage'>마이 페이지</router-link></li>
       <li><router-link to='/Find/index'>내 스타일 찾기</router-link></li>
-      <li><router-link to='/Codybook'>코디북 만들기</router-link></li>
+      <li><router-link to='/Codybook/solo'>코디북 만들기</router-link></li>
       <li><router-link to='/Recom'>스타일 보기</router-link></li>
       <li><router-link to='/store'>상태 확인</router-link></li>      
     </ul>
