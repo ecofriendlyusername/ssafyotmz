@@ -47,9 +47,6 @@ public class Member extends BaseEntity {
     @Column(length = 2000)
     private String itemStyleStat;
 
-    @Column(length = 2000)
-    private String itemStyleStat;
-
     @Builder
     public Member(Long authId, String nickname, String profileImagePath) {
         this.authId = authId;
