@@ -1,4 +1,5 @@
 from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import JSONResponse
 
 from style_classifier import *
 from category_classifier import *
@@ -7,6 +8,8 @@ from print_classifier import *
 from rembg import remove
 
 import io
+import base64
+
 from starlette.middleware.cors import CORSMiddleware
 
 origins = [
@@ -24,6 +27,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+def from_image_to_bytes(img):
+    """
+    pillow image 객체를 bytes로 변환
+    """
+    # Pillow 이미지 객체를 Bytes로 변환
+    imgByteArr = io.BytesIO()
+    img.save(imgByteArr, format=img.format)
+    imgByteArr = imgByteArr.getvalue()
+    # Base64로 Bytes를 인코딩
+    encoded = base64.b64encode(imgByteArr)
+    # Base64로 ascii로 디코딩
+    decoded = encoded.decode('ascii')
+    return decoded
 
 
 @app.get("/")
@@ -56,10 +73,18 @@ async def remove_bg(image: UploadFile = File(...)):
     # remove background
 
     img = remove(img, alpha_matting=True, alpha_matting_erode_size=15)
-
+    
     # fix output
     # save image
     img.save("./remove/output.png", "png")
+    
+    img = Image.open("./remove/output.png")
+    
+    img_converted = from_image_to_bytes(img)
+    
+    return JSONResponse(img_converted)
+    
+    
 
 
 @app.post("/ai/v1/style")
