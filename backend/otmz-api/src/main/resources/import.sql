@@ -1,4 +1,4 @@
-insert into member (id, auth_id, created_at, updated_at, deleted, nickname, profile_image_path, refresh_token, style_stat) values (default, 0, '2023-03-27 12:03:56.933528', '2023-03-27 12:03:56.933528', FALSE, 'admin', 'http://k.kakaocdn.net/dn/qkVpl/btrTQwFGd6I/qhpdOz4vpt3ydqymnidUL0/img_640x640.jpg', null, null);
+insert into member (id, auth_id, created_at, updated_at, deleted, nickname, profile_image_path, refresh_token, look_style_stat, item_style_stat) values (default, 0, '2023-03-27 12:03:56.933528', '2023-03-27 12:03:56.933528', FALSE, 'admin', 'http://k.kakaocdn.net/dn/qkVpl/btrTQwFGd6I/qhpdOz4vpt3ydqymnidUL0/img_640x640.jpg', null, null, null);
 
 insert into image_file (id, created_at, length, mime_type, name, origin_name, path, updated_at) values (default, '2023-03-27 12:03:56.933528', 95904, 'image/jpeg', 'c7a49d84-6f50-4105-adab-d7286413488d.jpeg', '24.jpg', 'c7a49d84-6f50-4105-adab-d7286413488d.jpeg', '2023-03-27 12:03:56.933528');
 
