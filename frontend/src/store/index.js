@@ -103,12 +103,12 @@ export default createStore({
         context.commit('setLookbook', response.data)
       })
     },
-    getClothes(context){
-      axios.post(process.env.VUE_APP_GET_CLOTHES_API_URL)
-      .then(response => {
-        context.commit('setClothes', response.data)
-      })
-    },
+    // getClothes(context){
+    //   axios.post(process.env.VUE_APP_GET_CLOTHES_API_URL)
+    //   .then(response => {
+    //     context.commit('setClothes', response.data)
+    //   })
+    // },
     updateFillter(context, formData){
       axios.post(process.env.VUE_APP_UPDATE_FILLTER_API_URL, formData)
       .then(response => {
