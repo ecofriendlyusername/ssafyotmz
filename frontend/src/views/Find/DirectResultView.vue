@@ -81,17 +81,7 @@ export default {
           style: this.result['data']['1'].style,
         },
       })
-      
-
-      // Kakao.Share.createCustomButton({
-      //   container: '#kakaotalk-sharing-btn',
-      //   templateId: 91677,
-      //   templateArgs: {
-      //     title: '라이언이 즐겨먹던 바로 그 틴케이스 치즈볼',
-      //     description: '바라만 봐도 즐거워지는 힐링 패키지에는 시크릿 스토리가 숨어있어요.',
-      //     },
-      //   })
-      // .catch(error=>console.log(error));
+      .catch(error=>console.log(error));
     }
   },
   // computed: {
