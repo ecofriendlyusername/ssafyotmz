@@ -4,6 +4,7 @@ import com.patandmat.otmz.global.auth.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -33,6 +34,7 @@ public class SecurityConfig {
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/v3/api-docs/**")).permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/oauth/**")).permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher("/images/**")).permitAll()
+                                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/items/brandi")).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

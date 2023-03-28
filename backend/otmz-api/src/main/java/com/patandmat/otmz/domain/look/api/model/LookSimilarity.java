@@ -6,14 +6,14 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class RecommendedLook implements Comparable<RecommendedLook> {
+public class LookSimilarity implements Comparable<LookSimilarity> {
 
     private final Look look;
 
     private final Double similarity;
 
     @Override
-    public int compareTo(RecommendedLook other) {
+    public int compareTo(LookSimilarity other) {
         return (int) (other.similarity - this.similarity);
     }
 }
