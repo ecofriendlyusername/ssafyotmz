@@ -36,35 +36,113 @@ export default {
         items: [],
         count: 0,
         canvas: undefined,
-        canvasItems: []
+        canvasItems: [],
+        offset: {x: 0, y: 0},
+        start: {x: 0, y: 0},
+        mouseDown: false
       }
     },
 
     mounted() {
         this.canvas = document.getElementById('myCanvas');
+        // this.offset = {x: this.canvas.offsetLeft, y: this.canvas.offsetTop};
+        this.start = {x: 0, y: 0};
 
-        // const ctx1 = this.canvas.getContext("2d");
-        // ctx1.fillStyle = 'blue';
-        // ctx1.fillRect(0, 0, 150, 75);
+        this.canvas.addEventListener("mousedown", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
 
-        // const ctx2 = this.canvas.getContext("2d");
-        // ctx2.fillStyle = 'white';
-        // ctx2.fillRect(100, 100, 150, 75);
+          const winScrollTop = window.scrollY;
+          this.start.x = parseInt(e.clientX - this.offset.x);
+          this.start.y = parseInt(e.clientY - this.offset.y + winScrollTop);
+
+          this.mouseDown = true;
+        });
+
+        this.canvas.addEventListener("mouseup", (e) => {
+          console.log('mouse clicked!!');
+          this.mouseDown = false;
+        });
+
+        this.canvas.addEventListener("mousemove", (e) => {
+          if (this.canvasItems === undefined || this.canvasItems.length === 0) {
+            return;
+          }
+          e.preventDefault();
+          	if(this.mouseDown){
+              const winScrollTop = window.scrollY,
+                  mouseX = parseInt(e.clientX - this.offset.x),
+                  mouseY = parseInt(e.clientY - this.offset.y + winScrollTop);
+              const dx = mouseX - this.start.x, dy = mouseY - this.start.y;
+                
+              this.start.x = mouseX;
+              this.start.y = mouseY;
+                  
+              this.canvasItems[0].x += Number(dx.toFixed(0));
+              this.canvasItems[0].y += Number(dy.toFixed(0));
+              
+              this.drawItem();
+            }
+        });
+
+        this.canvas.addEventListener("touchstart", (e) => {
+          console.log('mouse click!!');
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          const winScrollTop = window.scrollY;
+          this.start.x = parseInt(e.clientX - this.offset.x);
+          this.start.y = parseInt(e.clientY - this.offset.y + winScrollTop);
+
+          this.mouseDown = true;
+        });
+
+        this.canvas.addEventListener("touchend", (e) => {
+          console.log('mouse clicked!!');
+          this.mouseDown = false;
+        });
+
+        this.canvas.addEventListener("touchmove", (e) => {
+          if (this.canvasItems === undefined || this.canvasItems.length === 0) {
+            return;
+          }
+          e.preventDefault();
+          	if(this.mouseDown){
+              const winScrollTop = window.scrollY,
+                  mouseX = parseInt(e.clientX - this.offset.x),
+                  mouseY = parseInt(e.clientY - this.offset.y + winScrollTop);
+              const dx = mouseX - this.start.x, dy = mouseY - this.start.y;
+                
+              this.start.x = mouseX;
+              this.start.y = mouseY;
+                  
+              this.canvasItems[0].x += Number(dx.toFixed(0));
+              this.canvasItems[0].y += Number(dy.toFixed(0));
+              
+              this.drawItem();
+            }
+        });
     },
 
     methods: {
       choice(item) {
         const selectedItem = {}
         selectedItem.item = item;
+        selectedItem.x = 0;
+        selectedItem.y = 0;
+        selectedItem.width = 100;
+        selectedItem.height = 100;
         
         const image = new Image();
         image.src = 'http://localhost:8080/api/v1/images/' + item.imageId;
+        selectedItem.image = image;
         
         const canvas = this.canvas;
 
         image.onload = function(){
             const ctx = canvas.getContext("2d");
-            ctx.drawImage(image, 0, 0, 100, 100);
+            ctx.drawImage(image, selectedItem.x, selectedItem.y, selectedItem.width, selectedItem.height);
             selectedItem.ctx = ctx;
         }
       
@@ -86,6 +164,20 @@ export default {
         .catch(error =>{
           console.log(error)
         });
+      },
+      itemSelection(x, y, canvasItem){
+        const tx = canvasItem.x, ty = canvasItem.y, tWidth = canvasItem.width, tHeight = canvasItem.height;
+        return (x >= tx - tWidth/2 && x <= tx + tWidth/2 && y >= ty - tHeight && y <= ty);
+      },
+      drawItem() {
+        const ctx = this.canvas.getContext("2d");
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.canvasItems.forEach(item => {
+          item.ctx.drawImage(item.image, item.x, item.y, item.width, item.height);
+        });
+      },
+      clearItem(canvasItem) {
+        canvasItem.ctx.drawImage(canvasItem.image, 0, 0);
       }
     },
 }
