@@ -12,9 +12,11 @@ import FindIndexView from "@/views/Find/IndexView.vue";
 import FindMainView from "@/views/Find/MainView.vue";
 import FindLoadingView from "@/views/Find/LoadingView.vue";
 import FindResultView from "@/views/Find/ResultView.vue";
+import DFindResultView from "@/views/Find/DirectResultView.vue";
 import FindErrorView from "@/views/Find/ErrorView.vue";
 
-import CodybookView from "@/views/CodybookView.vue";
+import CodybookSoloView from "@/views/codybook/soloView.vue";
+import CodybookLiveView from "@/views/codybook/liveView.vue";
 
 import RecomView from "@/views/RecomView.vue";
 
@@ -47,8 +49,8 @@ const routes = [
       {
         path: 'codybook',
         name: 'MyPageCodybookView',
-        component: MyPageCodybookView
-      }
+        component:MyPageCodybookView,
+      },
     ]
   },
   {
@@ -75,9 +77,14 @@ const routes = [
         component: FindLoadingView
       },
       {
-        path: 'Result',
+        path: 'result',
         name: 'FindResultView',
         component: FindResultView,
+      },
+      {
+        path: 'DResult',
+        name: 'DFindResultView',
+        component: DFindResultView,
       },
       {
         path: 'Error',
@@ -88,8 +95,18 @@ const routes = [
   },
   {
     path: '/Codybook',
-    name: 'CodybookView',
-    component: CodybookView
+    children:[
+      {
+        path: 'solo',
+        name: 'CodybookSoloView',
+        component:CodybookSoloView,
+      },
+      {
+        path: 'live',
+        name: 'CodybookLiveView',
+        component:CodybookLiveView,
+      }
+    ]
   },
   {
     path: '/Recom',
