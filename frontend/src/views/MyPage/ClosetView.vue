@@ -1,6 +1,5 @@
 <template>
   <!-- 내 옷장 -->
-  
   <!-- 목차 -->
   <ul>
     <li>상의</li>
@@ -16,14 +15,15 @@
     <li>
       <img src="@/assets/img/logo.png" alt="">
     </li>
-
     <li>
       <img src="@/assets/img/logo.png" alt="">
     </li>
-
     <li>
       <img src="@/assets/img/logo.png" alt="">
     </li>
+    <div v-for="category in categories" @click="changeCategory(category)">{{ category }}</div>
+    <ItemView :key="curCategory" :category="curCategory"></ItemView>
+    <img src="@/assets/img/StartBtn.png" id="StartBtn" v-on:click=viewItemsWith()>
   </ul>
   <hr>
   <router-link to='/AddClothes'>옷 추가하기</router-link> | 
@@ -32,25 +32,27 @@
 </template>
 
 <script>
+import ItemView from './tempasset/ItemView.vue'
 export default {
   name:'MyPageClosetView',
-  methods:{
-    getData() {
-      console.log(this.filter)
-      axios.get('https://j8c105.p.ssafy.io/api/v1/', this.filter, {
-        headers: {
-          'Authorization': this.$store.Auth['accessToken']
-        }
-      })
-      .then(response => {
-        console.log(response.data)
-      })
-      .catch(error => console.log(error))
-    },
-  }
+  components: {
+    ItemView
+  },
+  data () {
+    return {
+      categories: ['outer','upper','lower','etc'],
+      curCategory: 'outer',
+    }
+  },
+  methods: {
+    changeCategory(category) {
+      this.curCategory = category;
+    }
+  },
 }
 </script>
 
 <style>
-
 </style>
+
+

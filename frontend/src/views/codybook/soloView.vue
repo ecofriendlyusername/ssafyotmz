@@ -18,6 +18,13 @@
 <script>
 export default {
     name:'CodybookView',
+    data () {
+      return {
+        count: 0
+      }
+    },
+    methods: {
+    }
 }
 </script>
 
