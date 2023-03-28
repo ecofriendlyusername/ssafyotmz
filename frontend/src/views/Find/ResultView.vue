@@ -1,6 +1,6 @@
 <template>
   <div v-if="result['data']">
-    <img :src=imgsrc alt="">
+    <img :src=imgsrc alt="" id="ResultImg">
     <!-- 워터마크 찍은 이미지 -->
     <h3>당신은 {{ result['data'][1].style }} 스타일 입니다.</h3>
     <p>{{ result['data'][1].style }} 스타일은 어쩌고 저쩌고</p>
@@ -62,5 +62,8 @@ export default {
 </script>
 
 <style>
+#ResultImg {
+  width: 100%;
+}
 
 </style>
