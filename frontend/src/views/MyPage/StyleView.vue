@@ -39,23 +39,7 @@ export default {
   name:'MyPageStyleView',
   data(){
     return {
-      styleList: [],
-      myData: {
-        'nickname': null
-      }
-    }
-  },
-  mounted() {
-    axios.get(process.env.VUE_APP_API_URL + '/member/lookdetail', {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': this.$store.state.Auth['accessToken']
-      }
-    })
-    .then(response => {
-      console.log(response.data)
-      this.styleList = response.data
-      this.styleList = [
+      styleList: [
         {
           'style': '스트릿',
           'count':5
@@ -72,7 +56,22 @@ export default {
           'style': '페미닌',
           'count':1
         }
-      ]
+      ],
+      myData: {
+        'nickname': null
+      }
+    }
+  },
+  mounted() {
+    axios.get(process.env.VUE_APP_API_URL + '/member/lookdetail', {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': this.$store.state.Auth['accessToken']
+      }
+    })
+    .then(response => {
+      console.log(response.data)
+      // this.styleList = response.data
     })
     .then(() => {
       const ctx = document.getElementById('myChart');
