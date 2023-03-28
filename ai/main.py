@@ -46,12 +46,12 @@ async def remove_bg(image: UploadFile = File(...)):
 
     # filename = "./dummy/test12.jpg"
 
-    img = Image.open(filename)
+    # img = Image.open(filename)
 
-    # img = await image.read()
-    # img = io.BytesIO(img)
-    # #open image
-    # img = Image.open(img)
+    img = await image.read()
+    img = io.BytesIO(img)
+    #open image
+    img = Image.open(img)
 
     # remove background
 
