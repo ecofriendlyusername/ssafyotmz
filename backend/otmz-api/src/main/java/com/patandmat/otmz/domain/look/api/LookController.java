@@ -31,9 +31,9 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 @RequestMapping("/looks")
 public class LookController {
+
     private final LookService lookService;
     private final MemberService memberService;
-
     private final LookRecommendService lookRecommendService;
 
     @PostMapping("")
