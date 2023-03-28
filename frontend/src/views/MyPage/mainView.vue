@@ -16,6 +16,7 @@
       </span>
       <!-- 아니면 3개 고정인 점을 이용해서 각자 집어넣어도 될 듯 -->
       <div>
+        <canvas id="myChart"></canvas>
         <p v-for="look in myData['lookCountDtoList']">{{ look['style'] }} : {{ look['count'] }}</p>
       </div>
     </div>
@@ -35,6 +36,7 @@
 
 <script>
 import axios from 'axios';
+import Chart from 'chart.js/auto';
 
 export default {
     name:'MyPageView',
@@ -49,7 +51,7 @@ export default {
     mounted(){
       this.style
       this.closet
-      axios.get('http://localhost:8080/api/v1/member/mypage', {
+      axios.get(process.env.VUE_APP_API_URL + '/member/mypage', {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': this.$store.state.Auth['accessToken']
@@ -77,6 +79,41 @@ export default {
           totalItemCount: 10, 
           totalStyleCount: 10
         }
+      })
+      .then(() => {
+        const ctx = document.getElementById('myChart');
+        const data = Object.values(this.myData['lookCountDtoList'])
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: data.map(x => x['style']),
+            datasets: [{
+              // label: '# of Votes',
+              data: data.map(x => x['count']),
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                display: false
+              },
+              x: {
+                grid: {
+                  offset: true,
+                  display: false
+                }
+              },
+            },
+            plugins: {
+              legend: {
+                display: false
+              },
+            }
+          },
+          
+        });
       })
       .catch(error => console.log(error))
     },

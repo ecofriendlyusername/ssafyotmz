@@ -31,7 +31,7 @@ export default {
   methods:{
     getData() {
       console.log(this.filter)
-      axios.get('https://j8c105.p.ssafy.io/api/v1/', this.filter, {
+      axios.get(process.env.VUE_APP_API_URL + '/', this.filter, {
         headers: {
           'Authorization': this.$store.Auth['accessToken']
         }

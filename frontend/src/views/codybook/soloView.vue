@@ -35,6 +35,7 @@ export default {
     data() { 
       return {
         items: [],
+        count: 0
       }
     },
 
@@ -59,7 +60,3 @@ export default {
     },
 }
 </script>
-
-<style>
-
-</style>

@@ -1,6 +1,5 @@
 package com.patandmat.otmz.domain.item.dto;
 
-import com.patandmat.otmz.domain.common.BaseEntity;
 import lombok.*;
 
 @Getter
@@ -12,12 +11,14 @@ public class ItemResponseDto {
     private String name;
     private Long imageId;
     private String category;
+    private String color;
 
     @Builder
-    public ItemResponseDto(Long id, String name, Long imageId, String category) {
+    public ItemResponseDto(Long id, String name, Long imageId, String category, String color) {
         this.id = id;
         this.name = name;
         this.imageId = imageId;
         this.category = category;
+        this.color = color;
     }
 }

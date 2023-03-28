@@ -15,6 +15,10 @@ public class VectorParser {
 
     // for raw vector
     public static Map<String, Double> parseToMap(String jsonString, String name, String value) {
+        if (jsonString == null) {
+            return new HashMap<>();
+        }
+
         JsonElement jsonElement = JsonParser.parseString(jsonString);
         JsonObject jsonObject = jsonElement.getAsJsonObject();
 
@@ -29,6 +33,10 @@ public class VectorParser {
 
     // for member style stat
     public static Map<String, Double> parseToMap(String jsonString) {
+        if (jsonString == null) {
+            return new HashMap<>();
+        }
+
         JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
 
         Map<String, Double> map = new HashMap<>();

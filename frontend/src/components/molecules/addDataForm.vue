@@ -60,7 +60,7 @@ export default {
       formData.append('imageFile', this.file);
       // api요청으로 이미지 분석하기
 
-      axios.post(process.env.VUE_APP_PREDICTION_API_URL, formData, {
+      axios.post(process.env.VUE_APP_AI_URL + '/style', formData, {
         headers: {
           'Content-Type': 'multipart/form-data' 
         }
