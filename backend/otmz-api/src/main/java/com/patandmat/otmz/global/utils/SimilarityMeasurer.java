@@ -44,7 +44,7 @@ public class SimilarityMeasurer {
     private static double calculateDotProduct(final Map<String, Double> vector1, final Map<String, Double> vector2, final Set<String> intersection) {
         long dotProduct = 0;
         for (String key : intersection) {
-            dotProduct += vector1.get(key) * vector2.get(key);
+            dotProduct += vector1.getOrDefault(key, 0.0) * vector2.getOrDefault(key, 0.0);
         }
 
         return dotProduct;

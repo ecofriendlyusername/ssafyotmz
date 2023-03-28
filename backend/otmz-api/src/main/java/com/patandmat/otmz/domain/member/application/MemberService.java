@@ -101,14 +101,14 @@ public class MemberService {
 
         Map<String, Double> memberStyleStatMap;
 
-        if (member.getStyleStat() != null) {
-            memberStyleStatMap = VectorParser.parseToMap(member.getStyleStat());
+        if (member.getLookStyleStat() != null) {
+            memberStyleStatMap = VectorParser.parseToMap(member.getLookStyleStat());
             memberStyleStatMap.replaceAll((style, score) -> (memberStyleStatMap.get(style) + styleMap.getOrDefault(style, 0d))/2);
         } else {
             memberStyleStatMap = styleMap;
         }
 
-        member.setStyleStat(VectorParser.parseToString(memberStyleStatMap));
+        member.setLookStyleStat(VectorParser.parseToString(memberStyleStatMap));
         memberRepository.save(member);
     }
 }
