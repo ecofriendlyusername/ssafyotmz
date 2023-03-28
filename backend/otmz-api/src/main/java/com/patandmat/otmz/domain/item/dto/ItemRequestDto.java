@@ -5,10 +5,9 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ItemRequestDto extends BaseEntity {
+public class ItemRequestDto {
     private String name;
     private String category;
-    private String categoryVector;
-    private String printVector;
-    private String fabricVector;
+    private String styleVector;
+    private String color;
 }

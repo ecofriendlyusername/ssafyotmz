@@ -1,12 +1,11 @@
 <template>
   <div v-if="result['data']">
-    <img :src=imgsrc alt="">
+    <img :src=imgsrc alt="" id="ResultImg">
     <!-- 워터마크 찍은 이미지 -->
     <h3>당신은 {{ result['data'][1].style }} 스타일 입니다.</h3>
     <p>{{ result['data'][1].style }} 스타일은 어쩌고 저쩌고</p>
     
     <hr>
-    <router-link to=''>스타일 저장하기</router-link> |
     <div v-on:click=shareKakao() id="kakaotalk-sharing-btn">스타일 공유하기</div> |
     <router-link to='/Recom'>다른 스타일 보기</router-link>
   </div>
@@ -53,6 +52,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.result)
     this.imgsrc = URL.createObjectURL(this.result['img_path']);
     // 여기 아래에 워터마크 찍는 코드 붙여야 함
 
@@ -62,5 +62,8 @@ export default {
 </script>
 
 <style>
+#ResultImg {
+  width: 100%;
+}
 
 </style>

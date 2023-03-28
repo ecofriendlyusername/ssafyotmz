@@ -28,9 +28,11 @@
         <br>
 
         <!-- 버튼 -->
-        <button class="btn-3">
-        MY STYLE <span>FIND</span>
-        </button>
+        <router-link to="/find/result">
+          <button class="btn-3" v-on:click=saveData()>
+            MY STYLE <span>FIND</span>
+          </button>
+      </router-link>
 
 
 
@@ -38,13 +40,32 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
-
-    
+    methods: {
+      // 서버에 저장하기
+      saveData(){
+        const formData = new FormData()
+        formData.append('styleVector', JSON.stringify(this.$store.state.result['data']))
+        formData.append('imageFile', this.$store.state.result['img_path'])
+        axios.post(process.env.VUE_APP_API_URL + '/looks', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': this.$store.state.Auth['accessToken']
+          }
+        })
+        .then((response) => {
+          // 파일 저장하는 api 리턴값으로 파일 경로 달라고 해야 함
+          // this.image = response.data
+          console.log(response.data)
+        })
+        .catch(error =>{
+          console.log(error)
+          this.$router.push('/Find/Error')
+        })
+      }
+    }
 }
-
-
-
 
 </script>
 
