@@ -72,18 +72,18 @@ export default {
     deleteMultipleItemsWith() {
       this.deleteMultipleItems([10,11,12,13])
     },
-    getStyle(formData) {
+    async getStyle(formData) {
       console.log('sending request')
       axios.post(process.env.VUE_APP_AI_STYLE, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
-      .then(response => {
+      .then((response) => {
         this.style = response.data
         return response
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e)
         return e
       })
@@ -103,7 +103,7 @@ export default {
         this.getStyle(tempFormData)
         .then((res) => {
           const formData = new FormData();
-          formData.append('imagefile', this.imagefile)
+          formData.append('imagefile', this.processedImage)
           const itemJson = {
             "name" : "hey",
             "color":"color",
@@ -150,7 +150,7 @@ export default {
       })
     },
     createItem(formData) {
-      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5OTcxMzU5LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzk5OTI5NTksInN1YiI6IjIiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5OTcxMzU5fQ.FTn1UVY5bJL3d7S-t-hHkPpPD4piMG4ZJDcUxfmVmDE'
+      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5OTgyOTY1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAwMDQ1NjUsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5OTgyOTY1fQ.rJkGuHqQT3972JQq_0622S2uRTKPoXZzDZwar1sDk9w'
       axios.post(process.env.VUE_APP_ITEM,formData, {
         headers: {
           'Content-Type' : 'multipart/form-data',
