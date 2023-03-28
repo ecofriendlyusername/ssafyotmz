@@ -2,9 +2,7 @@ package com.patandmat.otmz.domain.item.api;
 
 import com.patandmat.otmz.domain.item.application.CrawledItemService;
 import com.patandmat.otmz.domain.item.dto.CrawledItemRequest;
-import com.patandmat.otmz.domain.item.dto.ItemSimilarity;
 import com.patandmat.otmz.domain.item.entity.CrawledItem;
-import com.patandmat.otmz.domain.item.entity.Item;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.global.auth.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
