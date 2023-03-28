@@ -2,7 +2,7 @@ package com.patandmat.otmz.domain.member.application;
 
 
 import com.patandmat.otmz.domain.item.repository.ItemRepository;
-import com.patandmat.otmz.domain.look.api.model.LookCountDto;
+import com.patandmat.otmz.domain.look.api.model.StyleByCountResponse;
 import com.patandmat.otmz.domain.look.repository.LookRepository;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.domain.member.repository.MemberRepository;
@@ -90,10 +90,8 @@ public class MemberService {
         return totalItemCount;
     }
 
-    public List<LookCountDto> getStyleSummary(Long memberId) {
-        List<LookCountDto> list = lookRepository.findByMemberIdOrderByStyleDesc(memberId);
-
-        return list;
+    public List<StyleByCountResponse> getStyleSummary(Long memberId) {
+        return lookRepository.findByMemberIdOrderByStyleDesc(memberId);
     }
 
     public void updateStyleStat(Member member, String styleVector) {
@@ -103,7 +101,7 @@ public class MemberService {
 
         if (member.getLookStyleStat() != null) {
             memberStyleStatMap = VectorParser.parseToMap(member.getLookStyleStat());
-            memberStyleStatMap.replaceAll((style, score) -> (memberStyleStatMap.get(style) + styleMap.getOrDefault(style, 0d))/2);
+            memberStyleStatMap.replaceAll((style, score) -> (memberStyleStatMap.get(style) + styleMap.getOrDefault(style, 0d)) / 2);
         } else {
             memberStyleStatMap = styleMap;
         }
