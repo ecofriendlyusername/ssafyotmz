@@ -27,7 +27,21 @@
 
 <script>
 export default {
-    name:'MyPageCodybookView',
+  name:'MyPageCodybookView',
+  methods:{
+    getData() {
+      console.log(this.filter)
+      axios.get(process.env.VUE_APP_API_URL + '/', this.filter, {
+        headers: {
+          'Authorization': this.$store.Auth['accessToken']
+        }
+      })
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(error => console.log(error))
+    },
+  }
 }
 </script>
 
