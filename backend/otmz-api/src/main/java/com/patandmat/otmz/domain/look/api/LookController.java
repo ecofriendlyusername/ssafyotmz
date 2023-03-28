@@ -41,13 +41,16 @@ public class LookController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> saveLook(@RequestPart("imageFile") MultipartFile file, @RequestPart("styleVector") String styleVector, Authentication authentication) throws IOException {
+    public ResponseEntity<?> saveLook(@RequestPart("imageFile") MultipartFile file,
+                                      @RequestPart("styleVector") String styleVector,
+                                      @RequestPart("style") String style,
+                                      Authentication authentication) throws IOException {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
         Look look;
 
         try {
-            look = lookService.saveLook(file, styleVector, member);
+            look = lookService.saveLook(file, styleVector, style, member);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("User Does Not Exist", HttpStatus.BAD_REQUEST);
         } catch (NoSuchMemberException e) {
