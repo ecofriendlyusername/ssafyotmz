@@ -8,6 +8,9 @@
     <p>유저이름: {{ myData['nickname'] }}</p>
     <p>스타일 진단 횟수 {{ this.myData['totalStyleCount'] }} 회</p>
   </div>
+  <div>
+    <canvas id="myChart"></canvas>
+  </div>
   <!-- 스타일 구분별 스타일 사진 -->
   <!-- 얘도 가로 2~3 정도로  -->
   <ul>
@@ -30,6 +33,7 @@
 
 <script>
 import axios from 'axios';
+import Chart from 'chart.js/auto';
 
 export default {
   name:'MyPageStyleView',
@@ -42,7 +46,7 @@ export default {
     }
   },
   mounted() {
-    axios.get('http://localhost:8080/api/v1/member/lookdetail', {
+    axios.get(process.env.VUE_APP_API_URL + '/member/lookdetail', {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': this.$store.state.Auth['accessToken']
@@ -52,60 +56,94 @@ export default {
       console.log(response.data)
       this.styleList = response.data
       this.styleList = [
-      {
-            'style': '스트릿',
-            'count':5
-          },
-          {
-            'style': '캐주얼',
-            'count':3
-          },
-          {
-            'style': '러블리',
-            'count':1
-          },
-          {
-            'style': '페미닌',
-            'count':1
-          }
+        {
+          'style': '스트릿',
+          'count':5
+        },
+        {
+          'style': '캐주얼',
+          'count':3
+        },
+        {
+          'style': '러블리',
+          'count':1
+        },
+        {
+          'style': '페미닌',
+          'count':1
+        }
       ]
+    })
+    .then(() => {
+      const ctx = document.getElementById('myChart');
+      const data = Object.values(this.styleList)
+      new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.map(x => x['style']),
+        datasets: [{
+        // label: '# of Votes',
+          data: data.map(x => x['count']),
+          borderWidth: 1
+        }]
+      },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              display: false
+            },
+            x: {
+              grid: {
+                offset: true,
+                display: false
+              }
+            },
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      })
     })
     .catch(error => console.log(error))
 
-    axios.get('http://localhost:8080/api/v1/member/mypage', {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': this.$store.state.Auth['accessToken']
-        }
-      })
-      .then(response => {
-        console.log(response.data)
-        this.myData = response.data
-        this.myData = {
-          lookCountDtoList: [
-            {
-              'style': '스트릿',
-              'count':5
-            },
-            {
-              'style': '캐주얼',
-              'count':3
-            },
-            {
-              'style': '러블리',
-              'count':1
-            },
-          ], 
-          nickname: "최선호", 
-          totalItemCount: 0, 
-          totalStyleCount: 10
-        }
-      })
-      .catch(error => console.log(error))
+    axios.get(process.env.VUE_APP_API_URL + '/member/mypage', {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': this.$store.state.Auth['accessToken']
+      }
+    })
+  .then(response => {
+    console.log(response.data)
+    this.myData = response.data
+    this.myData = {
+      lookCountDtoList: [
+        {
+          'style': '스트릿',
+          'count':5
+        },
+        {
+          'style': '캐주얼',
+          'count':3
+        },
+        {
+          'style': '러블리',
+          'count':1
+        },
+      ], 
+      nickname: "최선호", 
+      totalItemCount: 0, 
+      totalStyleCount: 10
+    }
+  })
+  .catch(error => console.log(error))
   },
   methods:{
     styleShow(category){
-      axios.get('http://localhost:8080/api/v1/looks', {
+      axios.get(process.env.VUE_APP_API_URL + '/looks', {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': this.$store.state.Auth['accessToken']

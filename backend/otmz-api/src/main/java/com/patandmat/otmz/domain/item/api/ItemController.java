@@ -1,8 +1,8 @@
 package com.patandmat.otmz.domain.item.api;
 
-import com.patandmat.otmz.domain.item.dto.ItemResponseDto;
 import com.patandmat.otmz.domain.item.application.ItemService;
 import com.patandmat.otmz.domain.item.dto.ItemRequestDto;
+import com.patandmat.otmz.domain.item.dto.ItemResponseDto;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.global.auth.CustomUserDetails;
 import com.patandmat.otmz.global.exception.NoSuchMemberException;
@@ -38,8 +38,7 @@ public class ItemController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemRequestDto item, @RequestParam String category, Authentication authentication) throws IOException {
-        // Long member_id = 1L;
+    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemRequestDto item, @RequestParam String category, Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = customUserDetails.getMember();
         try {
@@ -50,6 +49,8 @@ public class ItemController {
             return new ResponseEntity<>("Check Attributes of The Item", HttpStatus.BAD_REQUEST);
         } catch (NoSuchMemberException e) {
             return new ResponseEntity<>("User Doesn't Exist", HttpStatus.BAD_REQUEST);
+        } catch (IOException e) {
+            System.out.println("IOException");
         }
 
         return ResponseEntity.ok().build();
@@ -96,7 +97,7 @@ public class ItemController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> deleteMultipleItems(@RequestBody List<Long> ids, Authentication authentication) {
+    public ResponseEntity<?> deleteMultipleItems(@RequestParam List<Long> ids, Authentication authentication) {
         // take name, comment
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();

@@ -56,8 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public void setAuthentication(String token) {
         // 토큰으로부터 유저 정보를 받아옵니다.
         Authentication authentication = jwtTokenUtil.getAuthentication(token);
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
-        // SecurityContext 에 Authentication 객체를 저장합니다.
+       // SecurityContext 에 Authentication 객체를 저장합니다.
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
