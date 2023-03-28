@@ -77,13 +77,13 @@ const routes = [
         component: FindLoadingView
       },
       {
-        path: 'Result',
+        path: 'result',
         name: 'FindResultView',
         component: FindResultView,
       },
       {
         path: 'DResult',
-        name: 'FindResultView',
+        name: 'DFindResultView',
         component: DFindResultView,
       },
       {
