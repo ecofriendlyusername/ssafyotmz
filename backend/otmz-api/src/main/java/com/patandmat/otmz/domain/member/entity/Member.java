@@ -42,7 +42,10 @@ public class Member extends BaseEntity {
     private List<ItemMatch> itemMatchBook;
 
     @Column(length = 2000)
-    private String styleStat;
+    private String lookStyleStat;
+
+    @Column(length = 2000)
+    private String itemStyleStat;
 
     @Builder
     public Member(Long authId, String nickname, String profileImagePath) {
