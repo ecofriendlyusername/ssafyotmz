@@ -3,6 +3,7 @@ package com.patandmat.otmz.domain.item.api;
 import com.patandmat.otmz.domain.item.dto.ItemResponseDto;
 import com.patandmat.otmz.domain.item.application.ItemService;
 import com.patandmat.otmz.domain.item.dto.ItemRequestDto;
+import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.global.auth.CustomUserDetails;
 import com.patandmat.otmz.global.exception.NoSuchMemberException;
@@ -32,6 +33,8 @@ public class ItemController {
     private final String SUCCESS = "SUCCESS";
     private final String FAIL = "FAIL";
     private final ItemService itemService;
+
+    private final MemberService memberService;
 
     @PostMapping("/item")
     @Operation(summary = "아이템 저장", description = "아이템을 저장한다. printVector, fabricVector, categoryVector는 각 vector의 JSON을 스트링화해서 보내주면 됨"

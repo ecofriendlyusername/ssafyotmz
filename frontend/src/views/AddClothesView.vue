@@ -74,13 +74,15 @@ export default {
     },
     async getStyle(formData) {
       console.log('sending request')
-      axios.post(process.env.VUE_APP_AI_STYLE, formData, {
+      await axios.post(process.env.VUE_APP_AI_STYLE, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
       .then((response) => {
         this.style = response.data
+        console.log('thisstyle ' + this.style)
+        console.log('response data' + response.data)
         return response
       })
       .catch((e) => {
@@ -88,7 +90,7 @@ export default {
         return e
       })
     },
-    processImageAndCreateItem() {
+    async processImageAndCreateItem() {
       if (this.file == null) {
         return;
       }
@@ -96,42 +98,69 @@ export default {
       formDataAI.append('image', this.file);
       console.log('file before :' + this.file)
 
-      this.removeBackground(formDataAI)
-      .then((res) => {
-        const tempFormData = new FormData();
-        tempFormData.append('imageFile',this.processedImage)
-        this.getStyle(tempFormData)
-        .then((res) => {
-          const formData = new FormData();
-          formData.append('imagefile', this.processedImage)
-          const itemJson = {
-            "name" : "hey",
-            "color":"color",
-            "styleVector" : JSON.stringify(this.style),
-          }
-          const jsonString = JSON.stringify(itemJson);
-          const itemBlob = new Blob([jsonString], {
-          type: 'application/json'});
-          formData.append('item',itemBlob);
-          formData.append('category','outer')
-          this.createItem(formData)
-          .then((res) => {
-            console.log(res)
-          })
-          .catch((e) => {
-            console.log(e)
-          })
-          return res
-        })
-        .catch((e) => {
-          return e
-        })
-        return res
-      })
-      .catch((e) => {
-        console.log(e)
-        return e
-      })
+      await this.removeBackground(formDataAI)
+
+      const formDataStyle = new FormData();
+      formDataStyle.append('imageFile', this.processedImage)
+      await this.getStyle(formDataStyle)
+
+
+      const formData = new FormData();
+      formData.append('imagefile',this.processedImage)
+
+      const itemJson = {
+        "name" : "hey",
+        "color":"color",
+        "styleVector" : JSON.stringify(this.style),
+      }
+      const jsonString = JSON.stringify(itemJson);
+      const itemBlob = new Blob([jsonString], {
+      type: 'application/json'});
+      formData.append('item',itemBlob);
+      formData.append('category','outer')
+
+      this.createItem(formData)
+      // this.removeBackground(formDataAI)
+      // .then((res) => {
+      //   const tempFormData = new FormData();
+      //   tempFormData.append('imageFile',this.processedImage)
+      //   this.getStyle(tempFormData)
+      //   .then((res) => {
+      //     const formData = new FormData();
+      //     // this.. ?
+      //     console.log('whaaat?')
+      //     formData.append('imagefile', res.data.processedImage)
+      //     console.log('resdt ' + res.data)
+      //     // console.log('before ... ' + this.style)
+      //     // console.log('after ... ' + JSON.stringify(this.style))
+      //     const itemJson = {
+      //       "name" : "hey",
+      //       "color":"color",
+      //       "styleVector" : JSON.stringify(this.style),
+      //     }
+      //     const jsonString = JSON.stringify(itemJson);
+      //     const itemBlob = new Blob([jsonString], {
+      //     type: 'application/json'});
+      //     formData.append('item',itemBlob);
+      //     formData.append('category','outer')
+      //     this.createItem(formData)
+      //     .then((res) => {
+      //       console.log(res)
+      //     })
+      //     .catch((e) => {
+      //       console.log(e)
+      //     })
+      //     return res
+      //   })
+      //   .catch((e) => {
+      //     return e
+      //   })
+      //   return res
+      // })
+      // .catch((e) => {
+      //   console.log(e)
+      //   return e
+      // })
     },
     async removeBackground(formData) {
       await axios.post(process.env.VUE_APP_AI_REMOVE, formData, {
@@ -150,7 +179,7 @@ export default {
       })
     },
     createItem(formData) {
-      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5OTgyOTY1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAwMDQ1NjUsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5OTgyOTY1fQ.rJkGuHqQT3972JQq_0622S2uRTKPoXZzDZwar1sDk9w'
+      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMDQ3MTU3LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAwNjg3NTcsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMDQ3MTU3fQ.IuM-IeIJZuJOWSaClhMWhRU3wLUUnmQx6rHL2rFWTaE'
       axios.post(process.env.VUE_APP_ITEM,formData, {
         headers: {
           'Content-Type' : 'multipart/form-data',

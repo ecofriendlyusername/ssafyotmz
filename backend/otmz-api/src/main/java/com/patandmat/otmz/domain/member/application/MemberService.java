@@ -111,4 +111,21 @@ public class MemberService {
         member.setLookStyleStat(VectorParser.parseToString(memberStyleStatMap));
         memberRepository.save(member);
     }
+
+    public void updateItemStyleStat(Member member, String styleVector) {
+        System.out.println("styleVector : " + styleVector);
+        Map<String, Double> styleMap = VectorParser.parseToMap(styleVector, VectorParser.STYLE_KEY, VectorParser.STYLE_VALUE);
+
+        Map<String, Double> memberStyleStatMap;
+
+        if (member.getLookStyleStat() != null) {
+            memberStyleStatMap = VectorParser.parseToMap(member.getItemStyleStat());
+            memberStyleStatMap.replaceAll((style, score) -> (memberStyleStatMap.get(style) + styleMap.getOrDefault(style, 0d))/2);
+        } else {
+            memberStyleStatMap = styleMap;
+        }
+
+        member.setItemStyleStat(VectorParser.parseToString(memberStyleStatMap));
+        memberRepository.save(member);
+    }
 }
