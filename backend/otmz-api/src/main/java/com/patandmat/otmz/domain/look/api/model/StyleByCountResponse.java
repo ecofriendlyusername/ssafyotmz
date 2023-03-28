@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LookCountDto {
+public class StyleByCountResponse {
     private Style style;
     private long count;
 
