@@ -1,14 +1,14 @@
 <template>
-  <div v-if="result['data']">
-    <img :src=imgsrc alt="">
+  <!-- <div v-if="result['data']"> -->
+    <img src="@/assets/img/findDefault.png" alt="">
     <!-- 워터마크 찍은 이미지 -->
-    <h3>당신은 {{ result['data'][1].style }} 스타일 입니다.</h3>
-    <p>{{ result['data'][1].style }} 스타일은 어쩌고 저쩌고</p>
+    <h3>당신은 asdf 스타일 입니다.</h3>
+    <p>asdf 스타일은 어쩌고 저쩌고</p>
     
     <hr>
     <div v-on:click=shareKakao() id="kakaotalk-sharing-btn">스타일 공유하기</div> |
     <router-link to='/Recom'>다른 스타일 보기</router-link>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -46,17 +46,17 @@ export default {
       // .catch(error=>console.log(error));
     }
   },
-  computed: {
-    result() {
-      return this.$store.state.result
-    }
-  },
-  mounted() {
-    console.log(this.result)
-    this.imgsrc = URL.createObjectURL(this.result['img_path']);
-    // 여기 아래에 워터마크 찍는 코드 붙여야 함
+  // computed: {
+  //   result() {
+  //     return this.$store.state.result
+  //   }
+  // },
+  // mounted() {
+  //   console.log(this.result)
+  //   this.imgsrc = URL.createObjectURL(this.result['img_path']);
+  //   // 여기 아래에 워터마크 찍는 코드 붙여야 함
 
-  }
+  // }
 
 }
 </script>

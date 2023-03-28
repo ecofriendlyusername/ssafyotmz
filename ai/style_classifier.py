@@ -189,7 +189,7 @@ val_transform = transforms.Compose([
 
 """# best model"""
 
-resume = "./style/style_best_model.pth"
+resume = "./style/style_best_model4.pth"
 
 checkpoint = torch.load(resume, map_location=torch.device('cpu'))
 
