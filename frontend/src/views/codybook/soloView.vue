@@ -4,23 +4,22 @@
   </div>
   <hr>
   <div>
-    내 옷 보여주는 창
+    <p @click="getItems('outer')">아우터</p>
+    <p @click="getItems('upper')">상의</p>
+    <p @click="getItems('lower')">하의</p>
+    <p @click="getItems('dress')">원피스</p>
+    <p @click="getItems('etc')">기타</p>
   </div>
-  <div>
-    <p @click="met('outer')">아우터</p>
-    <p @click="met('upper')">상의</p>
-    <p @click="met('lower')">하의</p>
-    <p @click="met('dress')">원피스</p>
-    <p @click="met('etc')">기타</p>
-  </div>
-  <div v-for="item in items">
+  <div v-for="item in items" @click="choice(item)">
     <div>{{item}}</div>
-    <img :src='`http://localhost:8080/api/v1/images/${item.imageId}`' style="width:100px;hegiht:100px"/>
+    <img :id='`${item.imageId}`' :src='`http://localhost:8080/api/v1/images/${item.imageId}`' style="width:100px;hegiht:100px"/>
   </div>
   <hr>
   <div>
     현재 코디북에 등록된 옷
+    <canvas id="myCanvas" width="400" height="400" style="background-color: #325890"></canvas>
   </div>
+  <div>{{canvasItems}}</div>
   <hr>
   <router-link to='/Codybook/live'>라이브 하기</router-link> |
   <router-link to='/'>메인페이지</router-link>
@@ -35,12 +34,43 @@ export default {
     data() { 
       return {
         items: [],
-        count: 0
+        count: 0,
+        canvas: undefined,
+        canvasItems: []
       }
     },
 
+    mounted() {
+        this.canvas = document.getElementById('myCanvas');
+
+        // const ctx1 = this.canvas.getContext("2d");
+        // ctx1.fillStyle = 'blue';
+        // ctx1.fillRect(0, 0, 150, 75);
+
+        // const ctx2 = this.canvas.getContext("2d");
+        // ctx2.fillStyle = 'white';
+        // ctx2.fillRect(100, 100, 150, 75);
+    },
+
     methods: {
-      met(category) {
+      choice(item) {
+        const selectedItem = {}
+        selectedItem.item = item;
+        
+        const image = new Image();
+        image.src = 'http://localhost:8080/api/v1/images/' + item.imageId;
+        
+        const canvas = this.canvas;
+
+        image.onload = function(){
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(image, 0, 0, 100, 100);
+            selectedItem.ctx = ctx;
+        }
+      
+        this.canvasItems.push(selectedItem);
+      },
+      getItems(category) {
         axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
           headers: {
             'Content-Type': 'application/json',
