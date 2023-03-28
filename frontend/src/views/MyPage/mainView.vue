@@ -51,7 +51,7 @@ export default {
     mounted(){
       this.style
       this.closet
-      axios.get('http://localhost:8080/api/v1/member/mypage', {
+      axios.get(process.env.VUE_APP_API_URL + '/member/mypage', {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': this.$store.state.Auth['accessToken']

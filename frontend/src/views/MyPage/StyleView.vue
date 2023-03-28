@@ -46,7 +46,7 @@ export default {
     }
   },
   mounted() {
-    axios.get('http://localhost:8080/api/v1/member/lookdetail', {
+    axios.get(process.env.VUE_APP_API_URL + '/member/lookdetail', {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': this.$store.state.Auth['accessToken']
@@ -110,7 +110,7 @@ export default {
     })
     .catch(error => console.log(error))
 
-    axios.get('http://localhost:8080/api/v1/member/mypage', {
+    axios.get(process.env.VUE_APP_API_URL + '/member/mypage', {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': this.$store.state.Auth['accessToken']
@@ -143,7 +143,7 @@ export default {
   },
   methods:{
     styleShow(category){
-      axios.get('http://localhost:8080/api/v1/looks', {
+      axios.get(process.env.VUE_APP_API_URL + '/looks', {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': this.$store.state.Auth['accessToken']
