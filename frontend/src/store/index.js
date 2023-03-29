@@ -6,6 +6,7 @@ export default createStore({
     result: {
       img_path: null,
       data: null,
+      imageId: null,
     },
     Auth: {
       accessToken: null,

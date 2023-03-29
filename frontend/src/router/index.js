@@ -12,7 +12,6 @@ import FindIndexView from "@/views/Find/IndexView.vue";
 import FindMainView from "@/views/Find/MainView.vue";
 import FindLoadingView from "@/views/Find/LoadingView.vue";
 import FindResultView from "@/views/Find/ResultView.vue";
-import DFindResultView from "@/views/Find/DirectResultView.vue";
 import FindErrorView from "@/views/Find/ErrorView.vue";
 
 import CodybookSoloView from "@/views/codybook/soloView.vue";
@@ -80,11 +79,6 @@ const routes = [
         path: 'result',
         name: 'FindResultView',
         component: FindResultView,
-      },
-      {
-        path: 'DResult',
-        name: 'DFindResultView',
-        component: DFindResultView,
       },
       {
         path: 'Error',
