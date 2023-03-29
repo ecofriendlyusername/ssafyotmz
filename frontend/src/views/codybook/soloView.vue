@@ -10,9 +10,9 @@
     <p @click="getItems('dress')">원피스</p>
     <p @click="getItems('etc')">기타</p>
   </div>
-  <div v-for="item in items" @click="choice(item)">
+  <div v-for="item in items" @click="choice(item)" :key="item.id">
     <div>{{item}}</div>
-    <img :id='`${item.imageId}`' :src='`http://localhost:8080/api/v1/images/${item.imageId}`' style="width:100px;hegiht:100px"/>
+    <img :src='`http://localhost:8080/api/v1/images/${item.imageId}`' style="width:100px;hegiht:100px"/>
   </div>
   <hr>
   <div>
@@ -23,31 +23,33 @@
         :config="configKonva"
         @dragstart="handleDragstart"
         @dragend="handleDragend"
+        @mousedown="handleMouseDown"
+        @touchstart="handleMouseDown"
       >
         <v-layer ref="layer">
           <v-image v-for="item in list" :key="item.id"
             :config="{
+              name: item.name,
               image: item.image,
               x: item.x,
               y: item.y,
-              width: 100,
-              height: 100,
+              width: item.width,
+              height: item.height,
               rotation: item.rotation,
               id: item.id,
               numPoints: 5,
               innerRadius: 30,
-              outerRadius: 50, fill: '#89b717',
-              opacity: 0.8,
-              draggable: true,
-              scaleX: dragItemId === item.id ? item.scale * 1.2 : item.scale,
-              scaleY: dragItemId === item.id ? item.scale * 1.2 : item.scale,
+              outerRadius: 50,
+              draggable: item.dragable,
               shadowColor: 'black',
               shadowBlur: 10,
               shadowOffsetX: dragItemId === item.id ? 10 : 3,
               shadowOffsetY: dragItemId === item.id ? 10 : 3,
               shadowOpacity: 0.2,
             }"
+            @transformend="handleTransformEnd"
           ></v-image>
+          <v-transformer ref="transformer"/>
         </v-layer>
       </v-stage>
     </div>
@@ -91,10 +93,47 @@ export default {
     },
 
     methods: {
+      handleTransformEnd(e) {
+        console.log('transform end', this.dragItemId);
+        const item = this.list.find(i => i.name === this.dragItemId);
+        item.x = e.target.x();
+        item.y = e.target.y();
+        item.rotation = e.target.rotation();
+        item.scaleX = e.target.scaleX();
+        item.scaleY = e.target.scaleY();
+        item.width = e.target.width();
+        item.height = e.target.height();
+      },
+      handleMouseDown(e) {
+        console.log('click')
+        if (e.target === e.target.getStage()) {
+          this.dragItemId = null;
+          this.updateTransformer();
+          return;
+        }
+
+        const clickedOnTransformer = e.target.getParent().className === 'Transformer';
+        if (clickedOnTransformer) {
+          return;
+        }
+
+        const name = e.target.name();
+        const item = this.list.find(i => i.name === name);
+        if (item) {
+          this.dragItemId = name;
+          this.updateTransformer();
+          const index = this.list.indexOf(item);
+          this.list.splice(index, 1);
+          this.list.push(item);
+        } else {
+          this.dragItemId = null;
+        }
+      },
       clear() {
         this.list = []
       },
       handleDragstart(e) {
+        console.log('drag start', e.target)
         // save drag element:
         this.dragItemId = e.target.id();
         // move current element to the top:
@@ -102,31 +141,64 @@ export default {
         const index = this.list.indexOf(item);
         this.list.splice(index, 1);
         this.list.push(item);
+
+        this.updateTransformer();
       },
       handleDragend(e) {
-        this.dragItemId = null;
-      },
+        console.log('transform', this.dragItemId);
+        const item = this.list.find(i => i.name === this.dragItemId);
 
+        console.log(this.list.find(i => i.name === this.dragItemId));
+
+        item.x = e.target.x();
+        item.y = e.target.y();
+        item.rotation = e.target.rotation();
+
+      },
+      updateTransformer() {
+        console.log('update transfomer')
+        const transformerNode = this.$refs.transformer.getNode();
+        const stage = transformerNode.getStage();
+        const { dragItemId } = this;
+
+        const selectedNode = stage.findOne('.' + dragItemId);
+        console.log('selectedNode', selectedNode);
+        if (selectedNode === transformerNode.node()) {
+          return;
+        }
+
+        if (selectedNode) {
+          transformerNode.nodes([selectedNode]);
+        } else {
+          transformerNode.nodes([]);
+        }
+      },
       choice(item) {
-        console.log(item)
         const img = new Image();
         img.src = 'http://localhost:8080/api/v1/images/' + item.imageId;
 
-        const targetIndex = this.list.findIndex(x => x.id === item.id);
+        const targetIndex = this.list.findIndex(x => x.name === String(item.id));
+        this.dragItemId = null;
+        this.updateTransformer();
 
         if (targetIndex !== -1) {
-          console.log(targetIndex)
-          console.log(this.list)
-          this.list.splice(targetIndex, 1)
-          console.log(this.list)
+          const target = this.list[targetIndex];
+          this.list.splice(targetIndex, 1);
+          this.list.push(target);
+          return;
         }
-
+      
         this.list.push({
+          name: String(item.id),
           image: img,
-          id: item.id,
-          x: 0,
-          y: 0,
-          scale: 1
+          id: String(item.id),
+          x: item.x ? item.x : 10,
+          y: item.y ? item.y : 10,
+          rotation: 0,
+          width: item.width ? item.width : 200,
+          height: item.height ? item.height : 200,
+          scale: 1,
+          dragable: true
         });
         console.log(this.list)
       },
