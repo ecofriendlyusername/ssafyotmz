@@ -16,10 +16,13 @@
 
     <br>
     <router-link to='Find/result'>결과 보기</router-link>
+
+    <p id="temp"></p>
   </div>
 </template>
 
 <script>
+import { templateElement } from '@babel/types';
 import axios from 'axios';
 import watermark from 'watermarkjs';
 
@@ -73,26 +76,20 @@ export default {
       })
       // 워터마크 찍기
       .then(() => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const img = new Image();
-          img.src = e.target.result;
-          img.onload = () => {
-            watermark([img, require('@/assets/img/watermark/logo.png')])
-              .image(watermark.image.upperRight(0.5))
-              .load([require('@/assets/img/watermark/MyStyleStreet.png')])
-              .image(watermark.image.lowerLeft(0.5))
-              .then((img) => {
-                this.file = img.src
-              });
-          }
-        }
-        reader.readAsDataURL(this.file)
+        watermark([this.image, require('@/assets/img/watermark/logo.png')])
+          .image(watermark.image.upperRight(0.5))
+          .load([require('@/assets/img/watermark/MyStyleStreet.png')])
+          .image(watermark.image.lowerLeft(0.5))
+          .then((img) => {
+            const watermark = this.dataURLtoFile(img.src, 'temp.jpg')
+            this.file = watermark
+          })      
+          .then(() => {
+            this.$store.commit('SET_RESULT', {img_path: this.file, data: this.result, imageId: null})
+          });
       })
       // 상태에 저장하고 라우트 이동
-      .then(() => {
-        this.$store.commit('SET_RESULT', {img_path: this.file, data: this.result, imageId: null});
-      })
+
       .then(() => {
         this.$router.push('/Find/loading');
       })
