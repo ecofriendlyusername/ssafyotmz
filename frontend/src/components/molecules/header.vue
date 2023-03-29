@@ -1,20 +1,23 @@
 <template>
   <header>
     <div>
-      <router-link class="logo" to="/" style=" text-decoration:none;">
-        <p style="color:white;">O't MZ</p>
+        <p class="logo">O't MZ</p>
         <!-- <img src="@/assets/img/logo.png" style="width:65px;"> -->
-      </router-link>
     </div>
+
+    <div id="Logout">
+      LOGOUT
+    </div>
+
     <!-- <h1>제목</h1> -->
-    <button class="hamburger" @click="toggleMenu">☰</button>
+    <!-- <button class="hamburger" @click="toggleMenu">☰</button>
     <ul v-if="showMenu" class="menu">
       <li><router-link to='/MyPage'>마이 페이지</router-link></li>
       <li><router-link to='/Find/index'>내 스타일 찾기</router-link></li>
       <li><router-link to='/Codybook/solo'>코디북 만들기</router-link></li>
       <li><router-link to='/Recom'>스타일 보기</router-link></li>
       <li><router-link to='/store'>상태 확인</router-link></li>      
-    </ul>
+    </ul> -->
   </header>
 
 
@@ -53,6 +56,7 @@ header {
   display: flex; 
   align-items: center; 
   justify-content: center;
+  color: white;
 }
 
 h1 {
@@ -96,6 +100,12 @@ display: block;
 
 .menu a:hover {
 background-color: #f0f0f0;
+}
+
+#Logout {
+  color: white;
+  font-size: 16.5px;
+  font-weight: bold;
 }
 
 
