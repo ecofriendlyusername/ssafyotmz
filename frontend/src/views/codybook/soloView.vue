@@ -17,7 +17,7 @@
   <hr>
   <div>
     현재 코디북에 등록된 옷
-    <div style="margin:10px;background-color:#FFDAB9">
+    <div :style="{margin: '10px', backgroundColor: backgroundColor}">
       <v-stage
         ref="stage"
         :config="configKonva"
@@ -53,6 +53,11 @@
     </div>
     <div>{{list}}</div>
     <div @click="clear">clear</div>
+    <div class="box">
+      <span class="editor-btn icon" title="Color Picker">
+        <input title="Color Picker" type="color" id="color" v-model="backgroundColor">
+      </span>
+    </div>
   </div>
   <hr>
   <router-link to='/Codybook/live'>라이브 하기</router-link> |
@@ -77,7 +82,8 @@ export default {
         configKonva: {
           width: width,
           height: height
-        }
+        },
+        backgroundColor: '#FFDAB9'
       }
     },
 
