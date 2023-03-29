@@ -56,13 +56,16 @@ footer {
     bottom: 0;
     height: 80px;
     width: 100%;
-    background-color: black;
-    color: white;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    border-top: rgb(220, 220, 220) solid 0.1px;
 }
 
 #footerText{
     margin-top: 3px;
+    color: black;
     font-size: 12px;
+    font-weight: bold;
     font-family: 'NanumSquareNeo-Variable';
 }
 

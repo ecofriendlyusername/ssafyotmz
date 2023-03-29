@@ -47,7 +47,8 @@ header {
   justify-content: space-between;
   height: 60px;
   padding: 0 20px;
-  background-color: black;
+  background-color: rgb(255, 255, 255);
+  border-bottom: rgb(220, 220, 220) solid 0.1px;
 }
 
 .logo {
@@ -56,7 +57,7 @@ header {
   display: flex; 
   align-items: center; 
   justify-content: center;
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 h1 {
@@ -106,6 +107,7 @@ background-color: #f0f0f0;
   color: white;
   font-size: 16.5px;
   font-weight: bold;
+  color: black;
 }
 
 
