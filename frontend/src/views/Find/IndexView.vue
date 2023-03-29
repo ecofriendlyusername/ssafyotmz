@@ -15,6 +15,9 @@
     <router-link to="/Find" style="text-decoration:none">
         <div id="UploadText">UPLOAD <br> </div>
     </router-link>
+
+    <div style="height:70px">
+    </div>
   </div>
 </template>
 

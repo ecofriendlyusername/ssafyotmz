@@ -2,14 +2,21 @@
   <headerComponent/>
 
   <router-view/>
+  
+  <footerComponent/>
+
+
+  
 </template>
 
 <script>
 import headerComponent from "@/components/molecules/header.vue";
+import footerComponent from "@/components/molecules/footer.vue";
 
 export default {
   components: {
     headerComponent,
+    footerComponent
   },
 }
 </script>
@@ -20,7 +27,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: black;
 }
 
 nav {
@@ -35,4 +42,6 @@ nav a {
 nav a.router-link-exact-active {
   color: #42b983;
 }
+
+
 </style>

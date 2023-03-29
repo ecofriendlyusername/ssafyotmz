@@ -8,6 +8,7 @@ import com.patandmat.otmz.domain.item.dto.ItemResponsePageDto;
 import com.patandmat.otmz.domain.item.entity.Item;
 
 import com.patandmat.otmz.domain.item.repository.ItemRepository;
+import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.domain.member.repository.MemberRepository;
 import com.patandmat.otmz.global.exception.NoSuchMemberException;
@@ -30,6 +31,8 @@ public class ItemService {
     private final ImageFileService imageFileService;
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
+
+    private final MemberService memberService;
 
     @Transactional
     public void saveItem(MultipartFile file, ItemRequestDto itemRequestDto, String category, Long id) throws IOException, AttributeNotFoundException, NoSuchMemberException {
@@ -54,6 +57,7 @@ public class ItemService {
                     .member(member)
                     .build();
             itemRepository.save(item);
+            memberService.updateItemStyleStat(member, item.getStyleVector());
         } catch (Exception e) {
             imageFileService.delete(imageFile.getId());
             throw e;
