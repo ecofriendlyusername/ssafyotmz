@@ -44,23 +44,6 @@ export default {
       return{
         Auth: this.$store.state.Auth,
         myData: {
-          'nickname': null
-        },
-      }
-    },
-    mounted(){
-      this.style
-      this.closet
-      axios.get(process.env.VUE_APP_API_URL + '/member/mypage', {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': this.$store.state.Auth['accessToken']
-        }
-      })
-      .then(response => {
-        console.log(response.data)
-        this.myData = response.data
-        this.myData = {
           lookCountDtoList: [
             {
               'style': '스트릿',
@@ -78,7 +61,21 @@ export default {
           nickname: "최선호", 
           totalItemCount: 10, 
           totalStyleCount: 10
+        },
+      }
+    },
+    mounted(){
+      this.style
+      this.closet
+      axios.get(process.env.VUE_APP_API_URL + '/member/mypage', {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': this.$store.state.Auth['accessToken']
         }
+      })
+      .then(response => {
+        console.log(response.data)
+        // this.myData = response.data
       })
       .then(() => {
         const ctx = document.getElementById('myChart');
