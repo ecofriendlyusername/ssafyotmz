@@ -50,7 +50,7 @@ export default {
 
 <style>
 footer {
-    width: 96%;
+    width: 100%;
     max-width: 420px;
     position: fixed;
     bottom: 0;
