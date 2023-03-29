@@ -45,34 +45,48 @@
           {{ look['style'] }} : {{ look['count']/this.myData['totalStyleCount']*100 }}%</p>
         </div>
       </div>
-
     </div>
 
+    <br> <br>
 
     <div id="mydiv1">
-      내 코디를 부탁해
+        <div>
+          내 옷장
+        </div>
+        <div>
+          <router-link to='/MyPage/closet' style="text-decoration:none; color:black;">
+            보러가기
+          </router-link>
+        </div>
     </div>
+
     <hr>
+
+    <div>
+      <p id="mystyle">
+        내가 가진 옷: {{ this.myData['totalItemCount'] }} 개
+      </p>
+      <!-- 아니면 3개 고정인 점을 이용해서 각자 집어넣어도 될 듯 -->
+      <div style="display:flex; justify-content: center; margin: 20px; align-items: center;">
+        <div style="width:55%;">
+          <canvas id="myChart"></canvas>
+        </div>
+        <div style="width:100%">
+          
+        <!-- 옷 종류 TOP3 출력 -->
+          <p>TOP 3</p>
+          <p v-for="look in myData['lookCountDtoList']" style="margin-top:-10px;">
+          {{ look['style'] }} : {{ look['count']/this.myData['totalStyleCount']*100 }}%</p>
+        </div>
+      </div>
+
+    </div>
 
 
       <!-- <p>내 옷장 {{ this.myData['totalItemCount'] }} 개</p> -->
 
 
-    <div style="display:flex; justify-content: space-around ">
-      <router-link to='/MyPage/closet'>
-        <div>
-          <img src="@/assets/img/logo.png" alt="">
-          <p>내 옷장 보기</p>
-        </div>
-      </router-link>
 
-      <router-link to='/MyPage/codybook'>
-        <div>
-          <img src="@/assets/img/logo.png" alt="">
-          <p>내 코디북 보기</p>
-        </div>
-      </router-link>
-    </div>
 
 
 
