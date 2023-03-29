@@ -39,23 +39,7 @@ export default {
   name:'MyPageStyleView',
   data(){
     return {
-      styleList: [],
-      myData: {
-        'nickname': null
-      }
-    }
-  },
-  mounted() {
-    axios.get(process.env.VUE_APP_API_URL + '/member/lookdetail', {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': this.$store.state.Auth['accessToken']
-      }
-    })
-    .then(response => {
-      console.log(response.data)
-      this.styleList = response.data
-      this.styleList = [
+      styleList: [
         {
           'style': '스트릿',
           'count':5
@@ -72,7 +56,38 @@ export default {
           'style': '페미닌',
           'count':1
         }
-      ]
+      ],
+      myData: {
+          lookCountDtoList: [
+            {
+              'style': '스트릿',
+              'count':5
+            },
+            {
+              'style': '캐주얼',
+              'count':3
+            },
+            {
+              'style': '러블리',
+              'count':1
+            },
+          ], 
+          nickname: "최선호", 
+          totalItemCount: 0, 
+          totalStyleCount: 10
+        }
+    }
+  },
+  mounted() {
+    axios.get(process.env.VUE_APP_API_URL + '/member/lookdetail', {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': this.$store.state.Auth['accessToken']
+      }
+    })
+    .then(response => {
+      console.log(response.data)
+      // this.styleList = response.data
     })
     .then(() => {
       const ctx = document.getElementById('myChart');
@@ -151,26 +166,8 @@ export default {
       })
       .then(response => {
         console.log(response.data)
-        this.myData = response.data
-        this.myData = {
-          lookCountDtoList: [
-            {
-              'style': '스트릿',
-              'count':5
-            },
-            {
-              'style': '캐주얼',
-              'count':3
-            },
-            {
-              'style': '러블리',
-              'count':1
-            },
-          ], 
-          nickname: "최선호", 
-          totalItemCount: 0, 
-          totalStyleCount: 10
-        }
+        // this.myData = response.data
+
       })
       .catch(error => console.log(error))
     }
