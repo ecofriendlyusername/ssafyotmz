@@ -72,32 +72,28 @@ export default {
         formData.append('styleVector', this.result);
       })
       // 워터마크 찍기
-      // .then(() => {
-      //   const reader = new FileReader();
-      //   reader.onload = (e) => {
-      //     const img = new Image();
-      //     img.src = e.target.result;
-      //     img.onload = () => {
-      //       watermark([img, require('@/assets/img/watermark/logo.png')])
-      //         .image(watermark.image.upperRight(0.5))
-      //         .load([require('@/assets/img/watermark/MyStyleStreet.png')])
-      //         .image(watermark.image.lowerLeft(0.5))
-      //         .then((temp) => {
-      //           console.log(temp.src)
-      //           const watermarkFile = this.dataURLtoFile(temp.src, 'watermarked-image.png');
-      //           console.log(watermarkFile)
-      //           // formData.set('imageFile2', watermarkFile)
-      //           // console.log(formData.get('imageFile'))
-      //           // console.log(formData.get('imageFile2'))
-      //           this.file = watermarkFile;
-      //         });
-      //     }
-      //   }
-      //   reader.readAsDataURL(this.file)
-      // })
+      .then(() => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.src = e.target.result;
+          img.onload = () => {
+            watermark([img, require('@/assets/img/watermark/logo.png')])
+              .image(watermark.image.upperRight(0.5))
+              .load([require('@/assets/img/watermark/MyStyleStreet.png')])
+              .image(watermark.image.lowerLeft(0.5))
+              .then((img) => {
+                this.file = img.src
+              });
+          }
+        }
+        reader.readAsDataURL(this.file)
+      })
       // 상태에 저장하고 라우트 이동
       .then(() => {
-        this.$store.commit('SET_RESULT', {img_path: this.file, data: this.result});
+        this.$store.commit('SET_RESULT', {img_path: this.file, data: this.result, imageId: null});
+      })
+      .then(() => {
         this.$router.push('/Find/loading');
       })
       .catch(error => {
