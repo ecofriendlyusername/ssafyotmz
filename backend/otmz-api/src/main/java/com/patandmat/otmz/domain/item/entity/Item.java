@@ -24,7 +24,6 @@ public class Item extends BaseEntity {
 
     @OneToOne
     private ImageFile image;
-
     @Column(length = 2000)
     private String styleVector;
 
