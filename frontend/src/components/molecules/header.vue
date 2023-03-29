@@ -53,7 +53,7 @@ header {
 
 .logo {
   font-weight: bold;
-  font-size: 24px;
+  font-size: 19px;
   display: flex; 
   align-items: center; 
   justify-content: center;
@@ -105,7 +105,7 @@ background-color: #f0f0f0;
 
 #Logout {
   color: white;
-  font-size: 16.5px;
+  font-size: 12px;
   font-weight: bold;
   color: black;
 }
