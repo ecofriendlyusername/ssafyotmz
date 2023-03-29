@@ -40,6 +40,7 @@
 
 <script>
 import axios from 'axios';
+
 export default {
   methods: {
     // 서버에 저장하기
@@ -48,6 +49,7 @@ export default {
       formData.append('styleVector', JSON.stringify(this.$store.state.result['data']))
       formData.append('imageFile', this.$store.state.result['img_path'])
       formData.append('style', this.$store.state.result['data']['1']['style'])
+      console.log(this.$store.state.result['data']['1']['style'])
       axios.post(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/looks', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -58,7 +60,8 @@ export default {
         // 파일 저장하는 api 리턴값으로 파일 경로 달라고 해야 함
         // this.image = response.data
         console.log(response.data)
-        this.$router.push('/Find/DResult')
+        this.$store.state.result['imageId'] = response.data['imageId']
+        this.$router.push('/Find/result')
       })
       .catch(error =>{
         console.log(error)

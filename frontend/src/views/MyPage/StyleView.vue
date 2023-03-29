@@ -58,8 +58,24 @@ export default {
         }
       ],
       myData: {
-        'nickname': null
-      }
+          lookCountDtoList: [
+            {
+              'style': '스트릿',
+              'count':5
+            },
+            {
+              'style': '캐주얼',
+              'count':3
+            },
+            {
+              'style': '러블리',
+              'count':1
+            },
+          ], 
+          nickname: "최선호", 
+          totalItemCount: 0, 
+          totalStyleCount: 10
+        }
     }
   },
   mounted() {
@@ -150,26 +166,8 @@ export default {
       })
       .then(response => {
         console.log(response.data)
-        this.myData = response.data
-        this.myData = {
-          lookCountDtoList: [
-            {
-              'style': '스트릿',
-              'count':5
-            },
-            {
-              'style': '캐주얼',
-              'count':3
-            },
-            {
-              'style': '러블리',
-              'count':1
-            },
-          ], 
-          nickname: "최선호", 
-          totalItemCount: 0, 
-          totalStyleCount: 10
-        }
+        // this.myData = response.data
+
       })
       .catch(error => console.log(error))
     }
