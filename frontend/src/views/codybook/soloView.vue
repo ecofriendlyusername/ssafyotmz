@@ -12,11 +12,12 @@
   </div>
   <div v-for="item in items" @click="choice(item)" :key="item.id">
     <div>{{item}}</div>
-    <img :src='`http://localhost:8080/api/v1/images/${item.imageId}`' style="width:100px;hegiht:100px"/>
+    <img :src='`${item.src}`' style="width:100px;hegiht:100px"/>
   </div>
   <hr>
   <div>
     현재 코디북에 등록된 옷
+    <div v-if="dragItemId" @click="removeItem">삭제</div>
     <div :style="{margin: '10px', backgroundColor: backgroundColor}">
       <v-stage
         ref="stage"
@@ -26,7 +27,8 @@
         @mousedown="handleMouseDown"
         @touchstart="handleMouseDown"
       >
-        <v-layer ref="layer">
+        <v-layer ref="layer"
+        :config="configKonva">
           <v-image v-for="item in list" :key="item.id"
             :config="{
               name: item.name,
@@ -90,11 +92,20 @@ export default {
     },
 
     mounted() {
+      this.backgroundColor = '#' +Math.floor(Math.random()*16777215).toString(16);
     },
 
     methods: {
+      removeItem() {
+        if (this.dragItemId === null) {
+          return;
+        }
+          const index = this.list.findIndex(i => i.name === this.dragItemId);
+          this.list.splice(index, 1);
+          this.dragItemId = null;
+          this.updateTransformer();
+      },
       handleTransformEnd(e) {
-        console.log('transform end', this.dragItemId);
         const item = this.list.find(i => i.name === this.dragItemId);
         item.x = e.target.x();
         item.y = e.target.y();
@@ -131,9 +142,10 @@ export default {
       },
       clear() {
         this.list = []
+        this.dragItemId = null;
+        this.updateTransformer();
       },
       handleDragstart(e) {
-        console.log('drag start', e.target)
         // save drag element:
         this.dragItemId = e.target.id();
         // move current element to the top:
@@ -145,7 +157,6 @@ export default {
         this.updateTransformer();
       },
       handleDragend(e) {
-        console.log('transform', this.dragItemId);
         const item = this.list.find(i => i.name === this.dragItemId);
 
         console.log(this.list.find(i => i.name === this.dragItemId));
@@ -156,13 +167,11 @@ export default {
 
       },
       updateTransformer() {
-        console.log('update transfomer')
         const transformerNode = this.$refs.transformer.getNode();
         const stage = transformerNode.getStage();
         const { dragItemId } = this;
 
         const selectedNode = stage.findOne('.' + dragItemId);
-        console.log('selectedNode', selectedNode);
         if (selectedNode === transformerNode.node()) {
           return;
         }
@@ -175,7 +184,7 @@ export default {
       },
       choice(item) {
         const img = new Image();
-        img.src = 'http://localhost:8080/api/v1/images/' + item.imageId;
+        img.src = process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/images/' + item.imageId;
 
         const targetIndex = this.list.findIndex(x => x.name === String(item.id));
         this.dragItemId = null;
@@ -214,6 +223,7 @@ export default {
           // this.image = response.data
           console.log(response.data)
           this.items = response.data.content;
+          this.items.forEach(item => item.src = process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/images/' + item.imageId);
         })
         .catch(error =>{
           console.log(error)
