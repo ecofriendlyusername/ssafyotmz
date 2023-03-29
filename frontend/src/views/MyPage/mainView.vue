@@ -62,7 +62,7 @@
 
     <hr>
 
-    <div>
+    <div style="padding-bottom:60px">
       <p id="mystyle">
         내가 가진 옷: {{ this.myData['totalItemCount'] }} 개
       </p>
@@ -82,12 +82,7 @@
 
     </div>
 
-
       <!-- <p>내 옷장 {{ this.myData['totalItemCount'] }} 개</p> -->
-
-
-
-
 
 
           
