@@ -17,9 +17,43 @@
   <hr>
   <div>
     현재 코디북에 등록된 옷
-    <canvas id="myCanvas" width="400" height="400" style="background-color: #325890"></canvas>
+    <div style="margin:10px;background-color:#FFDAB9">
+      <v-stage
+        ref="stage"
+        :config="configKonva"
+        @dragstart="handleDragstart"
+        @dragend="handleDragend"
+      >
+        <v-layer ref="layer">
+          <v-image v-for="item in list" :key="item.id"
+            :config="{
+              image: item.image,
+              x: item.x,
+              y: item.y,
+              width: 100,
+              height: 100,
+              rotation: item.rotation,
+              id: item.id,
+              numPoints: 5,
+              innerRadius: 30,
+              outerRadius: 50, fill: '#89b717',
+              opacity: 0.8,
+              draggable: true,
+              scaleX: dragItemId === item.id ? item.scale * 1.2 : item.scale,
+              scaleY: dragItemId === item.id ? item.scale * 1.2 : item.scale,
+              shadowColor: 'black',
+              shadowBlur: 10,
+              shadowOffsetX: dragItemId === item.id ? 10 : 3,
+              shadowOffsetY: dragItemId === item.id ? 10 : 3,
+              shadowOpacity: 0.2,
+            }"
+          ></v-image>
+        </v-layer>
+      </v-stage>
+    </div>
+    <div>{{list}}</div>
+    <div @click="clear">clear</div>
   </div>
-  <div>{{canvasItems}}</div>
   <hr>
   <router-link to='/Codybook/live'>라이브 하기</router-link> |
   <router-link to='/'>메인페이지</router-link>
@@ -28,6 +62,9 @@
 <script>
 import axios from 'axios'
 
+const width = 400;
+const height = 400;
+
 export default {
     name:'CodybookView',
 
@@ -35,118 +72,57 @@ export default {
       return {
         items: [],
         count: 0,
-        canvas: undefined,
-        canvasItems: [],
-        offset: {x: 0, y: 0},
-        start: {x: 0, y: 0},
-        mouseDown: false
+        list: [],
+        dragItemId: null,
+        configKonva: {
+          width: width,
+          height: height
+        }
       }
     },
 
     mounted() {
-        this.canvas = document.getElementById('myCanvas');
-        // this.offset = {x: this.canvas.offsetLeft, y: this.canvas.offsetTop};
-        this.start = {x: 0, y: 0};
-
-        this.canvas.addEventListener("mousedown", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-
-          const winScrollTop = window.scrollY;
-          this.start.x = parseInt(e.clientX - this.offset.x);
-          this.start.y = parseInt(e.clientY - this.offset.y + winScrollTop);
-
-          this.mouseDown = true;
-        });
-
-        this.canvas.addEventListener("mouseup", (e) => {
-          console.log('mouse clicked!!');
-          this.mouseDown = false;
-        });
-
-        this.canvas.addEventListener("mousemove", (e) => {
-          if (this.canvasItems === undefined || this.canvasItems.length === 0) {
-            return;
-          }
-          e.preventDefault();
-          	if(this.mouseDown){
-              const winScrollTop = window.scrollY,
-                  mouseX = parseInt(e.clientX - this.offset.x),
-                  mouseY = parseInt(e.clientY - this.offset.y + winScrollTop);
-              const dx = mouseX - this.start.x, dy = mouseY - this.start.y;
-                
-              this.start.x = mouseX;
-              this.start.y = mouseY;
-                  
-              this.canvasItems[0].x += Number(dx.toFixed(0));
-              this.canvasItems[0].y += Number(dy.toFixed(0));
-              
-              this.drawItem();
-            }
-        });
-
-        this.canvas.addEventListener("touchstart", (e) => {
-          console.log('mouse click!!');
-
-          e.preventDefault();
-          e.stopPropagation();
-
-          const winScrollTop = window.scrollY;
-          this.start.x = parseInt(e.clientX - this.offset.x);
-          this.start.y = parseInt(e.clientY - this.offset.y + winScrollTop);
-
-          this.mouseDown = true;
-        });
-
-        this.canvas.addEventListener("touchend", (e) => {
-          console.log('mouse clicked!!');
-          this.mouseDown = false;
-        });
-
-        this.canvas.addEventListener("touchmove", (e) => {
-          if (this.canvasItems === undefined || this.canvasItems.length === 0) {
-            return;
-          }
-          e.preventDefault();
-          	if(this.mouseDown){
-              const winScrollTop = window.scrollY,
-                  mouseX = parseInt(e.clientX - this.offset.x),
-                  mouseY = parseInt(e.clientY - this.offset.y + winScrollTop);
-              const dx = mouseX - this.start.x, dy = mouseY - this.start.y;
-                
-              this.start.x = mouseX;
-              this.start.y = mouseY;
-                  
-              this.canvasItems[0].x += Number(dx.toFixed(0));
-              this.canvasItems[0].y += Number(dy.toFixed(0));
-              
-              this.drawItem();
-            }
-        });
     },
 
     methods: {
-      choice(item) {
-        const selectedItem = {}
-        selectedItem.item = item;
-        selectedItem.x = 0;
-        selectedItem.y = 0;
-        selectedItem.width = 100;
-        selectedItem.height = 100;
-        
-        const image = new Image();
-        image.src = 'http://localhost:8080/api/v1/images/' + item.imageId;
-        selectedItem.image = image;
-        
-        const canvas = this.canvas;
+      clear() {
+        this.list = []
+      },
+      handleDragstart(e) {
+        // save drag element:
+        this.dragItemId = e.target.id();
+        // move current element to the top:
+        const item = this.list.find(i => i.id === this.dragItemId);
+        const index = this.list.indexOf(item);
+        this.list.splice(index, 1);
+        this.list.push(item);
+      },
+      handleDragend(e) {
+        this.dragItemId = null;
+      },
 
-        image.onload = function(){
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(image, selectedItem.x, selectedItem.y, selectedItem.width, selectedItem.height);
-            selectedItem.ctx = ctx;
+      choice(item) {
+        console.log(item)
+        const img = new Image();
+        img.src = 'http://localhost:8080/api/v1/images/' + item.imageId;
+
+        const targetIndex = this.list.findIndex(x => x.id === item.id);
+
+        if (targetIndex !== -1) {
+          console.log(targetIndex)
+          console.log(this.list)
+          this.list.splice(targetIndex, 1)
+          console.log(this.list)
         }
-      
-        this.canvasItems.push(selectedItem);
+
+        this.list.push({
+          image: img,
+          id: item.id,
+          x: 0,
+          y: 0,
+          scale: 1
+        });
+        console.log(this.list)
       },
       getItems(category) {
         axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
@@ -165,20 +141,6 @@ export default {
           console.log(error)
         });
       },
-      itemSelection(x, y, canvasItem){
-        const tx = canvasItem.x, ty = canvasItem.y, tWidth = canvasItem.width, tHeight = canvasItem.height;
-        return (x >= tx - tWidth/2 && x <= tx + tWidth/2 && y >= ty - tHeight && y <= ty);
-      },
-      drawItem() {
-        const ctx = this.canvas.getContext("2d");
-        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.canvasItems.forEach(item => {
-          item.ctx.drawImage(item.image, item.x, item.y, item.width, item.height);
-        });
-      },
-      clearItem(canvasItem) {
-        canvasItem.ctx.drawImage(canvasItem.image, 0, 0);
-      }
     },
 }
 </script>
