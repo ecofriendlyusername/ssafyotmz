@@ -177,7 +177,7 @@ export default {
 }
 
 #Profile {
-  width: 28%;
+  width: 50%;
   margin: 15px;
 }
 
