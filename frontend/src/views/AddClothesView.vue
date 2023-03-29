@@ -15,10 +15,6 @@
        <br>
   <hr>
   <img src="@/assets/img/StartBtn.png" id="StartBtn" v-on:click=processImageAndCreateItem()>
-  <!-- <img :src="imageSrc" v-if="imageSrc"/> -->
-  <!-- <img id="qr" :src="qrImg" /> -->
-  <!-- <img src="http://localhost:8080/api/v1/images/1" /> -->
-  <!-- <router-link to='/'>메인페이지</router-link> -->
 </div>
 </template>
 
@@ -32,11 +28,8 @@ export default {
   data () {
     return {
       file: null,
-      image: null,
       imagefile: null,
       name: "",
-      imageSrc: null,
-      qrImg: null,
       result: null,
       style: null,
       Auth: this.$store.state.Auth,
@@ -52,7 +45,6 @@ export default {
   methods: {
     fileUpload(event) {
       this.file = event.target.files[0];
-      // this.image = URL.createObjectURL(this.file)
       this.name = document.getElementById('name').value
     },
     dataURLtoFile(dataurl, filename) {
@@ -120,47 +112,6 @@ export default {
       formData.append('category','outer')
 
       this.createItem(formData)
-      // this.removeBackground(formDataAI)
-      // .then((res) => {
-      //   const tempFormData = new FormData();
-      //   tempFormData.append('imageFile',this.processedImage)
-      //   this.getStyle(tempFormData)
-      //   .then((res) => {
-      //     const formData = new FormData();
-      //     // this.. ?
-      //     console.log('whaaat?')
-      //     formData.append('imagefile', res.data.processedImage)
-      //     console.log('resdt ' + res.data)
-      //     // console.log('before ... ' + this.style)
-      //     // console.log('after ... ' + JSON.stringify(this.style))
-      //     const itemJson = {
-      //       "name" : "hey",
-      //       "color":"color",
-      //       "styleVector" : JSON.stringify(this.style),
-      //     }
-      //     const jsonString = JSON.stringify(itemJson);
-      //     const itemBlob = new Blob([jsonString], {
-      //     type: 'application/json'});
-      //     formData.append('item',itemBlob);
-      //     formData.append('category','outer')
-      //     this.createItem(formData)
-      //     .then((res) => {
-      //       console.log(res)
-      //     })
-      //     .catch((e) => {
-      //       console.log(e)
-      //     })
-      //     return res
-      //   })
-      //   .catch((e) => {
-      //     return e
-      //   })
-      //   return res
-      // })
-      // .catch((e) => {
-      //   console.log(e)
-      //   return e
-      // })
     },
     async removeBackground(formData) {
       await axios.post(process.env.VUE_APP_AI_REMOVE, formData, {
@@ -185,36 +136,6 @@ export default {
           'Content-Type' : 'multipart/form-data',
           'Authorization' : TOKEN,
         }
-      })
-    },
-    createItemMatchWith() {
-      if (this.file == null) {
-        return;
-      }
-      const formData = new FormData();
-      formData.append('imagefile', this.file);
-      const itemJson = {
-        "name" : "hey",
-        "comment" : "comment",
-      }
-      const jsonString = JSON.stringify(itemJson);
-      const itemBlob = new Blob([jsonString], {
-        type: 'application/json'
-      });
-      formData.append('itemMatch',itemBlob);
-      this.createItemMatch(formData)
-    },    
-    viewItem(id) {
-      var TOKEN = this.Auth.accessToken
-      axios.get(process.env.VUE_APP_ITEM + '/' + id, {
-        headers: {
-          'Authorization' : TOKEN
-        }
-      }).then((res) => {
-        console.log(res)
-        this.qrImg = "data:image/jpg;base64,"+res.data.image;
-      }).catch((e) => {
-        console.log(e)
       })
     },
     deleteItem() {
@@ -242,64 +163,6 @@ export default {
         console.log(e)
       })
     },
-    createItemMatch(formData) {
-      var TOKEN = this.Auth.accessToken
-      axios.post(process.env.VUE_APP_CODYBOOK,formData, {
-        headers: {
-          'Content-Type' : 'multipart/form-data',
-          'Authorization' : TOKEN,
-        }
-      })
-    },
-    viewItemMatch(id) {
-      var TOKEN = this.Auth.accessToken
-      axios.get(process.env.VUE_APP_CODYBOOK + '/' + id, {
-        headers: {
-          'Authorization' : TOKEN
-        }
-      }).then((res) => {
-          this.qrImg = "data:image/jpg;base64,"+res.data.image;
-      }).catch((e) => {
-        console.log(e)
-      })
-    },
-    viewMultipleItemMatches(category,page,size) {
-      var TOKEN = this.Auth.accessToken
-      axios.get(process.env.VUE_APP_CODYBOOKS+`/${category}?page=${page}&size=${size}`, {
-        headers: {
-          'Authorization' : TOKEN
-        }
-      }).then((res) => {
-        console.log(res)
-      }).catch((e) => {
-        console.log(e)
-      })
-    },
-    deleteItemMatch() {
-      var TOKEN = this.Auth.accessToken
-      axios.delete(process.env.VUE_APP_CODYBOOK + '/' + id, {
-        headers: {
-          'Authorization' : TOKEN
-        }
-      }).then((res) => {
-        console.log(res)
-      }).catch((e) => {
-        console.log(e)
-      })
-    },
-    deleteMultipleItemMatches(array) {
-      var TOKEN = this.Auth.accessToken
-      console.log(this.TOKEN);
-      axios.delete(process.env.VUE_APP_CODYBOOKS + `?ids=${array.join(',')}`, {
-        headers: {
-          'Authorization' : TOKEN
-        }
-      }).then((res) => {
-        console.log(res)
-      }).catch((e) => {
-        console.log(e)
-      })
-    }
   }
 }
 </script>
