@@ -2,8 +2,9 @@
   <headerComponent/>
 
   <router-view/>
-
+  
   <footerComponent/>
+
 
   
 </template>
