@@ -16,6 +16,7 @@
     "core-js": "^3.8.3",
     "swiper": "^9.1.1",
     "vue": "^3.2.13",
+    "vue-konva": "^3.0.2",
     "vue-router": "^4.0.3",
     "vue2-touch-events": "^3.2.2",
     "vue3-touch-events": "^4.1.2",
