@@ -43,5 +43,8 @@ nav a.router-link-exact-active {
   color: #42b983;
 }
 
+footer{
+  width: 95.8%;
+}
 
 </style>
