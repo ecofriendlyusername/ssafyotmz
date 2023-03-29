@@ -64,7 +64,7 @@ footer {
 #footerText{
     margin-top: 3px;
     color: black;
-    font-size: 15%;
+    font-size: 50%;
     font-weight: bold;
     font-family: 'NanumSquareNeo-Variable';
 }
