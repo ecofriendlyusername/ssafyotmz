@@ -127,5 +127,6 @@ export default createStore({
     },
   },
   modules: {
-  }
+  },
+  
 })
