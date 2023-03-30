@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SwipeBox ref="myswipe" @onChange="mySwipeChanged" speed="150">
+    <SwipeBox v-if="pages.length !== 0" ref="myswipe" @onChange="mySwipeChanged" speed="150">
       <div style="width: 350px; height: 250px; border: 1px solid black">
         <div v-for="i in Math.ceil(pages.length/9)">
           <div class="wrapperI">
@@ -11,6 +11,7 @@
         </div>
       </div>
     </SwipeBox>
+    <div v-if="pages.length===0" style="width: 350px; height: 250px; border: 1px solid black"></div>
     <button @click="selectItems()" @touchstart="selectItems()">select</button>
     <button v-if="selectMode" @click="deleteSelectedItems" @touchstart="deleteSelectedItems">delete</button>
     <div v-if="modalOpen" class="modal">
@@ -60,7 +61,7 @@ export default {
       } else {
         if (this.selectedIndices.includes(idx)) {
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
-          this.selectedIndices.remove(this.selectedIndices.indexOf(idx))
+          this.selectedIndices.slice(this.selectedIndices.indexOf(idx))
         } else {
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(50%)'
           this.selectedIndices.push(idx)

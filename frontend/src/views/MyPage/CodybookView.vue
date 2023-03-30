@@ -6,7 +6,7 @@
   <hr>
   <!-- 스타일 별 코디북 -->
   <div id="temp">
-    <SwipeBox ref="myswipe" @onChange="mySwipeChanged" speed="150">
+    <SwipeBox v-if="pages.length !== 0" ref="myswipe" @onChange="mySwipeChanged" speed="150">
       <div style="width: 350px; height: 250px; border: 1px solid black">
         <div v-for="i in Math.ceil(pages.length/4)">
           <div class="wrapperIT">
@@ -17,6 +17,7 @@
         </div>
       </div>
     </SwipeBox>
+    <div v-if="pages.length===0" style="width: 350px; height: 250px; border: 1px solid black"></div>
     <Teleport to="body">
   <div v-if="modalOpen" class="modal">
     <CodyBookDetail :selected="selected" @close="closeModal" @deleted="deleteItemMatch()">your content...</CodyBookDetail>
@@ -58,6 +59,7 @@ export default {
   },
   methods:{
     viewMultipleItemMatches(page,size) {
+      console.log('going? : ' + this.Auth.accessToken)
         axios.get(process.env.VUE_APP_CODYBOOKS+`?page=${page}&size=${size}`, {
           headers: {
             'Authorization' : this.Auth.accessToken
@@ -84,6 +86,7 @@ export default {
         if (index === Math.ceil(this.pages.length/9)-1) {
           this.viewMultipleItemMatches(this.category,index+1,9)
         }
+        console.log('hh')
       },
       clicked(itemMatch) {
         this.selected = itemMatch
@@ -174,6 +177,7 @@ export default {
           document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
           a.pages.splice(idx,1)
         }
+        this.selectMode = false
       })
       .catch((e) => {
         return e
