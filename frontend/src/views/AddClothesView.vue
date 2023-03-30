@@ -7,6 +7,13 @@
     <label for="imagefile">옷 이미지를 추가하세요</label><input type="file" id="imagefile" name="imagefile" @change="fileUpload">
     <br>
     <label for="text">옷 이름을 입력하세요</label><input type="text" id="name" name="name">
+    <select id="categories">
+  <option value="outer" selected>아우터</option>
+  <option value="upper" selected="selected">상의</option>
+  <option value="lower">하의</option>
+  <option value="dress">원피스</option>
+  <option value="etc">기타</option>
+</select>
     <br>
     <br>
     <input type="file"
@@ -27,17 +34,14 @@ export default {
     return {
       file: null,
       imagefile: null,
-      name: "",
       result: null,
       style: null,
       Auth: this.$store.state.Auth,
-      TOKEN : 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5NzYyMDkyLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzk3ODM2OTIsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5NzYyMDkyfQ.ys-nl4gzDzXXAc_USiH6w7OZf5fI1ESj6iILLiJwY5s',
     }
   },
   methods: {
     fileUpload(event) {
       this.file = event.target.files[0];
-      this.name = document.getElementById('name').value
     },
     dataURLtoFile(dataurl, filename) {
       var arr = dataurl.split(','),
@@ -90,7 +94,7 @@ export default {
       formData.append('imagefile',this.processedImage)
 
       const itemJson = {
-        "name" : "hey",
+        "name" : document.getElementById('name').value,
         "color":"color",
         "styleVector" : JSON.stringify(this.style),
       }
@@ -98,7 +102,7 @@ export default {
       const itemBlob = new Blob([jsonString], {
       type: 'application/json'});
       formData.append('item',itemBlob);
-      formData.append('category','outer')
+      formData.append('category',document.getElementById("categories").value)
 
       this.createItem(formData)
     },
@@ -119,19 +123,18 @@ export default {
       })
     },
     createItem(formData) {
-      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMDY5ODU0LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAwOTE0NTQsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMDY5ODU0fQ.Mc3DPXSMhn3ZKdofWlGkWkcZTAnXc7zBi5O8b0d5mMk'
+      console.log(this.Auth.accessToken)
       axios.post(process.env.VUE_APP_ITEM,formData, {
         headers: {
           'Content-Type' : 'multipart/form-data',
-          'Authorization' : TOKEN,
+          'Authorization' : this.Auth.accessToken,
         }
       })
     },
     deleteItem() {
-      var TOKEN = this.Auth.accessToken
       axios.delete(process.env.VUE_APP_ITEMS + '/' + id, {
         headers: {
-          'Authorization' : TOKEN
+          'Authorization' : this.Auth.accessToken
         }
       }).then((res) => {
         console.log(res)

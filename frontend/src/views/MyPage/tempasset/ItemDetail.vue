@@ -25,16 +25,15 @@
           image: "",
           name: "",
           category: "",
-          TOKEN : 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5NzYyMDkyLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzk3ODM2OTIsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5NzYyMDkyfQ.ys-nl4gzDzXXAc_USiH6w7OZf5fI1ESj6iILLiJwY5s',
+          Auth: this.$store.state.Auth
         }
     },
     methods:{
       deleteItem() {
         var a = this
-        var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
         axios.delete(process.env.VUE_APP_ITEM + '/' + this.selected.id, {
           headers: {
-            'Authorization' : TOKEN
+            'Authorization' : this.Auth.accessToken
           }
         }).then((res) => {
           a.$emit('deleted')

@@ -43,10 +43,10 @@ export default {
       itemsToRemove: [],
       selectedIdx: -1,
       selected: null,
+      Auth: this.$store.state.Auth,
       selectMode : false,
       modalOpen: false,
       selectedIndices : [],
-      TOKEN : 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5NzYyMDkyLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzk3ODM2OTIsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5NzYyMDkyfQ.ys-nl4gzDzXXAc_USiH6w7OZf5fI1ESj6iILLiJwY5s',
     }
   },
   props: ['category'],
@@ -108,11 +108,9 @@ export default {
       this.selectMode = !this.selectMode;
     },
     async deleteMultipleItems(array) {
-      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
-      console.log(this.TOKEN);
       axios.delete(process.env.VUE_APP_ITEMS + `?ids=${array.join(',')}`, {
         headers: {
-          'Authorization' : TOKEN
+          'Authorization' : this.Auth.accessToken
         }
       }).then((res) => {
         console.log(res)
