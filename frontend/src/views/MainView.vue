@@ -274,11 +274,6 @@ export default {
   font-weight: bold;
 }
 
-body {
-  padding: 80px;
-  font-family: 'NanumSquareRound',sans-serif;
-  color: black;
-}
 .container {
   /* // width: 380px;
   // height: 250px; */
