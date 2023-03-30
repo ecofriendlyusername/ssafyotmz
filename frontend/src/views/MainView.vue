@@ -26,7 +26,7 @@
         </p>
       </div>
 
-      <div style="position:absolute; top:10px;font-size: 14.5px; color:white; margin-left: 78%;">
+      <div style="position:absolute; top:10px;font-size: 100%; color:white; margin-left: 79%;">
           → 구매하기
       </div>
 
@@ -42,6 +42,31 @@
       <div id="LoginDiv2">
         # 러블리
       </div>
+
+      <!-- 그리드 -->
+      <div class="container">
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+        <div class="item">4</div>
+        <div class="item">5</div>
+        <div class="item">6</div>
+      </div>
+
+      <div id="LoginDiv2" style="margin-top:24px;">
+        # 페미닌
+      </div>
+
+      <!-- 그리드 -->
+      <div class="container">
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+        <div class="item">4</div>
+        <div class="item">5</div>
+        <div class="item">6</div>
+      </div>
+      
 
     </div>
     
@@ -134,12 +159,14 @@ export default {
       },
     ]);
     return {modules:[Pagination, Autoplay], swiperTextBase}
-
   },
   data() {
     return {
       EndPoint: false,
-      Auth: this.$store.state.Auth
+      Auth: this.$store.state.Auth,
+      pictures: [{img:'https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20230126_1674699972522098m.jpg'},
+                  {img:'https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20200916_1600266495690951m.JPG'}
+                ]
     }
   },
   created(){
@@ -230,7 +257,7 @@ export default {
 #LoginDiv1 {
   display: flex;
   padding: 10px 15px;
-  font-size: 18.5px;
+  font-size: 125%;
   font-weight: bold;
 }
 
@@ -238,9 +265,51 @@ export default {
   display: flex;
   margin-top: -3px;
   padding: 0px 15px;
-  font-size: 16px;
+  font-size: 118%;
   font-weight: bold;
 }
 
+body {
+  padding: 80px;
+  font-family: 'NanumSquareRound',sans-serif;
+  color: black;
+}
+.container {
+  /* // width: 380px;
+  // height: 250px; */
+  /* border: 10px solid rgba(black, .1); */
+  border-radius: 10px;
+  display: grid;
+}
 
+.item {
+  margin: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  font-size: 100%;
+  color: black;
+  background-color: aliceblue;
+  border: 1px solid black;
+  font-weight: 900;}
+
+.container {
+  width: 97%;
+  padding: 7px;
+  display: grid;
+  grid-template-rows: repeat(2, 100px);
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 100px;
+}
+
+.item:nth-child(1) {
+  grid-column: 1 / 4;
+}
+
+.item:nth-child(3) {
+  grid-column: span 2;
+}
 </style>
