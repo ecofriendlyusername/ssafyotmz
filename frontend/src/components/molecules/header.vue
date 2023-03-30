@@ -5,19 +5,10 @@
         <!-- <img src="@/assets/img/logo.png" style="width:65px;"> -->
     </div>
 
-    <div id="Logout">
+    <div id="Logout" v-on:click="logOut()">
       LOGOUT
     </div>
 
-    <!-- <h1>제목</h1> -->
-    <!-- <button class="hamburger" @click="toggleMenu">☰</button>
-    <ul v-if="showMenu" class="menu">
-      <li><router-link to='/MyPage'>마이 페이지</router-link></li>
-      <li><router-link to='/Find/index'>내 스타일 찾기</router-link></li>
-      <li><router-link to='/Codybook/solo'>코디북 만들기</router-link></li>
-      <li><router-link to='/Recom'>스타일 보기</router-link></li>
-      <li><router-link to='/store'>상태 확인</router-link></li>      
-    </ul> -->
   </header>
 
 
@@ -26,15 +17,11 @@
 <script>
 
 export default {
-    name:'headerComponent',
-    data() {
-    return {
-      showMenu: false
-    };
-  },
+  name:'headerComponent',
   methods: {
-    toggleMenu() {
-      this.showMenu = !this.showMenu;
+    logOut() {
+      localStorage.removeItem('vuex')
+      this.$router.push('/')
     },
   }
 }
