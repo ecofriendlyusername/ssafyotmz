@@ -25,46 +25,26 @@ data () {
       image: "",
       name: "",
       comment: "",
-      TOKEN : 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5NzYyMDkyLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzk3ODM2OTIsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5NzYyMDkyfQ.ys-nl4gzDzXXAc_USiH6w7OZf5fI1ESj6iILLiJwY5s',
+      Auth: this.$store.state.Auth
     }
 },
 methods:{
-    // viewItemMatch(id) {
-    //   var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMDU3ODQyLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAwNzk0NDIsInN1YiI6IjIiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMDU3ODQyfQ.OuEmVBgDQi48U465MTEMZVwpN_mY8F-cjEQpxWe-Xn4'
-    //   axios.get(process.env.VUE_APP_CODYBOOK + '/' + id, {
-    //     headers: {
-    //       'Authorization' : TOKEN
-    //     }
-    //   }).then((res) => {
-    //       this.image = "data:image/jpg;base64,"+res.data.image
-    //       this.name = res.data.name
-    //       this.comment = res.data.comment
-    //       return res
-    //   }).catch((e) => {
-    //     console.log(e)
-    //     return e
-    //   })
-    // },
     async deleteItemMatch(id) {
-      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
-        await axios.delete(process.env.VUE_APP_CODYBOOK + '/' + this.selected.id, {
-          headers: {
-            'Authorization' : TOKEN
-          }
+      await axios.delete(process.env.VUE_APP_CODYBOOK + '/' + this.selected.id, {
+        headers: {
+          'Authorization' : this.Auth.accessToken
+        }
         }).then((res) => {
-          
           return res
         }).catch((e) => {
           console.log(e)
         })
-      },
+      }
     },
     deleteItemMatch() {
-        var a = this
-        var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
         axios.delete(process.env.VUE_APP_CODYBOOK + '/' + this.selected.id, {
           headers: {
-            'Authorization' : TOKEN
+            'Authorization' : this.Auth.accessToken
           }
         }).then((res) => {
           this.$emit('deleted')
