@@ -5,7 +5,6 @@
 	</div>
 	<ov-video :stream-manager="streamManager"/>
 	<p>{{ clientData }}</p>
-	<p>{{ streamManager.stream.connection.connectionId}}</p>
 </div>
 </template>
 
@@ -65,7 +64,12 @@ export default {
 }
 
 .member {
-	text-align: left;
-	margin: 0 auto;
+	text-align: center;
+	margin: 0 2px;
+  font-size: 12px;
+}
+
+.active {
+  background-color: blueviolet;
 }
 </style>
