@@ -123,7 +123,6 @@ export default {
       })
     },
     createItem(formData) {
-      console.log(this.Auth.accessToken)
       axios.post(process.env.VUE_APP_ITEM,formData, {
         headers: {
           'Content-Type' : 'multipart/form-data',
