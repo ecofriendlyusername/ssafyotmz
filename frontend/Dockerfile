@@ -1,7 +1,7 @@
 #build stage
-FROM node:12.18.1-alpine as build-stage
+FROM node:18.13.0-alpine as build-stage
 WORKDIR /app
-COPY package*.json ./
+COPY package.json package-lock.json* ./
 RUN npm cache clean --force
 RUN npm ci
 COPY . .
