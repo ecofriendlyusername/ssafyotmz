@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="SubNav">
+    <!-- <div class="SubNav">
         <div class="SubNavText">
             WHAT’S MY STYLE
         </div>
-    </div>
+    </div> -->
 
     <img src="@/assets/img/PictureIndex.png" id="PictureIndex">
     <br>
@@ -50,7 +50,7 @@ export default {
 }
 
 #PictureIndex {
-    margin-top: 5%;
+    margin-top: 2%;
     width: 95%;
 }
 
