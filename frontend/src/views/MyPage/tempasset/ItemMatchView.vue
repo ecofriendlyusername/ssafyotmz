@@ -5,7 +5,6 @@
 <script>
 import { register } from 'swiper/element/bundle';
 import SwipeBox from '@shopid/vue3-swipe-box';
-import axios from 'axios'
 register();
 import 'swiper/css';
 export default {
