@@ -20,8 +20,6 @@
 
 <script>
 import axios from 'axios'
-// import { Buffer } from 'buffer';
-// import { mapGetters } from 'vuex'
 
 export default {
   name:'AddClothesView',
@@ -35,12 +33,6 @@ export default {
       Auth: this.$store.state.Auth,
       TOKEN : 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5NzYyMDkyLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzk3ODM2OTIsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5NzYyMDkyfQ.ys-nl4gzDzXXAc_USiH6w7OZf5fI1ESj6iILLiJwY5s',
     }
-  },
-  computed: {
-    // mix the getters into computed with object spread operator
-    // ...mapGetters([
-    //   'getAuth',
-    // ])
   },
   methods: {
     fileUpload(event) {
@@ -60,9 +52,6 @@ export default {
     },
     viewMultipleItemsWith() {
       this.viewMultipleItems('upper',2,3)
-    },
-    deleteMultipleItemsWith() {
-      this.deleteMultipleItems([10,11,12,13])
     },
     async getStyle(formData) {
       console.log('sending request')
@@ -130,7 +119,7 @@ export default {
       })
     },
     createItem(formData) {
-      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMDQ3MTU3LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAwNjg3NTcsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMDQ3MTU3fQ.IuM-IeIJZuJOWSaClhMWhRU3wLUUnmQx6rHL2rFWTaE'
+      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMDY5ODU0LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAwOTE0NTQsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMDY5ODU0fQ.Mc3DPXSMhn3ZKdofWlGkWkcZTAnXc7zBi5O8b0d5mMk'
       axios.post(process.env.VUE_APP_ITEM,formData, {
         headers: {
           'Content-Type' : 'multipart/form-data',
@@ -141,19 +130,6 @@ export default {
     deleteItem() {
       var TOKEN = this.Auth.accessToken
       axios.delete(process.env.VUE_APP_ITEMS + '/' + id, {
-        headers: {
-          'Authorization' : TOKEN
-        }
-      }).then((res) => {
-        console.log(res)
-      }).catch((e) => {
-        console.log(e)
-      })
-    },
-    deleteMultipleItems(array) {
-      var TOKEN = this.Auth.accessToken
-      console.log(this.TOKEN);
-      axios.delete(process.env.VUE_APP_ITEMS + `?ids=${array.join(',')}`, {
         headers: {
           'Authorization' : TOKEN
         }

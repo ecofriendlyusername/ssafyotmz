@@ -42,6 +42,7 @@
   <hr>
   <!-- <router-link to='/Codybook'>코디북 만들기</router-link> | -->
   <router-link to='/MyPage'>마이페이지</router-link>
+  <button @click="select()">select</button>
 </div>
 </template>
 
@@ -61,6 +62,7 @@ export default {
     return {
       pages : [],
       selected: null,
+      imagesToDelete: [],
       open: false,
       env: process.env.VUE_APP_IMG,
       TOKEN : 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5NzYyMDkyLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzk3ODM2OTIsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5NzYyMDkyfQ.ys-nl4gzDzXXAc_USiH6w7OZf5fI1ESj6iILLiJwY5s',
@@ -68,7 +70,7 @@ export default {
   },
   methods:{
     viewMultipleItemMatches(page,size) {
-        var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMDUwOTUxLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAwNzI1NTEsInN1YiI6IjIiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMDUwOTUxfQ.DaH_05gL83gAuBeaxktOfO5UyxBnlSvTFgBozI3tDaw'
+        var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMDY1NTkzLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAwODcxOTMsInN1YiI6IjIiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMDY1NTkzfQ.qM3dCn1QO8dNV2fC05Q0hT-a7GExr_5kI3oY9UkBs8g'
         axios.get(process.env.VUE_APP_CODYBOOKS+`?page=${page}&size=${size}`, {
           headers: {
             'Authorization' : TOKEN
@@ -82,6 +84,9 @@ export default {
           console.log(e)
           return e
         })
+      },
+      imagesToDelete() {
+
       },
       mySwipeChanged (index) {
         if (index === this.pages.length - 1) {                
@@ -183,7 +188,6 @@ export default {
   },
 }
 </script>
-
 <style>
 .modal {
   position: fixed;
