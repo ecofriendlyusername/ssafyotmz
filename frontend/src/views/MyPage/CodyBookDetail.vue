@@ -9,6 +9,7 @@
         <div>{{ this.selected.name }}</div>
         <div>{{ this.selected.comment }}</div>
     </div>
+    <button @click="deleteItemMatchWith()">삭제</button>
     <router-link to='/MyPage'>마이페이지</router-link>
 </div>
 </template>
@@ -44,19 +45,35 @@ methods:{
     //     return e
     //   })
     // },
-    deleteItemMatch() {
-      var TOKEN = this.Auth.accessToken
-        axios.delete(process.env.VUE_APP_CODYBOOK + '/' + id, {
+    async deleteItemMatch(id) {
+      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
+        await axios.delete(process.env.VUE_APP_CODYBOOK + '/' + this.selected.id, {
           headers: {
             'Authorization' : TOKEN
           }
         }).then((res) => {
-          console.log(res)
+          
+          return res
         }).catch((e) => {
           console.log(e)
         })
       },
     },
+    deleteItemMatch() {
+        var a = this
+        var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
+        axios.delete(process.env.VUE_APP_CODYBOOK + '/' + this.selected.id, {
+          headers: {
+            'Authorization' : TOKEN
+          }
+        }).then((res) => {
+          this.$emit('deleted')
+          return res
+        }).catch((e) => {
+          console.log(e)
+        })
+        
+      },
 
 //   async beforeMount() {
 //     this.viewItemMatch(this.selected)
