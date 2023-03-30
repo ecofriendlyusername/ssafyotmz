@@ -32,7 +32,7 @@ public class LookService {
             Look look = Look.builder()
                     .image(image)
                     .styleVector(styleVector)
-                    .style(Style.valueOf(style))
+                    .style(Style.valueOf(style.toUpperCase()))
                     .member(member)
                     .build();
             lookRepository.save(look);
