@@ -16,6 +16,7 @@ import FindErrorView from "@/views/Find/ErrorView.vue";
 
 import CodybookSoloView from "@/views/codybook/soloView.vue";
 import CodybookLiveView from "@/views/codybook/liveView.vue";
+import MainComponent from "@/views/codybook/MainComponent.vue";
 
 import RecomView from "@/views/RecomView.vue";
 
@@ -97,8 +98,8 @@ const routes = [
       },
       {
         path: 'live',
-        name: 'CodybookLiveView',
-        component:CodybookLiveView,
+        name: 'MainComponent',
+        component:MainComponent,
       }
     ]
   },

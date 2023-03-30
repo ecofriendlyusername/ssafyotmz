@@ -1,6 +1,6 @@
 <template>
   <div>
-    <footer>
+    <footer v-if="login['memberId']">
         <div style="display:flex; justify-content:space-between; padding: 10px;">
             <router-link to="/" style="text-decoration:none; color:white" v-on:click="clickhome">
                 <div >
@@ -56,6 +56,11 @@ export default {
             closet: "false",
             book: "false",
             my: "false",
+        }
+    },
+    computed: {
+        login() {
+            return this.$store.state.Auth
         }
     },
     methods: {
