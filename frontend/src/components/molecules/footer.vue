@@ -26,7 +26,7 @@
                 </div>
             </router-link>
 
-            <router-link to='/Codybook/solo' style="text-decoration:none; color:white" v-on:click="clickbook">
+            <router-link to='/MyPage/codybook' style="text-decoration:none; color:white" v-on:click="clickbook">
                 <div>
                     <img v-if="this.book=='false'" src="@/assets/img/bookicon.png" class="icon">
                     <img v-if="this.book=='true'" src="@/assets/img/clickbook.png" class="icon">
