@@ -49,6 +49,7 @@ body {
 
 footer{
   width: 95.8%;
+  padding-top: 7px;
 }
 
 </style>
