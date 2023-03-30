@@ -43,8 +43,13 @@ nav a.router-link-exact-active {
   color: #42b983;
 }
 
+body {
+  padding-bottom: 75px;
+}
+
 footer{
   width: 95.8%;
+  margin-top: 100px;
 }
 
 </style>
