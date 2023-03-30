@@ -1,53 +1,31 @@
 <template>
-  <div id="temp">
+  <div>
     <SwipeBox ref="myswipe" @onChange="mySwipeChanged" speed="150">
-        <div style="width: 350px; height: 250px; border: 1px solid black">
-          <div v-for="page in pages">
-            <div class="row">
-              <div class="column">
-                <img v-if="page[0]" :src="env+page[0].imageId" @click="clicked(page[0].id)" width="50" height="60" />
-              </div>
-              <div class="column">
-                <img v-if="page[1]" :src="env+page[1].imageId" @click="clicked(page[1].id)" width="50" height="60" />
-              </div>
-              <div class="column">
-                <img v-if="page[2]" :src="env+page[2].imageId" @click="clicked(page[2].id)" width="50" height="60" />
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="column">
-                <img v-if="page[3]" :src="env+page[3].imageId" @click="clicked(page[3].id)" width="50" height="60" />
-              </div>
-              <div class="column">
-                <img v-if="page[4]" :src="env+page[4].imageId" @click="clicked(page[4].id)" width="50" height="60" />
-              </div>
-              <div class="column">
-                <img v-if="page[5]" :src="env+page[5].imageId" @click="clicked(page[5].id)" width="50" height="60" />
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="column">
-                <img v-if="page[6]" :src="env+page[6].imageId" @click="clicked(page[6].id)" width="50" height="60" />
-              </div>
-              <div class="column">
-                <img v-if="page[7]" :src="env+page[7].imageId" @click="clicked(page[7].id)" width="50" height="60" />
-              </div>
-              <div class="column">
-                <img v-if="page[8]" :src="env+page[8].imageId" @click="clicked(page[8].id)" width="50" height="60" />
-              </div>
+      <div style="width: 350px; height: 250px; border: 1px solid black">
+        <div v-for="i in Math.ceil(pages.length/9)">
+          <div class="wrapperI">
+            <div v-for="(page,index) in pages.slice((i-1)*9,i*9)" class="grid-item">
+              <img v-if="page" :src="env+page.imageId" @click="selectItem(i,index)" @touchstart="viewItem(page.id)" :id="page.id" class="imgI" />
             </div>
           </div>
-          </div>
-      </SwipeBox>
+        </div>
+      </div>
+    </SwipeBox>
+    <button @click="selectItems()" @touchstart="selectItems()">select</button>
+    <button v-if="selectMode" @click="deleteSelectedItems" @touchstart="deleteSelectedItems">delete</button>
+    <div v-if="modalOpen" class="modal">
+      <ItemDetail :selected="selected" @close="closeModal" @deleted="deleteItem()">your content...</ItemDetail>
+      <button @click="modalOpen = false" @touchstart="modalOpen = false">Close</button>
+    </div>
   </div>
 </template>
 
 
 <script>
+// import { getCurrentInstance } from 'vue';
 import { register } from 'swiper/element/bundle';
 import SwipeBox from '@shopid/vue3-swipe-box';
+import ItemDetail from './ItemDetail.vue'
 import axios from 'axios'
 register();
 import 'swiper/css';
@@ -56,56 +34,116 @@ export default {
   name:'ItemView',
   components: {
     SwipeBox,
+    ItemDetail,
   },
   data () {
     return {
       pages : [],
-      currentIdx: 0,
-      lastPage: false,
       env: process.env.VUE_APP_IMG,
-      TOKEN : 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5NzYyMDkyLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzk3ODM2OTIsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5NzYyMDkyfQ.ys-nl4gzDzXXAc_USiH6w7OZf5fI1ESj6iILLiJwY5s',
+      itemsToRemove: [],
+      selectedIdx: -1,
+      selected: null,
+      Auth: this.$store.state.Auth,
+      selectMode : false,
+      modalOpen: false,
+      selectedIndices : [],
     }
   },
   props: ['category'],
   methods: {
-    viewMultipleItems(category,page,size) {
-      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5OTYzODYwLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzk5ODU0NjAsInN1YiI6IjIiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5OTYzODYwfQ.xOIScULrsWYRp_a3aTkZqbhfY1sYpLO2Q7qXfaIMJJ0'
-      axios.get(process.env.VUE_APP_ITEMS+`/${category}?page=${page}&size=${size}`, {
-        headers: {
-          'Authorization' : TOKEN
+    selectItem(i,j) {
+      var idx = (i-1)*9+j
+      if (!this.selectMode) {
+        this.selectedIdx = idx
+        this.selected = this.pages[idx]
+        this.modalOpen = true
+      } else {
+        if (this.selectedIndices.includes(idx)) {
+          document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
+          this.selectedIndices.remove(this.selectedIndices.indexOf(idx))
+        } else {
+          document.getElementById(this.pages[idx].id).style.filter = 'saturate(50%)'
+          this.selectedIndices.push(idx)
         }
-      }).then((res) => {
+      }
+    },
+    async deleteSelectedItems() {
+      var a = this
+      await this.deleteMultipleItems(this.selectedIndices.map(x => a.pages[x].id))
+      .then(() => {
+        var itemsToRemove = []
+        a.selectedIndices.sort()
+        a.selectedIndices.reverse()
+        for (var idx of a.selectedIndices) {
+          itemsToRemove.push(a.pages[idx].id)
+          document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
+          a.pages.splice(idx,1)
+        }
+      })
+      .catch((e) => {
+        return e
+      })
+    },
+    viewMultipleItems(category,page,size) {
+      var a = this
+      var member_id = 2;
+      axios.get(process.env.VUE_APP_ITEMS+`/${member_id}/${category}?page=${page}&size=${size}&sort=id,DESC`).then((res) => {
         if (res.data.content.length !== 0) {
-          this.pages.push(res.data.content)
+          for (var item of res.data.content) {
+            a.pages.push(item)
+          }
         }
       }).catch((e) => {
         console.log(e)
       })
     },
     mySwipeChanged (index) {
-      if (index === this.pages.length - 1) {
-        this.viewMultipleItems(this.category,index,9)
+      if (index === Math.ceil(this.pages.length/9)-1) {
+        this.viewMultipleItems(this.category,index+1,9)
       }
-      console.log('index' + index);
     },
-    clicked() {
-    }
+    selectItems() {
+      document.querySelector('.imgI').style.filter = 'saturate(1)'
+      this.selectedIndices = []
+      this.selectMode = !this.selectMode;
+    },
+    async deleteMultipleItems(array) {
+      axios.delete(process.env.VUE_APP_ITEMS + `?ids=${array.join(',')}`, {
+        headers: {
+          'Authorization' : this.Auth.accessToken
+        }
+      }).then((res) => {
+        console.log(res)
+        return res
+      }).catch((e) => {
+        console.log(e)
+        return e
+      })
+    },
+    async deleteItem() {
+      this.modalOpen = false
+      console.log(this.modalOpen)
+      this.pages.splice(this.selectedIdx,1)
+    },
   },
   async beforeMount() {
    this.viewMultipleItems(this.category,0,9)
    this.viewMultipleItems(this.category,1,9)
+   this.viewMultipleItems(this.category,2,9)
   },
 }
 </script>
 
 <style>
-.row {
-  display: flex;
+.imgI {
+  width: 40%
 }
 
-.column {
-  flex: 33.33%;
-  padding: 5px;
+.wrapperI {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  grid-auto-rows: 100px;
 }
 </style>
 

@@ -11,9 +11,10 @@ spring:
 
 file:
   image:
-#    path: C:/Users/SSAFY/Desktop/storage/
+     path: C:/Users/SSAFY/Desktop/storage/
 #    path: C:/Users/multicampus/Desktop/storage/
-    path: /Users/bellroot/Desktop/storage/
+#    path: /Users/bellroot/Desktop/storage/
+#    path: C:/Users/cba15/Desktop/storage/
 oauth:
   kakao:
     redirectUri: http://localhost:8080/api/v1/oauth/kakao

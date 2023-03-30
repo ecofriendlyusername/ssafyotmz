@@ -36,26 +36,27 @@ export default {
 }
 
 .SubNav {
-    background-color: #F5F5F7;
+    background-color: hwb(0 96% 4%);
 }
 
 .SubNavText {
     display: flex;
     justify-content: center;
     padding: 18px;
-    font-size: 23px;
+    font-size: 120%;
     font-weight: bold;
     font-family: 'TheJamsil5Bold';
-    color: black;
+    color: rgb(0, 0, 0);
 }
 
 #PictureIndex {
-    margin-top: 5%;
+    margin-top: 4%;
     width: 95%;
 }
 
 #Arrow {
     width: 1.2%;
+    height: 50px;
 }
 
 #UploadText {
