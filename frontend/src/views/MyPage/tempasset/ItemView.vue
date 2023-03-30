@@ -1,51 +1,24 @@
 <template>
-  <div id="temp">
+  <div :id="some">
     <SwipeBox ref="myswipe" @onChange="mySwipeChanged" speed="150">
-        <div style="width: 350px; height: 250px; border: 1px solid black">
-          <div v-for="page in pages">
-            <div class="row">
-              <div class="column">
-                <img v-if="page[0]" :src="env+page[0].imageId" @click="clicked(page[0].id)" width="50" height="60" />
-              </div>
-              <div class="column">
-                <img v-if="page[1]" :src="env+page[1].imageId" @click="clicked(page[1].id)" width="50" height="60" />
-              </div>
-              <div class="column">
-                <img v-if="page[2]" :src="env+page[2].imageId" @click="clicked(page[2].id)" width="50" height="60" />
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="column">
-                <img v-if="page[3]" :src="env+page[3].imageId" @click="clicked(page[3].id)" width="50" height="60" />
-              </div>
-              <div class="column">
-                <img v-if="page[4]" :src="env+page[4].imageId" @click="clicked(page[4].id)" width="50" height="60" />
-              </div>
-              <div class="column">
-                <img v-if="page[5]" :src="env+page[5].imageId" @click="clicked(page[5].id)" width="50" height="60" />
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="column">
-                <img v-if="page[6]" :src="env+page[6].imageId" @click="clicked(page[6].id)" width="50" height="60" />
-              </div>
-              <div class="column">
-                <img v-if="page[7]" :src="env+page[7].imageId" @click="clicked(page[7].id)" width="50" height="60" />
-              </div>
-              <div class="column">
-                <img v-if="page[8]" :src="env+page[8].imageId" @click="clicked(page[8].id)" width="50" height="60" />
-              </div>
+      <div style="width: 350px; height: 250px; border: 1px solid black">
+        <div v-for="i in Math.ceil(pages.length/9)">
+          <div class="wrapper">
+            <div v-for="(page,index) in pages.slice((i-1)*9,i*9)" class="grid-item">
+              <img v-if="page" :src="env+page.imageId" @click="selectItem(i,index)" @touchstart="viewItem(page.id)" :id="page.id" class="imgs" />
             </div>
           </div>
-          </div>
-      </SwipeBox>
+        </div>
+      </div>
+    </SwipeBox>
+    <button @click="selectItems()">select</button>
+    <button v-if="selectMode" @click="deleteMultipleImagesWith">delete</button>
   </div>
 </template>
 
 
 <script>
+// import { getCurrentInstance } from 'vue';
 import { register } from 'swiper/element/bundle';
 import SwipeBox from '@shopid/vue3-swipe-box';
 import axios from 'axios'
@@ -60,40 +33,92 @@ export default {
   data () {
     return {
       pages : [],
-      currentIdx: 0,
-      lastPage: false,
       env: process.env.VUE_APP_IMG,
+      itemsToRemove: [],
+      selectMode : false,
+      selectedIndices : [],
       TOKEN : 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5NzYyMDkyLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzk3ODM2OTIsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5NzYyMDkyfQ.ys-nl4gzDzXXAc_USiH6w7OZf5fI1ESj6iILLiJwY5s',
     }
   },
   props: ['category'],
   methods: {
+    selectItem(i,j) {
+      var idx = (i-1)*9+j
+      if (this.selectedIndices.includes(idx)) {
+        document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
+        this.selectedIndices.remove(this.selectedIndices.indexOf(idx))
+      } else {
+        document.getElementById(this.pages[idx].id).style.filter = 'saturate(50%)'
+        this.selectedIndices.push(idx)
+      }
+    },
+    async deleteMultipleImagesWith() {
+      await this.deleteMultipleItems(this.selectedIndices.map(x => this.pages[x].id))
+      .then(() => {
+        var itemsToRemove = []
+        this.selectedIndices.sort()
+        this.selectedIndices.reverse()
+        for (var idx of this.selectedIndices) {
+          itemsToRemove.push(this.pages[idx].id)
+          document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
+          this.pages.splice(idx,1)
+        }
+      })
+      .catch((e) => {
+        return e
+      })
+      // const instance = getCurrentInstance();
+      // instance.proxy.forceUpdate();
+    },
     viewMultipleItems(category,page,size) {
-      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5OTYzODYwLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzk5ODU0NjAsInN1YiI6IjIiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5OTYzODYwfQ.xOIScULrsWYRp_a3aTkZqbhfY1sYpLO2Q7qXfaIMJJ0'
-      axios.get(process.env.VUE_APP_ITEMS+`/${category}?page=${page}&size=${size}`, {
+      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTMzNjYxLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNTUyNjEsInN1YiI6IjIiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTMzNjYxfQ.wQtYO7x5ZBFDNHYH875WbMXzAb8HcGH9zaR7gtIfWiI'
+      axios.get(process.env.VUE_APP_ITEMS+`/${category}?page=${page}&size=${size}&sort=id,DESC`, {
         headers: {
           'Authorization' : TOKEN
         }
       }).then((res) => {
         if (res.data.content.length !== 0) {
-          this.pages.push(res.data.content)
+          for (var item of res.data.content) {
+            this.pages.push(item)
+          }
+          // this.pages.push(res.data.content)
         }
       }).catch((e) => {
         console.log(e)
       })
     },
     mySwipeChanged (index) {
-      if (index === this.pages.length - 1) {
-        this.viewMultipleItems(this.category,index,9)
+      if (index === Math.ceil(this.pages.length/9)-1) {
+        this.viewMultipleItems(this.category,index+1,9)
       }
-      console.log('index' + index);
     },
-    clicked() {
-    }
+    viewItem() {
+      console.log('do nothing yet')
+    },
+    selectItems() {
+      this.selectedIndices = []
+      this.selectMode = !this.selectMode;
+    },
+    async deleteMultipleItems(array) {
+      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTMzNjYxLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNTUyNjEsInN1YiI6IjIiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTMzNjYxfQ.wQtYO7x5ZBFDNHYH875WbMXzAb8HcGH9zaR7gtIfWiI'
+      console.log(this.TOKEN);
+      axios.delete(process.env.VUE_APP_ITEMS + `?ids=${array.join(',')}`, {
+        headers: {
+          'Authorization' : TOKEN
+        }
+      }).then((res) => {
+        console.log(res)
+        return res
+      }).catch((e) => {
+        console.log(e)
+        return e
+      })
+    },
   },
   async beforeMount() {
    this.viewMultipleItems(this.category,0,9)
    this.viewMultipleItems(this.category,1,9)
+   this.viewMultipleItems(this.category,2,9)
   },
 }
 </script>
@@ -106,6 +131,17 @@ export default {
 .column {
   flex: 33.33%;
   padding: 5px;
+}
+
+.imgs {
+  width: 30%
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  grid-auto-rows: 100px;
 }
 </style>
 
