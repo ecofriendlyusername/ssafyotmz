@@ -1,121 +1,130 @@
 <template>
-<div>
-  <div id="main-container" class="container">
-    <div id="join" v-if="!session">
-      <div id="join-dialog" class="jumbotron vertical-center">
-        <h1>Join a video session</h1>
-        <div class="form-group">
-          <p>
-            <label>Participant</label>
-            <input v-model="myUserName" class="form-control" type="text" required />
-          </p>
-          <p>
-            <label>Session</label>
-            <input v-model="mySessionId" class="form-control" type="text" required />
-          </p>
-          <p class="text-center">
-            <button class="btn btn-lg btn-success" @click="joinSession()">
-              Join!
-            </button>
-          </p>
-        </div>
+<div id="main-container">
+  <div id="join" v-if="!session">
+    <div id="join-dialog" class="jumbotron vertical-center">
+      <h1>Join a video session</h1>
+      <div class="form-group">
+        <p>
+          <label>Participant</label>
+          <input v-model="myUserName" class="form-control" type="text" required />
+        </p>
+        <p>
+          <label>Session</label>
+          <input v-model="mySessionId" class="form-control" type="text" required />
+        </p>
+        <p class="text-center">
+          <button class="btn btn-lg btn-success" @click="joinSession()">
+            Join!
+          </button>
+        </p>
       </div>
     </div>
+  </div>
 
-    <div id="session" v-if="session">
-      <div id="session-header">
-        <h1 id="session-title">{{ mySessionId }} 님의 옷장</h1>
-          <div>
-            라이브 코디북 만들기 페이지
-          </div>
-        <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession"
-          value="Leave session" />
-      </div>
-      <hr>
-      <div class="categories">
-        <div class="category" :class="{ 'selected': selected === 'outer' }" @click="getItems('outer')">아우터</div>
-        <div class="category" :class="{ 'selected': selected === 'upper' }" @click="getItems('upper')">상의</div>
-        <div class="category" :class="{ 'selected': selected === 'lower' }" @click="getItems('lower')">하의</div>
-        <div class="category" :class="{ 'selected': selected === 'dress' }" @click="getItems('dress')">원피스</div>
-        <div class="category" :class="{ 'selected': selected === 'etc' }" @click="getItems('etc')">기타</div>
-      </div>
-      <div class="items" >
-        <div v-for="item in items" @click="choice(item)" :key="item.id">
-          <img :src='`${item.src}`' style="width:100px;hegiht:100px"/>
+  <div id="session" v-if="session">
+    <div id="session-header">
+      <h1 id="session-title">{{ mySessionId }} 님의 옷장</h1>
+        <div>
+          라이브 코디북 만들기 페이지
         </div>
-      </div>
-      <hr>
-      <div style="text-align:left;">Participants</div>
-      <div id="video-container">
-        <user-video class="publisher" :stream-manager="publisher" :is-speaking="this.publisher.isSpeaking && audioEnabled" />
-        <user-video class="subscriber" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" :is-speaking="sub.isSpeaking"/>
-      </div>
-      <div v-show="audioEnabled" @click="micOnOff" style="width:50px;height:50px">
-        <img src="https://collusic.com/assets/track/unselected/vocal.svg" >
-      </div>
-      <div v-show="!audioEnabled" @click="micOnOff" style="width:50px;height:50px">
-        <img  src="https://collusic.com/assets/track/unselected/crap.svg" >
-      </div>
-      <hr>
-      <div>
-        <div class="settings">
-          <div class="box">
-            <span class="editor-btn icon" title="Color Picker">
-              <input title="Color Picker" type="color" id="color" v-model="backgroundColor"  @blur="updateColor()">
-            </span>
-          </div>
-          <div @click="clear">clear</div>
-          <div v-if="dragItemId" @click="removeItem">삭제</div>
-        </div>
-        <div :style="{margin: '10px', backgroundColor: backgroundColor}">
-          <v-stage
-            ref="stage"
-            :config="configKonva"
-            @dragstart="handleDragstart"
-            @dragend="handleDragend"
-            @mousedown="handleMouseDown"
-            @touchstart="handleMouseDown"
-          >
-            <v-layer ref="layer"
-            :config="configKonva">
-              <v-image :config="{
-                x: 330,
-                y: 330,
-                width: 50,
-                height: 50,
-                image: logo
-              }" />
-              <v-image v-for="item in list" :key="item.id"
-                :config="{
-                  name: item.name,
-                  image: item.image,
-                  x: item.x,
-                  y: item.y,
-                  width: item.width,
-                  height: item.height,
-                  rotation: item.rotation,
-                  scaleX: item.scaleX,
-                  scaleY: item.scaleY,
-                  id: item.id,
-                  numPoints: 5,
-                  innerRadius: 30,
-                  outerRadius: 50,
-                  draggable: item.dragable,
-                  shadowColor: 'black',
-                  shadowBlur: 10,
-                  shadowOffsetX: dragItemId === item.id ? 10 : 3,
-                  shadowOffsetY: dragItemId === item.id ? 10 : 3,
-                  shadowOpacity: 0.2,
-                }"
-                @transformend="handleTransformEnd"
-              ></v-image>
-              <v-transformer ref="transformer"/>
-            </v-layer>
-          </v-stage>
-        </div>
-      </div>
-      <hr>
+      <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession"
+        value="Leave session" />
     </div>
+    <hr>
+    <div class="categories">
+      <div class="category" :class="{ 'selected': selected === 'outer' }" @click="getItems('outer')">아우터</div>
+      <div class="category" :class="{ 'selected': selected === 'upper' }" @click="getItems('upper')">상의</div>
+      <div class="category" :class="{ 'selected': selected === 'lower' }" @click="getItems('lower')">하의</div>
+      <div class="category" :class="{ 'selected': selected === 'dress' }" @click="getItems('dress')">원피스</div>
+      <div class="category" :class="{ 'selected': selected === 'etc' }" @click="getItems('etc')">기타</div>
+    </div>
+    <div class="items" >
+      <div v-for="item in items" @click="choice(item)" :key="item.id">
+        <img :src='`${item.src}`' style="width:100px;hegiht:100px"/>
+      </div>
+    </div>
+    <hr>
+    <div style="text-align:left;">Participants</div>
+    <div id="video-container">
+      <user-video class="publisher" :stream-manager="publisher" :is-speaking="publisher.isSpeaking && audioEnabled" />
+      <user-video class="subscriber" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" :is-speaking="sub.isSpeaking"/>
+    </div>
+    <div v-show="audioEnabled" @click="micOnOff" style="width:50px;height:50px">
+      <img src="https://collusic.com/assets/track/unselected/vocal.svg" >
+    </div>
+    <div v-show="!audioEnabled" @click="micOnOff" style="width:50px;height:50px">
+      <img  src="https://collusic.com/assets/track/unselected/crap.svg" >
+    </div>
+    <hr>
+    <div>
+      <div class="settings">
+        <div class="box">
+          <span class="editor-btn icon" title="Color Picker">
+            <input title="Color Picker" type="color" id="color" v-model="backgroundColor"  @blur="updateColor()">
+          </span>
+        </div>
+        <div @click="clear">clear</div>
+        <div v-if="dragItemId" @click="removeItem">삭제</div>
+      </div>
+      <div :style="{margin: '10px', backgroundColor: backgroundColor}">
+        <v-stage
+          ref="stage"
+          :config="configKonva"
+          @dragstart="handleDragstart"
+          @dragend="handleDragend"
+          @mousedown="handleMouseDown"
+          @touchstart="handleMouseDown"
+        >
+          <v-layer ref="layer"
+          :config="configKonva">
+            <v-rect 
+              id="background"
+              :config="{
+                x: 0,
+                y: 0,
+                width: 400,
+                height: 400,
+                fill: backgroundColor
+              }"
+            />
+            <v-image :config="{
+              x: 330,
+              y: 330,
+              width: 50,
+              height: 50,
+              image: logo
+            }" />
+            <v-image v-for="item in list" :key="item.id"
+              :config="{
+                name: item.name,
+                image: item.image,
+                x: item.x,
+                y: item.y,
+                width: item.width,
+                height: item.height,
+                rotation: item.rotation,
+                scaleX: item.scaleX,
+                scaleY: item.scaleY,
+                id: item.id,
+                numPoints: 5,
+                innerRadius: 30,
+                outerRadius: 50,
+                draggable: item.dragable,
+                shadowColor: 'black',
+                shadowBlur: 10,
+                shadowOffsetX: dragItemId === item.id ? 10 : 3,
+                shadowOffsetY: dragItemId === item.id ? 10 : 3,
+                shadowOpacity: 0.2,
+              }"
+              @transformend="handleTransformEnd"
+            ></v-image>
+            <v-transformer ref="transformer"/>
+          </v-layer>
+        </v-stage>
+      </div>
+    </div>
+    <div @click="captureCodiBoard">캡처</div>
+    <hr>
   </div>
 </div>
 </template>
@@ -180,6 +189,16 @@ export default {
   },
 
   methods: {
+    captureCodiBoard() {
+      const stage = this.$refs.stage.getNode();
+      const dataURL = stage.toDataURL({ pixelRatio: 3 });
+      var link = document.createElement('a');
+      link.download = 'capture.png';
+      link.href = dataURL;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
     updateColor() {
       const color = this.backgroundColor;
       console.log(color);
@@ -216,8 +235,8 @@ export default {
       this.updateItemsOnBoard();
     },
     handleMouseDown(e) {
-      console.log('click')
-      if (e.target === e.target.getStage()) {
+      console.log('click', e.target)
+      if (e.target.id() === 'background') {
         this.dragItemId = null;
         this.updateTransformer();
         return;
@@ -289,6 +308,7 @@ export default {
     choice(item) {
       const img = new Image();
       img.src = process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/images/' + item.imageId;
+      img.crossOrigin = 'Anonymous';
 
       const targetIndex = this.list.findIndex(x => x.name === String(item.id));
       this.dragItemId = null;
@@ -317,7 +337,7 @@ export default {
     },
     getItems(category) {
       this.selected = category;
-      axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
+      axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + this.$store.state.Auth.memberId + '/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
         headers: {
           'Content-Type': 'application/json',
           'Authorization': this.$store.state.Auth['accessToken']
@@ -489,6 +509,7 @@ export default {
                   const item = x;
                   const img = new Image();
                   img.src = x.image;
+                  img.crossOrigin = 'Anonymous';
                   item.image = img;
                   list.push(item)
                 }
@@ -504,6 +525,7 @@ export default {
                   const item = x;
                   const img = new Image();
                   img.src = x.image;
+                  img.crossOrigin = 'Anonymous';
                   item.image = img;
                   list.push(item)
                 }
