@@ -38,6 +38,16 @@
       >
         <v-layer ref="layer"
         :config="configKonva">
+          <v-rect 
+            id="background"
+            :config="{
+              x: 0,
+              y: 0,
+              width: 400,
+              height: 400,
+              fill: backgroundColor
+            }"
+          />
           <v-image :config="{
             x: 330,
             y: 330,
@@ -72,6 +82,7 @@
       </v-stage>
     </div>
   </div>
+  <div @click="captureCodiBoard">캡처</div>
   <hr>
   <router-link to='/Codybook/live'>라이브 하기</router-link> |
   <router-link to='/'>메인페이지</router-link>
@@ -115,6 +126,16 @@ export default {
     },
 
     methods: {
+      captureCodiBoard() {
+        const stage = this.$refs.stage.getNode();
+        const dataURL = stage.toDataURL({ pixelRatio: 3 });
+        var link = document.createElement('a');
+        link.download = 'capture.png';
+        link.href = dataURL;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      },
       removeItem() {
         if (this.dragItemId === null) {
           return;
@@ -135,8 +156,8 @@ export default {
         item.height = e.target.height();
       },
       handleMouseDown(e) {
-        console.log('click')
-        if (e.target === e.target.getStage()) {
+        console.log('click', e.target)
+        if (e.target.id() === 'background') {
           this.dragItemId = null;
           this.updateTransformer();
           return;
@@ -204,6 +225,7 @@ export default {
       choice(item) {
         const img = new Image();
         img.src = process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/images/' + item.imageId;
+        img.crossOrigin = 'Anonymous';
 
         const targetIndex = this.list.findIndex(x => x.name === String(item.id));
         this.dragItemId = null;
@@ -232,7 +254,7 @@ export default {
       },
       getItems(category) {
         this.selected = category;
-        axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
+        axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + this.$store.state.Auth.memberId + '/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
           headers: {
             'Content-Type': 'application/json',
             'Authorization': this.$store.state.Auth['accessToken']
