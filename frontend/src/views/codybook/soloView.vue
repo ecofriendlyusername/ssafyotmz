@@ -3,21 +3,30 @@
     코디북 만들기 페이지
   </div>
   <hr>
-  <div>
-    <p @click="getItems('outer')">아우터</p>
-    <p @click="getItems('upper')">상의</p>
-    <p @click="getItems('lower')">하의</p>
-    <p @click="getItems('dress')">원피스</p>
-    <p @click="getItems('etc')">기타</p>
+  <div class="categories">
+    <div class="category" :class="{ 'selected': selected === 'outer' }" @click="getItems('outer')">아우터</div>
+    <div class="category" :class="{ 'selected': selected === 'upper' }" @click="getItems('upper')">상의</div>
+    <div class="category" :class="{ 'selected': selected === 'lower' }" @click="getItems('lower')">하의</div>
+    <div class="category" :class="{ 'selected': selected === 'dress' }" @click="getItems('dress')">원피스</div>
+    <div class="category" :class="{ 'selected': selected === 'etc' }" @click="getItems('etc')">기타</div>
   </div>
-  <div v-for="item in items" @click="choice(item)" :key="item.id">
-    <div>{{item}}</div>
-    <img :src='`${item.src}`' style="width:100px;hegiht:100px"/>
+  <div class="items" >
+    <div v-for="item in items" @click="choice(item)" :key="item.id">
+      <img :src='`${item.src}`' style="width:80px;hegiht:80px"/>
+    </div>
   </div>
   <hr>
   <div>
-    현재 코디북에 등록된 옷
-    <div v-if="dragItemId" @click="removeItem">삭제</div>
+    <div class="settings">
+      <div class="box">
+        <span class="editor-btn icon" title="Color Picker">
+          <input title="Color Picker" type="color" id="color" v-model="backgroundColor">
+        </span>
+      </div>
+      <div @click="clear">clear</div>
+      <div v-if="dragItemId" @click="removeItem">삭제</div>
+    </div>
+
     <div :style="{margin: '10px', backgroundColor: backgroundColor}">
       <v-stage
         ref="stage"
@@ -29,6 +38,13 @@
       >
         <v-layer ref="layer"
         :config="configKonva">
+          <v-image :config="{
+            x: 330,
+            y: 330,
+            width: 50,
+            height: 50,
+            image: logo
+          }" />
           <v-image v-for="item in list" :key="item.id"
             :config="{
               name: item.name,
@@ -55,13 +71,6 @@
         </v-layer>
       </v-stage>
     </div>
-    <div>{{list}}</div>
-    <div @click="clear">clear</div>
-    <div class="box">
-      <span class="editor-btn icon" title="Color Picker">
-        <input title="Color Picker" type="color" id="color" v-model="backgroundColor">
-      </span>
-    </div>
   </div>
   <hr>
   <router-link to='/Codybook/live'>라이브 하기</router-link> |
@@ -87,7 +96,17 @@ export default {
           width: width,
           height: height
         },
-        backgroundColor: '#FFDAB9'
+        logo: null,
+        backgroundColor: '#FFDAB9',
+        selected: 'outer'
+      }
+    },
+
+    created() {
+      const logoImage = new Image();
+      logoImage.src = '/logo.png'
+      logoImage.onload = () => {
+        this.logo = logoImage;
       }
     },
 
@@ -212,6 +231,7 @@ export default {
         console.log(this.list)
       },
       getItems(category) {
+        this.selected = category;
         axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
           headers: {
             'Content-Type': 'application/json',
@@ -232,3 +252,29 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+  .categories {
+    display: flex;
+    margin: 10px;
+  }
+
+  .category {
+    margin: 0 5px;
+  }
+
+  .selected {
+    background-color: black;
+    color: white;
+  }
+
+  .items {
+    display: flex;
+  }
+
+  .settings {
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 10px;
+  }
+</style>
