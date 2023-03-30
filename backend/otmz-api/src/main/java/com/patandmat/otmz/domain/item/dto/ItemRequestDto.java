@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ItemRequestDto {
     private String name;
-    private String category;
     private String styleVector;
     private String color;
 }
