@@ -61,12 +61,9 @@ public class ItemController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = ItemResponseDto.class)))
     })
-    public ResponseEntity<?> getItem(@PathVariable Long id, Authentication authentication) {
-        // take name, comment
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Member member = userDetails.getMember();
+    public ResponseEntity<?> getItem(@PathVariable Long id, @PathVariable Long member_id) {
         try {
-            ItemResponseDto itemResponseDto = itemService.getItem(id, member.getId());
+            ItemResponseDto itemResponseDto = itemService.getItem(id, member_id);
             return new ResponseEntity<>(itemResponseDto, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
@@ -97,12 +94,9 @@ public class ItemController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> deleteMultipleItems(@RequestParam List<Long> ids, Authentication authentication) {
-        // take name, comment
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Member member = userDetails.getMember();
+    public ResponseEntity<?> deleteMultipleItems(@RequestParam List<Long> ids, @PathVariable Long member_id) {
         try {
-            itemService.deleteMultipleItems(ids, member.getId());
+            itemService.deleteMultipleItems(ids, member_id);
             return new ResponseEntity<>("Success", HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
@@ -113,7 +107,7 @@ public class ItemController {
         }
     }
 
-    @GetMapping("/items/{category}")
+    @GetMapping("/items/{member_id}/{category}")
     @Operation(summary = "여러 아이템들을 페이지 안에 넣어 돌려줌(사진 파일은 보내지 않음)", description = "각 아이템의 사진을 제외한 정보들을 보내주며 사진을 얻기 위해서는 imageId(사진 아이디)로 api에 요청하면 됨. " +
             "<br><br> 이미지 요청 endpoint -> http://(host)/api/v1/images/{id}" +
             "<br><br> page 관련 정보를 쿼리 파라미터로 보내면 해당 페이지를 보내줌. " +
@@ -127,11 +121,9 @@ public class ItemController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> getItemPageByCategory(Pageable pageable, @PathVariable String category, Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Member member = userDetails.getMember();
+    public ResponseEntity<?> getItemPageByCategory(Pageable pageable, @PathVariable String category, @PathVariable Long member_id) {
         try {
-            Page<ItemResponseDto> page = itemService.getItems(pageable, category, member.getId());
+            Page<ItemResponseDto> page = itemService.getItems(pageable, category, member_id);
             return new ResponseEntity<>(page, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

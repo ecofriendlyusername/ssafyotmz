@@ -8,41 +8,27 @@
   <div id="temp">
     <SwipeBox ref="myswipe" @onChange="mySwipeChanged" speed="150">
       <div style="width: 350px; height: 250px; border: 1px solid black">
-        <div v-for="page in pages">
-          <div class="row">
-            <div v-if="page[0]" class="column">
-              <img :src="env+page[0].imageId" @click="clicked(page[0])" width="50" height="60" />
-              <figcaption>{{ page[0].name }}</figcaption>
-            </div>
-            <div v-if="page[1]" class="column">
-              <img :src="env+page[1].imageId" @click="clicked(page[1])" width="50" height="60" />
-              <figcaption>{{ page[1].name }}</figcaption>
-            </div>
-          </div>
-          <div class="row">
-            <div v-if="page[2]" class="column">
-              <img :src="env+page[3].imageId" @click="clicked(page[2])" width="50" height="60" />
-              <figcaption>{{ page[2].name }}</figcaption>
-            </div>
-            <div v-if="page[3]" class="column">
-              <img :src="env+page[3].imageId" @click="clicked(page[3])" width="50" height="60" />
-              <figcaption>{{ page[3].name }}</figcaption>
+        <div v-for="i in Math.ceil(pages.length/4)">
+          <div class="wrapperIT">
+            <div v-for="(page,index) in pages.slice((i-1)*4,i*4)" class="grid-item">
+              <img v-if="page" :src="env+page.imageId" @click="selectItemMatch(i,index)" @touchstart="viewItem(page.id)" :id="page.id" class="imgIT" />
             </div>
           </div>
         </div>
       </div>
     </SwipeBox>
     <Teleport to="body">
-  <div v-if="open" class="modal">
-    <CodyBookDetail :selected="selected" @close="closeModal">your content...</CodyBookDetail>
-    <button @click="open = false">Close</button>
+  <div v-if="modalOpen" class="modal">
+    <CodyBookDetail :selected="selected" @close="closeModal" @deleted="deleteItemMatch()">your content...</CodyBookDetail>
+    <button @click="modalOpen = false" @touchstart="modalOpen = false">Close</button>
   </div>
 </Teleport>
   </div>
   <hr>
   <!-- <router-link to='/Codybook'>코디북 만들기</router-link> | -->
   <router-link to='/MyPage'>마이페이지</router-link>
-  <button @click="select()">select</button>
+  <button @click="selectItemMatches()" @touchstart="selectItemMatches()">선택</button>
+  <button v-if="selectMode" @click="deleteSelectedItemMatches()" @touchstart="deleteSelectedItemMatches()">선택된 코디북 삭제</button>
 </div>
 </template>
 
@@ -61,23 +47,27 @@ export default {
   data () {
     return {
       pages : [],
+      selectedIdx: -1,
       selected: null,
-      imagesToDelete: [],
-      open: false,
+      selectedIndices: [],
+      modalOpen: false,
+      selectMode: false,
       env: process.env.VUE_APP_IMG,
       TOKEN : 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5NzYyMDkyLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzk3ODM2OTIsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5NzYyMDkyfQ.ys-nl4gzDzXXAc_USiH6w7OZf5fI1ESj6iILLiJwY5s',
     }
   },
   methods:{
     viewMultipleItemMatches(page,size) {
-        var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMDY1NTkzLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAwODcxOTMsInN1YiI6IjIiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMDY1NTkzfQ.qM3dCn1QO8dNV2fC05Q0hT-a7GExr_5kI3oY9UkBs8g'
+        var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
         axios.get(process.env.VUE_APP_CODYBOOKS+`?page=${page}&size=${size}`, {
           headers: {
             'Authorization' : TOKEN
           }
         }).then((res) => {
           if (res.data.content.length !== 0) {
-            this.pages.push(res.data.content)
+            for (var item of res.data.content) {
+              this.pages.push(item)
+            }
           }
           return res
         }).catch((e) => {
@@ -85,18 +75,20 @@ export default {
           return e
         })
       },
-      imagesToDelete() {
-
+      selectItemMatches() {
+        document.querySelector('.imgIT').style.filter = 'saturate(1)'
+        console.log('hmmm')
+        this.selectedIndices = []
+        this.selectMode = !this.selectMode;
       },
       mySwipeChanged (index) {
-        if (index === this.pages.length - 1) {                
-          this.viewMultipleItemMatches(index,4)
+        if (index === Math.ceil(this.pages.length/9)-1) {
+          this.viewMultipleItemMatches(this.category,index+1,9)
         }
-        console.log('index' + index);
       },
-      clicked(id) {
-        this.selected = id
-        this.open = true
+      clicked(itemMatch) {
+        this.selected = itemMatch
+        this.modalOpen = true
       },
       closeModal() {
         this.isShow = false
@@ -120,7 +112,7 @@ export default {
       },    
       createItemMatch(formData) {
         // var TOKEN = this.Auth.accessToken
-        var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMDQ5NTI2LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAwNzExMjYsInN1YiI6IjIiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMDQ5NTI2fQ.TD-0mZDiVziNMyuKsGC6tDwln7kVy9wLOiqKt4M2cIY'
+        var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
         axios.post(process.env.VUE_APP_CODYBOOK,formData, {
           headers: {
             'Content-Type' : 'multipart/form-data',
@@ -128,18 +120,25 @@ export default {
           }
         })
       },
-  
       deleteItemMatch() {
-        var TOKEN = this.Auth.accessToken
-        axios.delete(process.env.VUE_APP_CODYBOOK + '/' + id, {
-          headers: {
-            'Authorization' : TOKEN
+        this.modalOpen = false
+        this.pages.splice(selectedIdx,1)
+      },
+      selectItemMatch(i,j) {
+        var idx = (i-1)*4+j
+        if (!this.selectMode) {
+          this.selectedIdx = idx
+          this.selected = this.pages[idx]
+          this.modalOpen = true
+        } else {
+          if (this.selectedIndices.includes(idx)) {
+            document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
+            this.selectedIndices.splice(this.selectedIndices.indexOf(idx))
+          } else {
+            document.getElementById(this.pages[idx].id).style.filter = 'saturate(50%)'
+            this.selectedIndices.push(idx)
           }
-        }).then((res) => {
-          console.log(res)
-        }).catch((e) => {
-          console.log(e)
-        })
+        }
       },
     createItemMatchWith() {
       if (this.file == null) {
@@ -160,7 +159,7 @@ export default {
     },    
     createItemMatch(formData) {
       // var TOKEN = this.Auth.accessToken
-      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMDQ5NTI2LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAwNzExMjYsInN1YiI6IjIiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMDQ5NTI2fQ.TD-0mZDiVziNMyuKsGC6tDwln7kVy9wLOiqKt4M2cIY'
+      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
       axios.post(process.env.VUE_APP_CODYBOOK,formData, {
         headers: {
           'Content-Type' : 'multipart/form-data',
@@ -168,23 +167,41 @@ export default {
         }
       })
     },
-    deleteMultipleItemMatches(array) {
-      var TOKEN = this.Auth.accessToken
+    async deleteSelectedItemMatches() {
+      var a = this
+      await this.deleteMultipleItemMatches(this.selectedIndices.map(x => a.pages[x].id))
+      .then(() => {
+        var itemMatchesToRemove = []
+        a.selectedIndices.sort()
+        a.selectedIndices.reverse()
+        for (var idx of a.selectedIndices) {
+          itemMatchesToRemove.push(a.pages[idx].id)
+          document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
+          a.pages.splice(idx,1)
+        }
+      })
+      .catch((e) => {
+        return e
+      })
+    },
+    async deleteMultipleItemMatches(array) {
+      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
       console.log(this.TOKEN);
-      axios.delete(process.env.VUE_APP_CODYBOOKS + `?ids=${array.join(',')}`, {
+      await axios.delete(process.env.VUE_APP_CODYBOOKS + `?ids=${array.join(',')}`, {
         headers: {
           'Authorization' : TOKEN
         }
       }).then((res) => {
-        console.log(res)
+        return res
       }).catch((e) => {
-        console.log(e)
+        return res
       })
     }
   },
   async beforeMount() {
     this.viewMultipleItemMatches(0,4)
     this.viewMultipleItemMatches(1,4)
+    this.viewMultipleItemMatches(2,4)
   },
 }
 </script>
@@ -197,5 +214,16 @@ export default {
   width: 300px;
   margin-left: -150px;
   background-color: bisque;
+}
+
+.imgIT {
+  width: 30%
+}
+
+.wrapperIT {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  grid-auto-rows: 100px;
 }
 </style>
