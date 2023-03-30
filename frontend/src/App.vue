@@ -18,6 +18,18 @@ export default {
     headerComponent,
     footerComponent
   },
+  mounted() {
+    window.addEventListener('beforeunload', this.confirmExit);
+  },
+  beforeUnmount() {
+    window.removeEventListener('beforeunload', this.confirmExit);
+  },
+  methods: {
+    confirmExit(event) {
+      // 페이지를 닫으려는 경우
+      localStorage.removeItem('vuex')
+    }
+  }
 }
 </script>
 
@@ -44,12 +56,11 @@ nav a.router-link-exact-active {
 }
 
 body {
-  padding-bottom: 73px;
+  padding-bottom: 75px;
 }
 
 footer{
   width: 95.8%;
-  padding-top: 7px;
 }
 
 </style>
