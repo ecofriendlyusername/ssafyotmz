@@ -73,6 +73,13 @@
           >
             <v-layer ref="layer"
             :config="configKonva">
+              <v-image :config="{
+                x: 330,
+                y: 330,
+                width: 50,
+                height: 50,
+                image: logo
+              }" />
               <v-image v-for="item in list" :key="item.id"
                 :config="{
                   name: item.name,
@@ -151,8 +158,17 @@ export default {
         width: width,
         height: height
       },
-      backgroundColor: '#FFDAB9'
+      backgroundColor: '#FFDAB9',
+      logo: null
     };
+  },
+
+  created() {
+    const logoImage = new Image();
+    logoImage.src = '/logo.png'
+    logoImage.onload = () => {
+      this.logo = logoImage;
+    }
   },
 
   mounted() {
