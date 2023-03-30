@@ -5,7 +5,8 @@
         <!-- <img src="@/assets/img/logo.png" style="width:65px;"> -->
     </div>
 
-    <div id="Logout" v-on:click="logOut()">
+    
+    <div v-if="login['memberId']" id="Logout" v-on:click="logOut()">
       LOGOUT
     </div>
 
@@ -18,11 +19,27 @@
 
 export default {
   name:'headerComponent',
+  computed: {
+    login() {
+      return this.$store.state.Auth
+    }
+  },
   methods: {
     logOut() {
+      this.$store.commit('setAuth', {
+        accessToken: null,
+        refreshToken: null,
+        memberId: null,
+        nickname: null,
+        profileImagePath: null,
+      });
       localStorage.removeItem('vuex')
-      this.$router.push('/')
     },
+  },
+  watch: {
+    login() {
+      this.$router.push('/')
+    }
   }
 }
 </script>

@@ -182,6 +182,11 @@ export default {
       })
     },
   },
+  computed:{
+    Auth(){
+      return this.$store.state.Auth
+    }
+  },
   mounted() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
@@ -269,6 +274,11 @@ export default {
   font-weight: bold;
 }
 
+body {
+  padding: 80px;
+  font-family: 'NanumSquareRound',sans-serif;
+  color: black;
+}
 .container {
   /* // width: 380px;
   // height: 250px; */
