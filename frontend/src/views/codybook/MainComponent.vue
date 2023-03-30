@@ -45,8 +45,8 @@
       </div>
       <hr>
       <div id="video-container">
-        <user-video :stream-manager="publisher" :isSpeaking="this.publisher.isSpeaking && audioEnabled" />
-        <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" :isSpeaking="sub.isSpeaking"/>
+        <user-video class="publisher" :stream-manager="publisher" :isSpeaking="this.publisher.isSpeaking && audioEnabled" />
+        <user-video class="subscriber" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" :isSpeaking="sub.isSpeaking"/>
       </div>
       <div v-show="audioEnabled" @click="micOnOff" style="width:50px;height:50px">
         <img src="https://collusic.com/assets/track/unselected/vocal.svg" >
@@ -56,9 +56,12 @@
       </div>
       <hr>
       <div>
-        현재 코디북에 등록된 옷
-        <div>{{list}}</div>
         <div v-if="dragItemId" @click="removeItem">삭제</div>
+        <div class="box">
+          <span class="editor-btn icon" title="Color Picker">
+            <input title="Color Picker" type="color" id="color" v-model="backgroundColor" @blur="updateColor()">
+          </span>
+        </div>
         <div :style="{margin: '10px', backgroundColor: backgroundColor}">
           <v-stage
             ref="stage"
@@ -79,6 +82,8 @@
                   width: item.width,
                   height: item.height,
                   rotation: item.rotation,
+                  scaleX: item.scaleX,
+                  scaleY: item.scaleY,
                   id: item.id,
                   numPoints: 5,
                   innerRadius: 30,
@@ -97,11 +102,6 @@
           </v-stage>
         </div>
         <div @click="clear">clear</div>
-        <div class="box">
-          <span class="editor-btn icon" title="Color Picker">
-            <input title="Color Picker" type="color" id="color" v-model="backgroundColor">
-          </span>
-        </div>
       </div>
       <hr>
     </div>
@@ -156,10 +156,24 @@ export default {
   },
 
   mounted() {
-    this.backgroundColor = '#' +Math.floor(Math.random()*16777215).toString(16);
+    this.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
   },
 
   methods: {
+    updateColor() {
+      const color = this.backgroundColor;
+      console.log(color);
+      this.session.signal({
+        data: JSON.stringify({backgroundColor: color}),
+        to: this.subscribers,
+        type: 'updateBackgroundColor'
+      }).then(() => {
+        console.log('Message successfully sent');
+      })
+      .catch(error => {
+          console.error(error);
+      });
+    },
     removeItem() {
       if (this.dragItemId === null) {
         return;
@@ -178,6 +192,7 @@ export default {
       item.scaleY = e.target.scaleY();
       item.width = e.target.width();
       item.height = e.target.height();
+      this.updateItemsOnBoard();
     },
     handleMouseDown(e) {
       console.log('click')
@@ -189,6 +204,7 @@ export default {
 
       const clickedOnTransformer = e.target.getParent().className === 'Transformer';
       if (clickedOnTransformer) {
+        this.updateItemsOnBoard();
         return;
       }
 
@@ -203,6 +219,8 @@ export default {
       } else {
         this.dragItemId = null;
       }
+
+      this.updateItemsOnBoard();
     },
     clear() {
       this.list = []
@@ -228,7 +246,7 @@ export default {
       item.x = e.target.x();
       item.y = e.target.y();
       item.rotation = e.target.rotation();
-
+      this.updateItemsOnBoard();
     },
     updateTransformer() {
       const transformerNode = this.$refs.transformer.getNode();
@@ -270,7 +288,8 @@ export default {
         rotation: 0,
         width: item.width ? item.width : 200,
         height: item.height ? item.height : 200,
-        scale: 1,
+        scaleX: item.scaleX ? item.scaleX : 1,
+        screenY: item.scaleY ? item.scaleY : 1,
         dragable: true
       });
     },
@@ -296,11 +315,11 @@ export default {
         this.audioEnabled = !this.audioEnabled;
         this.publisher.publishAudio(this.audioEnabled);
     },
-    alterSpeaker(id, isSpeaking) {
+    alertSpeaker(id, isSpeaking) {
       this.session.signal({
         data: JSON.stringify({id: id, isSpeaking: isSpeaking}),
         to: this.subscribers,
-        type: 'alterSpeaker'
+        type: 'alertSpeaker'
       }).then(() => {
         console.log('Message successfully sent');
       })
@@ -322,17 +341,36 @@ export default {
     },
     alertSetUpBoard() {
       console.log('items', this.list)
-      const data = [];
+      const data = {items:[], backgroundColor: this.backgroundColor};
       this.list.forEach(i => {
         const item = Object.assign({}, i);
         item.image = i.image.src;
-        data.push(item)
+        data.items.push(item);
       });
       console.log(data);
       this.session.signal({
         data: JSON.stringify(data),
-        to: this.subscribers.filter(subscriber => subscriber !== this.publisher),
+        to: this.subscribers,
         type: 'setUpBoard'
+      }).then(() => {
+        console.log('Message successfully sent');
+      })
+      .catch(error => {
+          console.error(error);
+      });
+    },
+    updateItemsOnBoard() {
+      const data = [];
+      this.list.forEach(i => {
+        const item = Object.assign({}, i);
+        item.image = i.image.src;
+        data.push(item);
+      });
+      console.log('updateItemsOnBoard', data);
+      this.session.signal({
+        data: JSON.stringify(data),
+        to: this.subscribers,
+        type: 'updateItemsOnBoard'
       }).then(() => {
         console.log('Message successfully sent');
       })
@@ -409,19 +447,35 @@ export default {
             this.session.on('publisherStartSpeaking', (event) => {
                 console.log('User ' + event.connection.connectionId + ' start speaking');
                 this.publisher.isSpeaking = true;
-                this.alterSpeaker(event.connection.connectionId, true);
+                this.alertSpeaker(event.connection.connectionId, true);
             });
 
             this.session.on('publisherStopSpeaking', (event) => {
                 console.log('User ' + event.connection.connectionId + ' stop speaking');
                 this.publisher.isSpeaking = false;
-                this.alterSpeaker(event.connection.connectionId, false);
+                this.alertSpeaker(event.connection.connectionId, false);
             });
 
             this.session.on('signal:setUpBoard', (event) => {
               console.log('setUpBoard');
               const data = JSON.parse(event.data);
               console.log(data)
+              this.backgroundColor = data.backgroundColor;
+              data.items.forEach(x => {
+                if (this.list.findIndex(i => i.name === x.name) === -1) {
+                  const item = x;
+                  const img = new Image();
+                  img.src = x.image;
+                  item.image = img;
+                  list.push(item)
+                }
+              });
+            })
+
+            this.session.on('signal:updateItemsOnBoard', (event) => {
+              console.log('updateItemsOnBoard', event.data);
+              const data = JSON.parse(event.data);
+              list.splice(0, list.length);
               data.forEach(x => {
                 if (this.list.findIndex(i => i.name === x.name) === -1) {
                   const item = x;
@@ -441,8 +495,14 @@ export default {
               clothes.style.top = data.y;
             });
 
-            this.session.on('signal:alterSpeaker', (event) => {
-              console.log('alterSpeaker');
+            this.session.on('signal:updateBackgroundColor', (event) => {
+              console.log('updateBackgroundColor');
+              const data = JSON.parse(event.data);
+              this.backgroundColor = data.backgroundColor;
+            })
+
+            this.session.on('signal:alertSpeaker', (event) => {
+              console.log('alertSpeaker');
               const data = JSON.parse(event.data)
               console.log(data)
               console.log(this.subscribers)
