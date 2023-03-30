@@ -1,33 +1,16 @@
 <template>
   <!-- 내 옷장 -->
   <!-- 목차 -->
-  <ul>
-    <li>상의</li>
-    <li>하의</li>
-    <li>아우터</li>
-    <li>원피스</li>
-    <li>ETC</li>
-  </ul>
   <hr>
   <!-- 옷 목록 -->
   <!-- 그리드, 가로 2~3 정도로 -->
-  <ul>
-    <li>
-      <img src="@/assets/img/logo.png" alt="">
-    </li>
-    <li>
-      <img src="@/assets/img/logo.png" alt="">
-    </li>
-    <li>
-      <img src="@/assets/img/logo.png" alt="">
-    </li>
-    <div v-for="category in categories" @click="changeCategory(category)">{{ category }}</div>
+  <ul style="list-style-type:none;">
+    <li v-for="(category,index) in categories" @click="changeCategory(category)">{{ categoriesKorean[index] }}</li>
     <ItemView :key="curCategory" :category="curCategory"></ItemView>
-    <img src="@/assets/img/StartBtn.png" id="StartBtn" v-on:click=viewItemsWith()>
   </ul>
   <hr>
   <router-link to='/AddClothes'>옷 추가하기</router-link> | 
-  <router-link to='/Codybook'>코디북 만들기</router-link> |
+  <!-- <router-link to='/Codybook'>코디북 만들기</router-link> | -->
   <router-link to='/MyPage'>마이페이지</router-link>
 </template>
 
@@ -40,7 +23,8 @@ export default {
   },
   data () {
     return {
-      categories: ['outer','upper','lower','etc'],
+      categories: ['outer','upper','lower','dress','etc'],
+      categoriesKorean: ['아우터','상의','하의','원피스','ETC'],
       curCategory: 'outer',
     }
   },
