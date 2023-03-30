@@ -26,7 +26,7 @@
   </div>
   <hr>
   <!-- <router-link to='/Codybook'>코디북 만들기</router-link> | -->
-  <router-link to='/MyPage'>마이페이지</router-link>
+  <router-link to='/MyPage'>코디북 만들러가기</router-link>
   <button @click="selectItemMatches()" @touchstart="selectItemMatches()">선택</button>
   <button v-if="selectMode" @click="deleteSelectedItemMatches()" @touchstart="deleteSelectedItemMatches()">선택된 코디북 삭제</button>
 </div>
@@ -50,18 +50,17 @@ export default {
       selectedIdx: -1,
       selected: null,
       selectedIndices: [],
+      Auth: this.$store.state.Auth,
       modalOpen: false,
       selectMode: false,
       env: process.env.VUE_APP_IMG,
-      TOKEN : 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjc5NzYyMDkyLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Nzk3ODM2OTIsInN1YiI6IjEiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjc5NzYyMDkyfQ.ys-nl4gzDzXXAc_USiH6w7OZf5fI1ESj6iILLiJwY5s',
     }
   },
   methods:{
     viewMultipleItemMatches(page,size) {
-        var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
         axios.get(process.env.VUE_APP_CODYBOOKS+`?page=${page}&size=${size}`, {
           headers: {
-            'Authorization' : TOKEN
+            'Authorization' : this.Auth.accessToken
           }
         }).then((res) => {
           if (res.data.content.length !== 0) {
@@ -111,12 +110,10 @@ export default {
         this.createItemMatch(formData)
       },    
       createItemMatch(formData) {
-        // var TOKEN = this.Auth.accessToken
-        var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
         axios.post(process.env.VUE_APP_CODYBOOK,formData, {
           headers: {
             'Content-Type' : 'multipart/form-data',
-            'Authorization' : TOKEN,
+            'Authorization' : this.Auth.accessToken
           }
         })
       },
@@ -158,12 +155,10 @@ export default {
       this.createItemMatch(formData)
     },    
     createItemMatch(formData) {
-      // var TOKEN = this.Auth.accessToken
-      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
       axios.post(process.env.VUE_APP_CODYBOOK,formData, {
         headers: {
           'Content-Type' : 'multipart/form-data',
-          'Authorization' : TOKEN,
+          'Authorization' : this.Auth.accessToken
         }
       })
     },
@@ -185,11 +180,9 @@ export default {
       })
     },
     async deleteMultipleItemMatches(array) {
-      var TOKEN = 'Bearer eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNjgwMTUxMzM1LCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODAxNzI5MzUsInN1YiI6IjMiLCJpc3MiOiJPdG16IiwiaWF0IjoxNjgwMTUxMzM1fQ.chZHsP_gx-ZubEkPLtT3kvjDAXOEh-63DxSE_JZ2Id4'
-      console.log(this.TOKEN);
       await axios.delete(process.env.VUE_APP_CODYBOOKS + `?ids=${array.join(',')}`, {
         headers: {
-          'Authorization' : TOKEN
+          'Authorization' : this.Auth.accessToken
         }
       }).then((res) => {
         return res
