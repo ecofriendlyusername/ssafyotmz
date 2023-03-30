@@ -24,7 +24,7 @@
 
     <div id="session" v-if="session">
       <div id="session-header">
-        <h1 id="session-title">{{ mySessionId }}</h1>
+        <h1 id="session-title">{{ mySessionId }} 님의 옷장</h1>
           <div>
             라이브 코디북 만들기 페이지
           </div>
@@ -32,21 +32,23 @@
           value="Leave session" />
       </div>
       <hr>
-      <div>
-        <p @click="getItems('outer')">아우터</p>
-        <p @click="getItems('upper')">상의</p>
-        <p @click="getItems('lower')">하의</p>
-        <p @click="getItems('dress')">원피스</p>
-        <p @click="getItems('etc')">기타</p>
+      <div class="categories">
+        <div class="category" :class="{ 'selected': selected === 'outer' }" @click="getItems('outer')">아우터</div>
+        <div class="category" :class="{ 'selected': selected === 'upper' }" @click="getItems('upper')">상의</div>
+        <div class="category" :class="{ 'selected': selected === 'lower' }" @click="getItems('lower')">하의</div>
+        <div class="category" :class="{ 'selected': selected === 'dress' }" @click="getItems('dress')">원피스</div>
+        <div class="category" :class="{ 'selected': selected === 'etc' }" @click="getItems('etc')">기타</div>
       </div>
-      <div v-for="item in items" @click="choice(item)" :key="item.id">
-        <div>{{item}}</div>
-        <img :src='`${item.src}`' style="width:100px;hegiht:100px"/>
+      <div class="items" >
+        <div v-for="item in items" @click="choice(item)" :key="item.id">
+          <img :src='`${item.src}`' style="width:100px;hegiht:100px"/>
+        </div>
       </div>
       <hr>
+      <div style="text-align:left;">Participants</div>
       <div id="video-container">
-        <user-video class="publisher" :stream-manager="publisher" :isSpeaking="this.publisher.isSpeaking && audioEnabled" />
-        <user-video class="subscriber" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" :isSpeaking="sub.isSpeaking"/>
+        <user-video class="publisher" :stream-manager="publisher" :is-speaking="this.publisher.isSpeaking && audioEnabled" />
+        <user-video class="subscriber" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" :is-speaking="sub.isSpeaking"/>
       </div>
       <div v-show="audioEnabled" @click="micOnOff" style="width:50px;height:50px">
         <img src="https://collusic.com/assets/track/unselected/vocal.svg" >
@@ -56,11 +58,14 @@
       </div>
       <hr>
       <div>
-        <div v-if="dragItemId" @click="removeItem">삭제</div>
-        <div class="box">
-          <span class="editor-btn icon" title="Color Picker">
-            <input title="Color Picker" type="color" id="color" v-model="backgroundColor" @blur="updateColor()">
-          </span>
+        <div class="settings">
+          <div class="box">
+            <span class="editor-btn icon" title="Color Picker">
+              <input title="Color Picker" type="color" id="color" v-model="backgroundColor"  @blur="updateColor()">
+            </span>
+          </div>
+          <div @click="clear">clear</div>
+          <div v-if="dragItemId" @click="removeItem">삭제</div>
         </div>
         <div :style="{margin: '10px', backgroundColor: backgroundColor}">
           <v-stage
@@ -108,7 +113,6 @@
             </v-layer>
           </v-stage>
         </div>
-        <div @click="clear">clear</div>
       </div>
       <hr>
     </div>
@@ -144,7 +148,6 @@ export default {
       publisher: undefined,
       subscribers: [],
       audioEnabled: true,
-      hello: undefined,
 
       // Join form
       mySessionId: "SessionA",
@@ -159,7 +162,8 @@ export default {
         height: height
       },
       backgroundColor: '#FFDAB9',
-      logo: null
+      logo: null,
+      selected: 'outer'
     };
   },
 
@@ -198,6 +202,7 @@ export default {
         this.list.splice(index, 1);
         this.dragItemId = null;
         this.updateTransformer();
+        this.updateItemsOnBoard();
     },
     handleTransformEnd(e) {
       const item = this.list.find(i => i.name === this.dragItemId);
@@ -242,6 +247,7 @@ export default {
       this.list = []
       this.dragItemId = null;
       this.updateTransformer();
+      this.updateItemsOnBoard();
     },
     handleDragstart(e) {
       // save drag element:
@@ -310,6 +316,7 @@ export default {
       });
     },
     getItems(category) {
+      this.selected = category;
       axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
         headers: {
           'Content-Type': 'application/json',
@@ -601,4 +608,33 @@ export default {
     height: 200px;
     position: absolute;
   }
+
+.categories {
+  display: flex;
+  margin: 10px;
+}
+
+.category {
+  margin: 0 5px;
+}
+
+.selected {
+  background-color: black;
+  color: white;
+}
+
+.items {
+  display: flex;
+}
+
+.settings {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 10px;
+}
+
+#video-container {
+  display: flex;
+}
 </style>
+
