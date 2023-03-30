@@ -4,35 +4,40 @@
         <div style="display:flex; justify-content:space-between; padding: 10px;">
             <router-link to="/" style="text-decoration:none; color:white">
                 <div>
-                    <img src="@/assets/img/homeicon.png" style="width: 34%;">
+                    <img v-if="this.home=='false'" v-on:click="clickhome" src="@/assets/img/homeicon.png" class="icon">
+                    <img v-if="this.home=='true'" src="@/assets/img/clickhome.png" class="icon">
                     <p id="footerText">홈</p>
                 </div>
             </router-link>
 
             <router-link to='/Find/index' style="text-decoration:none; color:white">
                 <div>
-                    <img src="@/assets/img/styleicon.png" style="width: 34%;">
+                    <img v-if="this.style=='false'" v-on:click="clickstyle" src="@/assets/img/styleicon.png" class="icon">
+                    <img v-if="this.style=='true'" src="@/assets/img/clickstyle.png" class="icon">
                     <p id="footerText">스타일 찾기</p>
                 </div>
             </router-link>
 
             <router-link to="/MyPage/closet" style="text-decoration:none; color:white">
                 <div>
-                    <img src="@/assets/img/closeticon.png" style="width: 34%;">
+                    <img v-if="this.closet=='false'" v-on:click="clickcloset" src="@/assets/img/closeticon.png" class="icon">
+                    <img v-if="this.closet=='true'" src="@/assets/img/clickcloset.png" class="icon">
                     <p id="footerText">옷장</p>
                 </div>
             </router-link>
 
             <router-link to='/Codybook/solo' style="text-decoration:none; color:white">
                 <div>
-                    <img src="@/assets/img/bookicon.png" style="width: 34%;">
+                    <img v-if="this.book=='false'" v-on:click="clickbook" src="@/assets/img/bookicon.png" class="icon">
+                    <img v-if="this.book=='true'" src="@/assets/img/clickbook.png" class="icon">
                     <p id="footerText">코디북</p>
                 </div>
             </router-link>
 
             <router-link to="/Mypage" style="text-decoration:none; color:white">
                 <div>
-                    <img src="@/assets/img/myicon.png" style="width: 34%;">
+                    <img v-if="this.my=='false'" v-on:click="clickmy" src="@/assets/img/myicon.png" class="icon">
+                    <img v-if="this.my=='true'" src="@/assets/img/clickmy.png" class="icon">
                     <p id="footerText">마이페이지</p>
                 </div>
             </router-link>
@@ -44,6 +49,53 @@
 
 <script>
 export default {
+    data() {
+        return {
+            home: "true",
+            style: "false",
+            closet: "false",
+            book: "false",
+            my: "false",
+        }
+    },
+    methods: {
+        clickhome() {
+            this.home="true"
+            this.style="false"
+            this.closet="false"
+            this.book="false"
+            this.my="false"
+        },
+        clickstyle() {
+            this.style="true"
+            this.home="false"
+            this.closet="false"
+            this.book="false"
+            this.my="false"
+        },
+        clickcloset() {
+            this.closet="true"
+            this.home="false"
+            this.style="false"
+            this.book="false"
+            this.my="false"
+        },
+        clickbook() {
+            this.book="true"
+            this.home="false"
+            this.style="false"
+            this.closet="false"
+            this.my="false"
+        },
+        clickmy() {
+            this.my="true"
+            this.home="false"
+            this.style="false"
+            this.closet="false"
+            this.book="false"
+        },
+
+    }
 
 }
 </script>
@@ -67,6 +119,11 @@ footer {
     font-size: 55%;
     font-weight: bold;
     font-family: 'NanumSquareNeo-Variable';
+}
+
+.icon {
+    width: 31%;
+    margin-top: 5px;
 }
 
 </style>
