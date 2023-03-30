@@ -44,7 +44,7 @@ nav a.router-link-exact-active {
 }
 
 body {
-  padding-bottom: 75px;
+  padding-bottom: 73px;
 }
 
 footer{
