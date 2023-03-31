@@ -5,7 +5,7 @@
         <div v-for="i in Math.ceil(pages.length/9)">
           <div class="wrapperI">
             <div v-for="(page,index) in pages.slice((i-1)*9,i*9)" class="grid-item">
-              <img v-if="page" :src="env+page.imageId" @click="selectItem(i,index)" @touchstart="viewItem(page.id)" :id="page.id" class="imgI" />
+              <img v-if="page" :src="env+page.imageId" @click="selectItem(i,index)" @touchend="selectItem(i,index)" :id="page.id" class="imgI" />
             </div>
           </div>
         </div>
