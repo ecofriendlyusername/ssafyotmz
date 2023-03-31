@@ -21,7 +21,7 @@
        accept="image/png, image/jpeg">
        <br>
   <hr>
-  <img src="@/assets/img/StartBtn.png" id="StartBtn" v-on:click=processImageAndCreateItem()>
+  <img src="@/assets/img/StartBtn.png" id="StartBtn" v-on:click=processImageAndCreateItem() @touchstart="processImageAndCreateItem()" >
 </div>
 </template>
 

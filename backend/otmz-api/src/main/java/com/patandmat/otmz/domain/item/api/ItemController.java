@@ -115,7 +115,7 @@ public class ItemController {
             "size : 한 페이지에 몇개의 item이 들어가는지  <br><br>" +
             "page : 몇번째 페이지인지,  <br><br>" +
             "sort : 어떤 속성으로 정렬할것인지, 올림차순인지 내림차순인지 <br><br>" +
-            "요청예시 : http://(host)/api/v1/itempage?page=2&size=3&sort=id,ASC <br><br>" +
+            "요청예시 : http://(host)/api/v1/items?page=2&size=3&sort=id,ASC <br><br>" +
             "설명 : 아이디를 기준으로 오름차순으로 정렬하고 두 번쩨 페이지를 가져온다. 한 페이지에는 두개의 아이템이 있다. <br><br>" +
             " 총 페이지 수는 totalPages에서 찾을 수 있음"
             , responses = {

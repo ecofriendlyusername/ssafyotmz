@@ -28,7 +28,7 @@
   <hr>
   <!-- <router-link to='/Codybook'>코디북 만들기</router-link> | -->
   <router-link to='/Codybook/solo'>코디북 만들러가기</router-link>
-  <button @click="selectItemMatches()" @touchstart="selectItemMatches()">선택</button>
+  <button v-if="pages.length!==0" @click="selectItemMatches()" @touchstart="selectItemMatches()">선택</button>
   <button v-if="selectMode" @click="deleteSelectedItemMatches()" @touchstart="deleteSelectedItemMatches()">선택된 코디북 삭제</button>
 </div>
 </template>
@@ -130,6 +130,8 @@ export default {
           this.selectedIdx = idx
           this.selected = this.pages[idx]
           this.modalOpen = true
+          this.selectedIndices = []
+          document.querySelector('.imgIT').style.filter = 'saturate(1)'
         } else {
           if (this.selectedIndices.includes(idx)) {
             document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
