@@ -2,6 +2,7 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 
 from style_classifier import *
+from single_classifier import *
 from category_classifier import *
 from texture_classifier import *
 from print_classifier import *
@@ -59,30 +60,60 @@ async def test(img: UploadFile = File(...)):
 
 
 @app.post("/ai/v1/remove")
-async def remove_bg(image: UploadFile = File(...)):
-
-    # filename = "./dummy/test12.jpg"
-
-    # img = Image.open(filename)
-
+async def remove_bg_and_style_classification(image: UploadFile = File(...)):
+    
+    #read image data
     img = await image.read()
     img = io.BytesIO(img)
     #open image
     img = Image.open(img)
+    
+    ##########################################################
+    #inference style
+    
+    inf_img = img.convert('RGB')
+    # transformation
+    if val_transform is not None:
 
+        inf_img = val_transform(inf_img)
+    
+    # prepare feature
+    inf_img = inf_img.unsqueeze(0)
+
+    feature_var = torch.autograd.Variable(inf_img).float()
+    
+    # data
+    output = model_single(feature_var, inp_var)
+    percentage_output = F.softmax(output, dim=1)
+
+    pred = output.cpu().detach().numpy()
+
+    sorted_pred = np.argsort(pred, axis=1)
+
+    # result
+    result = {}
+
+    for i in range(num_classes_style-1, -1, -1):
+
+        result[23-i] = {"style": change_class_style[sorted_pred[0][i]],
+                        "score": round((percentage_output[0][sorted_pred[0][i]].item())*100, 4)}
+    
+    
+    ###############################################################################
     # remove background
-
     img = remove(img, alpha_matting=True, alpha_matting_erode_size=15)
     
     # fix output
     # save image
-    img.save("./remove/output.png", "png")
+    x = int(round(np.random.rand(),5)*(10**5))
     
-    img = Image.open("./remove/output.png")
+    img.save(f"./remove/{x}.png", "png")
+    
+    img = Image.open(f"./remove/{x}.png")
     
     img_converted = from_image_to_bytes(img)
     
-    return JSONResponse(img_converted)
+    return {"image":JSONResponse(img_converted),"style":result}
     
     
 

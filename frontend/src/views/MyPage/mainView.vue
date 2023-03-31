@@ -32,14 +32,11 @@
       <p id="mystyle">
         스타일 진단 횟수: {{ this.myData['totalStyleCount'] }}회
       </p>
-      <!-- 아니면 3개 고정인 점을 이용해서 각자 집어넣어도 될 듯 -->
       <div style="display:flex; justify-content: center; margin: 20px; align-items: center;">
         <div style="width:55%;">
           <canvas id="myChart"></canvas>
         </div>
         <div style="width:100%">
-          
-          
           <p>TOP 3</p>
           <p v-for="look in myData['lookCountDtoList']" style="margin-top:-10px;">
           {{ look['style'] }} : {{ look['count']/this.myData['totalStyleCount']*100 }}%</p>
@@ -69,14 +66,14 @@
       <!-- 아니면 3개 고정인 점을 이용해서 각자 집어넣어도 될 듯 -->
       <div style="display:flex; justify-content: center; margin: 20px; align-items: center;">
         <div style="width:55%;">
-          <canvas id="myChart"></canvas>
+          <canvas id="myChart2"></canvas>
         </div>
         <div style="width:100%">
           
         <!-- 옷 종류 TOP3 출력 -->
           <p>TOP 3</p>
-          <p v-for="look in myData['lookCountDtoList']" style="margin-top:-10px;">
-          {{ look['style'] }} : {{ look['count']/this.myData['totalStyleCount']*100 }}%</p>
+          <p v-for="look in myData['clothCountDtoList']" style="margin-top:-10px;">
+          {{ look['style'] }} : {{ look['count']/this.myData['totalItemCount']*100 }}%</p>
         </div>
       </div>
 
@@ -118,6 +115,20 @@ export default {
         console.log(response.data)
         this.myData = response.data
         this.myData = {
+          clothCountDtoList:[
+          {
+              'style': '스트릿',
+              'count':5
+            },
+            {
+              'style': '캐주얼',
+              'count':3
+            },
+            {
+              'style': '러블리',
+              'count':1
+            },
+          ],
           lookCountDtoList: [
             {
               'style': '스트릿',
@@ -169,7 +180,38 @@ export default {
               },
             }
           },
-          
+        });
+        const ctx2 = document.getElementById('myChart2');
+        const data2 = Object.values(this.myData['clothCountDtoList'])
+        new Chart(ctx2, {
+          type: 'bar',
+          data: {
+            labels: data2.map(x => x['style']),
+            datasets: [{
+              // label: '# of Votes',
+              data: data2.map(x => x['count']),
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                display: false
+              },
+              x: {
+                grid: {
+                  offset: true,
+                  display: false
+                }
+              },
+            },
+            plugins: {
+              legend: {
+                display: false
+              },
+            }
+          },
         });
       })
       .catch(error => console.log(error))
