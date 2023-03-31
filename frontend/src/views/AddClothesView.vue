@@ -14,6 +14,13 @@
   <option value="dress">원피스</option>
   <option value="etc">기타</option>
 </select>
+<img v-if="isLoading" :src="loadingImage">
+<div v-if="haveImage">
+  <img :src="processedImageStr">
+  <div>이 이미지로 등록하시겠습니까?</div>
+  <button @click="createItemWithProcessedImage()"></button>
+  <button @click="no()"></button>
+</div>
     <br>
     <br>
     <input type="file"
@@ -37,12 +44,20 @@ export default {
       result: null,
       style: null,
       cropped: null,
+      isLoading: false,
+      processedImageStr: "",
+      loadingImage: "https://upload.wikimedia.org/wikipedia/commons/b/b9/Youtube_loading_symbol_1_(wobbly).gif",
+      haveImage: false,
       Auth: this.$store.state.Auth,
     }
   },
   methods: {
     fileUpload(event) {
       this.file = event.target.files[0];
+    },
+    no() {
+      this.haveImage = false
+      this.processedImageStr = ""    
     },
     dataURLtoFile(dataurl, filename) {
       var arr = dataurl.split(','),
@@ -77,23 +92,19 @@ export default {
       })
     },
     async processImageAndCreateItem() {
+      var a = this
       if (this.file == null) {
+        alert('사진을 올려주세요!')
         return;
       }
+      this.isLoading = true
       const formDataAI = new FormData();
       formDataAI.append('image', this.file);
-      console.log('file before :' + this.file)
-
       await this.removeBackground(formDataAI)
-
-      const formDataStyle = new FormData();
-      formDataStyle.append('imageFile', this.processedImage)
-      await this.getStyle(formDataStyle)
-
-
+    },
+    async createItemWithProcessedImage() {
       const formData = new FormData();
       formData.append('imagefile',this.processedImage)
-
       const itemJson = {
         "name" : document.getElementById('name').value,
         "color":"color",
@@ -104,22 +115,27 @@ export default {
       type: 'application/json'});
       formData.append('item',itemBlob);
       formData.append('category',document.getElementById("categories").value)
-
       this.createItem(formData)
     },
     async removeBackground(formData) {
+      var a = this
       await axios.post(process.env.VUE_APP_AI_REMOVE, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
       .then(response => {
-        const str = 'data:image/png;base64,' + response.data
-        this.processedImage = this.dataURLtoFile(str,'processedImage.jpeg')
+        a.processedImageStr = 'data:image/png;base64,' + response.data.image
+        const style = response.data.style
+        this.processedImage = this.dataURLtoFile(a.processedImageStr,'processedImage.jpeg')
+        this.style = style
+        this.isLoading = false
+        this.haveImage = true
         return response
       })
       .catch(e => {
-        console.log(e)
+        this.isLoading = false
+        alert('이미지 처리에 문제가 있었습니다 다시 등록해주세요')
         return e
       })
     },
