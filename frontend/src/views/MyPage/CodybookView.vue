@@ -31,7 +31,9 @@
       </div>
     </swiper-slide>
   </swiper>
-    <div v-if="pages.length===0" style="width: 350px; height: 250px; border: 1px solid black"></div>
+    <div v-if="pages.length===0">
+      아직 코디북이 없습니다!
+    </div>
     <Teleport to="body">
   <div v-if="modalOpen" class="modal">
     <CodyBookDetail :selected="selected" @close="closeModal" @deleted="deleteItemMatch()">your content...</CodyBookDetail>
