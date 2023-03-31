@@ -14,7 +14,7 @@
           <span>#{{ result['data']['3'].style}}</span>
         </div>
         <!-- <h3>#{{ result['data']['1'].style}} #{{ result['data']['2'].style}} #{{ result['data']['3'].style}}</h3> -->
-        <div style="width:300px; margin-left: 11%;">
+        <div style="width:80%; margin-left: 11%;">
           <div style="dispaly:flex; justify-self:center; ">
             <p style="font-size:100%">{{ explanation[result['data']['1'].style] }}</p>
           </div>
@@ -51,10 +51,10 @@
       <router-link to='/Recom' style="text-decoration:none; color:black">
         <div style="display:flex; justify-content:center; margin-top: 12px;">
           <div id="GoStyle">
-            <p style="font-size:95%">
+            <p style="font-size:90%">
               더욱 다양한 스타일을 즐겨보세요
             </p>
-            <p style="font-size:90%">
+            <p style="font-size:85%">
               Go to another style
             </p>
           </div>
@@ -144,7 +144,7 @@ export default {
   border-radius: 14px;
   width: 32%;
   font-weight: bold;
-  font-size: 80%;
+  font-size: 75%;
   padding: 6px;
   margin: 5px;
   box-shadow: 5px 5px 5px rgb(192, 192, 192);
