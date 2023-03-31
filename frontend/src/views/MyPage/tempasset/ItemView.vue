@@ -1,17 +1,18 @@
 <template>
   <div>
-    <SwipeBox ref="myswipe" @onChange="mySwipeChanged" speed="150">
+    <SwipeBox v-if="pages.length !== 0" ref="myswipe" @onChange="mySwipeChanged" speed="150">
       <div style="width: 350px; height: 250px; border: 1px solid black">
         <div v-for="i in Math.ceil(pages.length/9)">
           <div class="wrapperI">
             <div v-for="(page,index) in pages.slice((i-1)*9,i*9)" class="grid-item">
-              <img v-if="page" :src="env+page.imageId" @click="selectItem(i,index)" @touchstart="viewItem(page.id)" :id="page.id" class="imgI" />
+              <img v-if="page" :src="env+page.imageId" @click="selectItem(i,index)" @touchend="selectItem(i,index)" :id="page.id" class="imgI" />
             </div>
           </div>
         </div>
       </div>
     </SwipeBox>
-    <button @click="selectItems()" @touchstart="selectItems()">select</button>
+    <div v-if="pages.length===0" style="width: 350px; height: 250px; border: 1px solid black"></div>
+    <button v-if="pages.length!==0" @click="selectItems()" @touchstart="selectItems()">select</button>
     <button v-if="selectMode" @click="deleteSelectedItems" @touchstart="deleteSelectedItems">delete</button>
     <div v-if="modalOpen" class="modal">
       <ItemDetail :selected="selected" @close="closeModal" @deleted="deleteItem()">your content...</ItemDetail>
@@ -57,11 +58,15 @@ export default {
         this.selectedIdx = idx
         this.selected = this.pages[idx]
         this.modalOpen = true
+        this.selectedIndices = []
+        document.querySelector('.imgI').style.filter = 'saturate(1)'
       } else {
         if (this.selectedIndices.includes(idx)) {
+          console.log('contains')
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
-          this.selectedIndices.remove(this.selectedIndices.indexOf(idx))
+          this.selectedIndices.splice(this.selectedIndices.indexOf(idx))
         } else {
+          console.log('contains not')
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(50%)'
           this.selectedIndices.push(idx)
         }
@@ -86,7 +91,7 @@ export default {
     },
     viewMultipleItems(category,page,size) {
       var a = this
-      var member_id = 2;
+      var member_id = this.Auth.memberId;
       axios.get(process.env.VUE_APP_ITEMS+`/${member_id}/${category}?page=${page}&size=${size}&sort=id,DESC`).then((res) => {
         if (res.data.content.length !== 0) {
           for (var item of res.data.content) {
