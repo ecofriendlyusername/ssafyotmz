@@ -1,73 +1,30 @@
 <template>
   <div>
-    <!-- <SwipeBox v-if="pages.length !== 0" ref="myswipe" @onChange="mySwipeChanged" speed="150">
-      <div style="width: 350px; height: 250px; border: 1px solid black">
-        <div v-for="i in Math.ceil(pages.length/9)">
-          <div class="wrapperI">
-            <div v-for="(page,index) in pages.slice((i-1)*9,i*9)" class="grid-item">
-              <img v-if="page" :src="env+page.imageId" @click="selectItem(i,index)" @touchend="selectItem(i,index)" :id="page.id" class="imgI" />
-            </div>
-          </div>
+  <swiper v-if="pages.length!==0" class="items"
+    @activeIndexChange="mySwipeChanged" 
+    :space-between="1"
+    :loop="false"
+    :slidesPerView="1"
+  >
+    <swiper-slide v-for="i in Math.ceil(pages.length/9)">
+      <div class="wrapperI">
+        <div v-for="(page,index) in pages.slice((i-1)*9,i*9)" class="grid-item">
+          <img v-if="page" :src="env+page.imageId" @click="selectItem(i,index)" @mousedown="selectItem(i,index)" :id="page.id" class="imgI" />
         </div>
       </div>
-    </SwipeBox> -->
-    <swiper
-    :slides-per-view="1"
-    :space-between="50"
-    :modules="modules" 
-    navigation
-    :pagination="{ clickable: false }"
-    @swiper="onSwiper"
-    @activeIndexChange="slideChange" 
-  >
-  <div>1</div>
-  <div>2</div>
-  <div>3</div>
-  <div>4</div>
-  <div>5</div>
-  <div>6</div>
-  <div>7</div>
-  <!-- <div v-for="i in Math.ceil(pages.length/9)">
-          <div class="wrapperI">
-            <div v-for="(page,index) in pages.slice((i-1)*9,i*9)" class="grid-item">
-              <img v-if="page" :src="env+page.imageId" @click="selectItem(i,index)" @touchend="selectItem(i,index)" :id="page.id" class="imgI" />
-            </div>
-          </div>
-        </div> -->
+    </swiper-slide>
   </swiper>
-    <div v-if="pages.length===0" style="width: 350px; height: 250px; border: 1px solid black"></div>
     <button v-if="pages.length!==0" @click="selectItems()" @touchstart="selectItems()">select</button>
     <button v-if="selectMode" @click="deleteSelectedItems" @touchstart="deleteSelectedItems">delete</button>
     <div v-if="modalOpen" class="modal">
       <ItemDetail :selected="selected" @close="closeModal" @deleted="deleteItem()">your content...</ItemDetail>
-      <button @click="modalOpen = false" @touchstart="modalOpen = false">Close</button>
+      <button @click="modalOpen = false" @mousedown="modalOpen = false">Close</button>
     </div>
-
-    <div>hey</div>
-    <!-- <swiper
-    :modules="modules"
-    :slides-per-view="3"
-    :space-between="50"
-    navigation
-    :pagination="{ clickable: false }"
-    @swiper="onSwiper"
-    @activeIndexChange="slideChange" 
-  >
-    <swiper-slide @click="printHi()">Slide 1</swiper-slide>
-    <swiper-slide @click="printHi()" >Slide 2</swiper-slide>
-    <swiper-slide @click="printHi()" >Slide 3</swiper-slide>
-    <swiper-slide @click="printHi()">Slide 4</swiper-slide>
-    <swiper-slide @click="printHi()">Slide 5</swiper-slide>
-    <swiper-slide @click="printHi()">Slide 6</swiper-slide>
-  </swiper> -->
   </div>
 </template>
 
 
 <script>
-// import { getCurrentInstance } from 'vue';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
-
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
@@ -78,16 +35,13 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
 import { register } from 'swiper/element/bundle';
-import SwipeBox from '@shopid/vue3-swipe-box';
 import ItemDetail from './ItemDetail.vue'
 import axios from 'axios'
 register();
-import 'swiper/css';
 
 export default {
   name:'ItemView',
   components: {
-    SwipeBox,
     Swiper,
     SwiperSlide,
     ItemDetail,
@@ -160,7 +114,8 @@ export default {
         console.log(e)
       })
     },
-    mySwipeChanged (index) {
+    mySwipeChanged (swiper) {
+      var index = swiper.realIndex
       if (index === Math.ceil(this.pages.length/9)-1) {
         this.viewMultipleItems(this.category,index+1,9)
       }
@@ -209,7 +164,7 @@ export default {
 
 <style>
 .imgI {
-  width: 40%
+  width: 50%
 }
 
 .wrapperI {

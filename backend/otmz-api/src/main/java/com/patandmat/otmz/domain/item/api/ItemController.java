@@ -94,9 +94,11 @@ public class ItemController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> deleteMultipleItems(@RequestParam List<Long> ids, @PathVariable Long member_id) {
+    public ResponseEntity<?> deleteMultipleItems(@RequestParam List<Long> ids, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Member member = userDetails.getMember();
         try {
-            itemService.deleteMultipleItems(ids, member_id);
+            itemService.deleteMultipleItems(ids, member.getId());
             return new ResponseEntity<>("Success", HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);

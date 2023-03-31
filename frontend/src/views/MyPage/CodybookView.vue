@@ -6,7 +6,7 @@
   <hr>
   <!-- 스타일 별 코디북 -->
   <div id="temp">
-    <SwipeBox v-if="pages.length !== 0" ref="myswipe" @onChange="mySwipeChanged" speed="150">
+    <!-- <SwipeBox v-if="pages.length !== 0" ref="myswipe" @onChange="mySwipeChanged" speed="150">
       <div style="width: 350px; height: 250px; border: 1px solid black">
         <div v-for="i in Math.ceil(pages.length/4)">
           <div class="wrapperIT">
@@ -16,33 +16,55 @@
           </div>
         </div>
       </div>
-    </SwipeBox>
+    </SwipeBox> -->
+    <swiper v-if="pages.length!==0" class="items"
+    @activeIndexChange="mySwipeChanged" 
+    :space-between="1"
+    :loop="false"
+    :slidesPerView="1"
+  >
+    <swiper-slide v-for="i in Math.ceil(pages.length/4)">
+      <div class="wrapperIT">
+        <div v-for="(page,index) in pages.slice((i-1)*4,i*4)" class="grid-item">
+          <img v-if="page" :src="env+page.imageId" @click="selectItemMatch(i,index)" @mousedown="selectItemMatch(i,index)" :id="page.id" class="imgIT" />
+        </div>
+      </div>
+    </swiper-slide>
+  </swiper>
     <div v-if="pages.length===0" style="width: 350px; height: 250px; border: 1px solid black"></div>
     <Teleport to="body">
   <div v-if="modalOpen" class="modal">
     <CodyBookDetail :selected="selected" @close="closeModal" @deleted="deleteItemMatch()">your content...</CodyBookDetail>
-    <button @click="modalOpen = false" @touchstart="modalOpen = false">Close</button>
+    <button @click="modalOpen = false" @mousedown="modalOpen = false">Close</button>
   </div>
 </Teleport>
   </div>
   <hr>
   <!-- <router-link to='/Codybook'>코디북 만들기</router-link> | -->
   <router-link to='/Codybook/solo'>코디북 만들러가기</router-link>
-  <button v-if="pages.length!==0" @click="selectItemMatches()" @touchstart="selectItemMatches()">선택</button>
-  <button v-if="selectMode" @click="deleteSelectedItemMatches()" @touchstart="deleteSelectedItemMatches()">선택된 코디북 삭제</button>
+  <button v-if="pages.length!==0" @mousedown="selectItemMatches()">선택</button>
+  <button v-if="selectMode" @mousedown="deleteSelectedItemMatches()">선택된 코디북 삭제</button>
 </div>
 </template>
 
 <script>
 import { register } from 'swiper/element/bundle';
 import CodyBookDetail from './CodyBookDetail.vue'
-import SwipeBox from '@shopid/vue3-swipe-box';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+
 import axios from 'axios'
 register();
 export default {
   name:'MyPageCodybookView',
   components: {
-    SwipeBox,
+    Swiper,
+    SwiperSlide,
     CodyBookDetail,
   },
   data () {
@@ -78,7 +100,6 @@ export default {
       },
       selectItemMatches() {
         document.querySelector('.imgIT').style.filter = 'saturate(1)'
-        console.log('hmmm')
         this.selectedIndices = []
         this.selectMode = !this.selectMode;
       },
