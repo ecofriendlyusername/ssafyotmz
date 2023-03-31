@@ -10,7 +10,7 @@ import PIL
 
 #Change directory so that imports wortk correctly
 
-os.chdir("YOLOv6")
+os.chdir("./YOLOv6")
 
 from yolov6.utils.events import LOGGER, load_yaml
 from yolov6.layers.common import DetectBackend
