@@ -10,11 +10,16 @@
     <div class="category" :class="{ 'selected': selected === 'dress' }" @click="getItems('dress')">원피스</div>
     <div class="category" :class="{ 'selected': selected === 'etc' }" @click="getItems('etc')">기타</div>
   </div>
-  <div class="items" >
-    <div v-for="item in items" @click="choice(item)" :key="item.id">
+  <swiper class="items" 
+    :modules="modules"
+    :space-between="1"
+    :loop="false"
+    :slidesPerView="5"
+  >
+    <swiper-slide v-for="item in items" @click="choice(item)" :key="item.id" @activeIndexChange="slideChage">
       <img :src='`${item.src}`' style="width:80px;hegiht:80px"/>
-    </div>
-  </div>
+    </swiper-slide>
+  </swiper>
   <hr>
   <div>
     <div class="settings">
@@ -91,11 +96,17 @@
 <script>
 import axios from 'axios'
 
+import {Swiper, SwiperSlide} from 'swiper/vue'
+import 'swiper/css'
+import 'swiper/css/pagination'
+
 const width = 400;
 const height = 400;
 
 export default {
     name:'CodybookView',
+
+    components: {Swiper, SwiperSlide},
 
     data() { 
       return {
@@ -126,6 +137,9 @@ export default {
     },
 
     methods: {
+      slideChage() {
+        console.log('slide', this.readIndex)
+      },
       captureCodiBoard() {
         const stage = this.$refs.stage.getNode();
         const dataURL = stage.toDataURL({ pixelRatio: 3 });
@@ -288,10 +302,6 @@ export default {
   .selected {
     background-color: black;
     color: white;
-  }
-
-  .items {
-    display: flex;
   }
 
   .settings {
