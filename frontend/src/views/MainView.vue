@@ -64,7 +64,7 @@
         </div>
       </div>
 
-      <div id="LoginDiv2" style="margin-top:24px;">
+      <div id="LoginDiv2" style="margin-top:26px;">
         # 페미닌
       </div>
 
