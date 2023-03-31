@@ -9,7 +9,7 @@
       <!-- 스타일 별 설명 값 넣기 -->
       <div id="ResultText">
         <h3>#{{ result['data']['1'].style}} #{{ result['data']['2'].style}} #{{ result['data']['3'].style}}</h3>
-        <p style="font-size:90%">{{ category[result['data']['1'].style] }}</p>
+        <p style="font-size:90%">{{ explanation[result['data']['1'].style] }}</p>
       </div>
     </div>
 
@@ -65,7 +65,7 @@ export default {
     return {
       initkakao:false,
       imgsrc: null,
-      category: {
+      explanation: {
         'romantic': '부드럽고 낭만적인 느낌을 기본으로 하는 스타일입니다. 소녀적인 분위기의 테마로 장식적인 요소가 강합니다. 연약한 색상인 페일(pale)톤이 자주 사용됩니다.',
         'feminine': '여성만을 위한 가장 여성스러움을 연출할 수 있는 스타일입니다. 시폰, 레이스, 리본 등 여성적인 것으로 여겨졌던 장식으로 우아함을 나타낸 것이 특징입니다.',
         'street': '한정판 제품, 스케이트 문화와 연결되는 스타일입니다. 또한 길거리 패션답게 새로운 트렌드를 반영하기도 합니다.',
