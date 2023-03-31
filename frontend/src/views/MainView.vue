@@ -33,7 +33,11 @@
     </swiper-slide>
     </swiper>
 
-
+    <div>
+      <div id="LoginDiv1">
+        랭킹 보기
+      </div>
+    </div>
 
     <div>
       <div id="LoginDiv1">
