@@ -10,11 +10,17 @@
     <div class="category" :class="{ 'selected': selected === 'dress' }" @click="getItems('dress')">원피스</div>
     <div class="category" :class="{ 'selected': selected === 'etc' }" @click="getItems('etc')">기타</div>
   </div>
-  <div class="items" >
-    <div v-for="item in items" @click="choice(item)" :key="item.id">
+  <swiper class="items"
+    @activeIndexChange="loadItems" 
+    :modules="modules"
+    :space-between="1"
+    :loop="false"
+    :slidesPerView="5"
+  >
+    <swiper-slide v-for="item in items" @click="choice(item)" :key="item.id" >
       <img :src='`${item.src}`' style="width:80px;hegiht:80px"/>
-    </div>
-  </div>
+    </swiper-slide>
+  </swiper>
   <hr>
   <div>
     <div class="settings">
@@ -91,11 +97,17 @@
 <script>
 import axios from 'axios'
 
+import {Swiper, SwiperSlide} from 'swiper/vue'
+import 'swiper/css'
+import 'swiper/css/pagination'
+
 const width = 400;
 const height = 400;
 
 export default {
     name:'CodybookView',
+
+    components: {Swiper, SwiperSlide},
 
     data() { 
       return {
@@ -126,6 +138,29 @@ export default {
     },
 
     methods: {
+      loadItems(swiper) {
+        const index = swiper.realIndex;
+        if (index % 10 === 5 && index + 5 === this.items.length) {
+          axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + this.$store.state.Auth.memberId + '/' + this.selected +'?page=' + (parseInt(index / 10) + 1) + '&size=10', { // outer, upper, lower, dress, etc
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': this.$store.state.Auth['accessToken']
+            }
+          })
+          .then((response) => {
+            // 파일 저장하는 api 리턴값으로 파일 경로 달라고 해야 함
+            // this.image = response.data
+            console.log(response.data)
+            response.data.content.forEach(item => {
+              item.src = process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/images/' + item.imageId;
+              this.items.push(item);
+            });
+          })
+          .catch(error =>{
+            console.log(error)
+          });
+        }
+      },
       captureCodiBoard() {
         const stage = this.$refs.stage.getNode();
         const dataURL = stage.toDataURL({ pixelRatio: 3 });
@@ -288,10 +323,6 @@ export default {
   .selected {
     background-color: black;
     color: white;
-  }
-
-  .items {
-    display: flex;
   }
 
   .settings {

@@ -144,10 +144,12 @@ button {
 }
 
 #InnerCard {
-  display: inline-block;
+  display: flex;
+  /* display: inline-block; */
+  /* align-content: center; */
   object-fit: cover;
   margin-top: 17%;
-  margin-left: 4%;
+  margin-left: 12%;
   width:80%;
   height: 325px;
   /* height: 50%; */
