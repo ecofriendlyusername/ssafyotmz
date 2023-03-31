@@ -7,7 +7,7 @@
       :loop="true"
       :pagination="{clickable: true}"  
       :autoplay="{
-        delay: 7000,
+        delay: 4000,
         disableOnInteraction: false,
         pauseOnMouseEnter: true
       }"
@@ -44,13 +44,24 @@
       </div>
 
       <!-- 그리드 -->
-      <div class="container">
-        <div class="item">1</div>
-        <div class="item">2</div>
-        <div class="item">3</div>
-        <div class="item">4</div>
-        <div class="item">5</div>
-        <div class="item">6</div>
+      <div style="display:flex; justify-content:center; margin-top:7px;">
+        <div class="container">
+          <div class="item">
+            <img src="https://d20s70j9gw443i.cloudfront.net/t_GOODS_INFORMATION/https://imgb.a-bly.com/data/editor/20220828_1661640468492713l.jpg" id="picture">
+          </div>
+          <div class="item">
+            <img src="https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20230302_1677698198733017m.jpg" id="picture">
+          </div>
+          <div class="item">
+            <img src="https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20230308_1678255054352384m.jpg" id="picture">
+          </div>
+          <div class="item">
+            <img src="https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/064e6fd8f60339b7e2ea452c06bcf244.jpg" id="picture">
+          </div>
+          <div class="item">
+            <img src="https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20230206_1675654028387077m.jpg" id="picture">
+          </div>
+        </div>
       </div>
 
       <div id="LoginDiv2" style="margin-top:24px;">
@@ -58,13 +69,14 @@
       </div>
 
       <!-- 그리드 -->
-      <div class="container">
-        <div class="item">1</div>
-        <div class="item">2</div>
-        <div class="item">3</div>
-        <div class="item">4</div>
-        <div class="item">5</div>
-        <div class="item">6</div>
+      <div style="display:flex; justify-content:center; margin-top:7px;">
+        <div class="container">
+          <div class="item">1</div>
+          <div class="item">2</div>
+          <div class="item">3</div>
+          <div class="item">4</div>
+          <div class="item">5</div>
+        </div>
       </div>
       
 
@@ -164,9 +176,6 @@ export default {
     return {
       EndPoint: false,
       Auth: this.$store.state.Auth,
-      pictures: [{img:'https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20230126_1674699972522098m.jpg'},
-                  {img:'https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20200916_1600266495690951m.JPG'}
-                ]
     }
   },
   created(){
@@ -261,6 +270,7 @@ export default {
 
 #LoginDiv1 {
   display: flex;
+  margin-top: 5px;
   padding: 10px 15px;
   font-size: 125%;
   font-weight: bold;
@@ -274,42 +284,40 @@ export default {
   font-weight: bold;
 }
 
-.container {
-  /* // width: 380px;
-  // height: 250px; */
-  /* border: 10px solid rgba(black, .1); */
-  border-radius: 10px;
-  display: grid;
+#picture {
+  width: 100%;
+  height: 100%;
 }
 
 .item {
-  margin: 5px;
+  margin: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
   box-sizing: border-box;
   position: relative;
   font-size: 100%;
   color: black;
-  background-color: aliceblue;
-  border: 1px solid black;
-  font-weight: 900;}
+  /* border: 1px solid gray; */
+  font-weight: 900;
+}
 
 .container {
   width: 97%;
-  padding: 7px;
   display: grid;
-  grid-template-rows: repeat(2, 100px);
-  grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: 100px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 0fr;
+  /* padding: 7px; */
+  /* grid-template-rows: repeat(2, 100px);
+  grid-template-columns: repeat(3, 1fr); */
+  /* grid-auto-rows: 100px; */
+  grid-auto-rows:minmax(100px, auto)
+  
 }
 
 .item:nth-child(1) {
-  grid-column: 1 / 4;
+  grid-column: 1 / 3;
 }
 
-.item:nth-child(3) {
-  grid-column: span 2;
-}
+
 </style>
