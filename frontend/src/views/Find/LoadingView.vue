@@ -15,13 +15,13 @@
       <div id="LoadingBoard">
         <!-- 영상1 -->
         <div style="width:50%;">
-            <video autoplay muted loop id="LoadingVideo1" src="@/assets/video/video1.mp4">
+            <video autoplay muted loop playsinline id="LoadingVideo1" src="@/assets/video/video1.mp4">
             </video>
         </div>
     
         <!-- 영상2 -->
         <div style="width:50%;">
-            <video autoplay muted loop id="LoadingVideo2" src="@/assets/video/video2.mp4"></video>
+            <video autoplay muted loop playsinline id="LoadingVideo2" src="@/assets/video/video2.mp4"></video>
         </div>
       </div>
 
