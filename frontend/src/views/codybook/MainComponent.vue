@@ -38,11 +38,16 @@
       <div class="category" :class="{ 'selected': selected === 'dress' }" @click="getItems('dress')">원피스</div>
       <div class="category" :class="{ 'selected': selected === 'etc' }" @click="getItems('etc')">기타</div>
     </div>
-    <div class="items" >
-      <div v-for="item in items" @click="choice(item)" :key="item.id">
-        <img :src='`${item.src}`' style="width:100px;hegiht:100px"/>
-      </div>
-    </div>
+    <swiper class="items" 
+      :modules="modules"
+      :space-between="1"
+      :loop="false"
+      :slidesPerView="5"
+    >
+      <swiper-slide  v-for="item in items" @click="choice(item)" :key="item.id">
+      <img :src='`${item.src}`' style="width:100px;hegiht:100px"/>
+      </swiper-slide >
+    </swiper>
     <hr>
     <div style="text-align:left;">Participants</div>
     <div id="video-container">
@@ -134,6 +139,10 @@ import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "./UserVideo";
 
+import {Swiper, SwiperSlide} from 'swiper/vue'
+import 'swiper/css'
+import 'swiper/css/pagination'
+
 const width = 400;
 const height = 400;
 
@@ -146,6 +155,8 @@ export default {
 
   components: {
     UserVideo,
+    Swiper, 
+    SwiperSlide,
   },
 
   data() {
