@@ -4,7 +4,9 @@ import createPersistedState from 'vuex-persistedstate'
 
 
 export default createStore({
-  plugins: [createPersistedState()],
+  plugins: [createPersistedState({
+    storage: window.sessionStorage,
+  })],
   state: {
     result: {
       img_path: null,
