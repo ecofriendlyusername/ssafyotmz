@@ -36,6 +36,7 @@ export default {
       imagefile: null,
       result: null,
       style: null,
+      cropped: null,
       Auth: this.$store.state.Auth,
     }
   },
