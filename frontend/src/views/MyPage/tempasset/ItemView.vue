@@ -12,7 +12,7 @@
       </div>
     </SwipeBox>
     <div v-if="pages.length===0" style="width: 350px; height: 250px; border: 1px solid black"></div>
-    <button @click="selectItems()" @touchstart="selectItems()">select</button>
+    <button v-if="pages.length!==0" @click="selectItems()" @touchstart="selectItems()">select</button>
     <button v-if="selectMode" @click="deleteSelectedItems" @touchstart="deleteSelectedItems">delete</button>
     <div v-if="modalOpen" class="modal">
       <ItemDetail :selected="selected" @close="closeModal" @deleted="deleteItem()">your content...</ItemDetail>
@@ -58,11 +58,15 @@ export default {
         this.selectedIdx = idx
         this.selected = this.pages[idx]
         this.modalOpen = true
+        this.selectedIndices = []
+        document.querySelector('.imgI').style.filter = 'saturate(1)'
       } else {
         if (this.selectedIndices.includes(idx)) {
+          console.log('contains')
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
-          this.selectedIndices.slice(this.selectedIndices.indexOf(idx))
+          this.selectedIndices.splice(this.selectedIndices.indexOf(idx))
         } else {
+          console.log('contains not')
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(50%)'
           this.selectedIndices.push(idx)
         }
