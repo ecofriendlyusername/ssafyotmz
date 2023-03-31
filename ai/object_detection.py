@@ -4,6 +4,7 @@ device= "cpu"
 
 #half:bool = False 
 
+import sys
 import os, requests, torch, math, cv2
 import numpy as np
 import PIL
@@ -15,6 +16,10 @@ print(os.getcwd())
 os.chdir("./YOLOv6/")
 
 print(os.getcwd())
+
+sys.path.append(os.getcwd())
+
+print(sys.path)
 
 from yolov6.utils.events import LOGGER, load_yaml
 from yolov6.layers.common import DetectBackend
