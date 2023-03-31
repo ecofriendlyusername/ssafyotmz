@@ -21,7 +21,7 @@
        accept="image/png, image/jpeg">
        <br>
   <hr>
-  <img src="@/assets/img/StartBtn.png" id="StartBtn" v-on:click=processImageAndCreateItem()>
+  <img src="@/assets/img/StartBtn.png" id="StartBtn" v-on:click=processImageAndCreateItem() @touchstart="processImageAndCreateItem()" >
 </div>
 </template>
 
@@ -36,6 +36,7 @@ export default {
       imagefile: null,
       result: null,
       style: null,
+      cropped: null,
       Auth: this.$store.state.Auth,
     }
   },
@@ -123,7 +124,6 @@ export default {
       })
     },
     createItem(formData) {
-      console.log(this.Auth.accessToken)
       axios.post(process.env.VUE_APP_ITEM,formData, {
         headers: {
           'Content-Type' : 'multipart/form-data',
