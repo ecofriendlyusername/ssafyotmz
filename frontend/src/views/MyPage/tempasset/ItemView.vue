@@ -91,7 +91,7 @@ export default {
     },
     viewMultipleItems(category,page,size) {
       var a = this
-      var member_id = 2;
+      var member_id = this.Auth.memberId;
       axios.get(process.env.VUE_APP_ITEMS+`/${member_id}/${category}?page=${page}&size=${size}&sort=id,DESC`).then((res) => {
         if (res.data.content.length !== 0) {
           for (var item of res.data.content) {
