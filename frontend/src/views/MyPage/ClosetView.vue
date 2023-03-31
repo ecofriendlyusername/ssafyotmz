@@ -1,17 +1,15 @@
 <template>
-  <!-- 내 옷장 -->
-  <!-- 목차 -->
-  <hr>
-  <!-- 옷 목록 -->
-  <!-- 그리드, 가로 2~3 정도로 -->
-  <ul style="list-style-type:none;">
+<div>
+  <div style="list-style-type:none;">
     <li v-for="(category,index) in categories" @click="changeCategory(category)">{{ categoriesKorean[index] }}</li>
-    <ItemView :key="curCategory" :category="curCategory"></ItemView>
-  </ul>
+    <!-- <div style="width: 350px; height: 250px; border: 1px solid black"> -->
+      <ItemView :key="curCategory" :category="curCategory"></ItemView>
+    <!-- </div> -->
+  </div>
   <hr>
-  <router-link to='/AddClothes'>옷 추가하기</router-link> | 
-  <!-- <router-link to='/Codybook'>코디북 만들기</router-link> | -->
+  <router-link to='/AddClothes'>옷 추가하기</router-link>
   <router-link to='/MyPage'>마이페이지</router-link>
+</div>
 </template>
 
 <script>
