@@ -1,6 +1,7 @@
 #build stage
 FROM python:3.8
-WORKDIR /app
+RUN mkdir /app/ai
+WORKDIR /app/ai
 COPY . .
 RUN pip install -r req.txt
 RUN pip install python-multipart
