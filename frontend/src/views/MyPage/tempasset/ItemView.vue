@@ -1,40 +1,49 @@
 <template>
   <div>
-    <SwipeBox v-if="pages.length !== 0" ref="myswipe" @onChange="mySwipeChanged" speed="150">
-      <div style="width: 350px; height: 250px; border: 1px solid black">
-        <div v-for="i in Math.ceil(pages.length/9)">
-          <div class="wrapperI">
-            <div v-for="(page,index) in pages.slice((i-1)*9,i*9)" class="grid-item">
-              <img v-if="page" :src="env+page.imageId" @click="selectItem(i,index)" @touchend="selectItem(i,index)" :id="page.id" class="imgI" />
-            </div>
-          </div>
+  <swiper v-if="pages.length!==0" class="items"
+    @activeIndexChange="mySwipeChanged" 
+    :space-between="1"
+    :loop="false"
+    :slidesPerView="1"
+  >
+    <swiper-slide v-for="i in Math.ceil(pages.length/9)">
+      <div class="wrapperI">
+        <div v-for="(page,index) in pages.slice((i-1)*9,i*9)" class="grid-item">
+          <img v-if="page" :src="env+page.imageId" @click="selectItem(i,index)" @mousedown="selectItem(i,index)" :id="page.id" class="imgI" />
         </div>
       </div>
-    </SwipeBox>
-    <div v-if="pages.length===0" style="width: 350px; height: 250px; border: 1px solid black"></div>
+    </swiper-slide>
+  </swiper>
     <button v-if="pages.length!==0" @click="selectItems()" @touchstart="selectItems()">select</button>
     <button v-if="selectMode" @click="deleteSelectedItems" @touchstart="deleteSelectedItems">delete</button>
     <div v-if="modalOpen" class="modal">
       <ItemDetail :selected="selected" @close="closeModal" @deleted="deleteItem()">your content...</ItemDetail>
-      <button @click="modalOpen = false" @touchstart="modalOpen = false">Close</button>
+      <button @click="modalOpen = false" @mousedown="modalOpen = false">Close</button>
     </div>
   </div>
 </template>
 
 
 <script>
-// import { getCurrentInstance } from 'vue';
+// Import Swiper Vue.js components
+import { Swiper, SwiperSlide } from 'swiper/vue';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+
 import { register } from 'swiper/element/bundle';
-import SwipeBox from '@shopid/vue3-swipe-box';
 import ItemDetail from './ItemDetail.vue'
 import axios from 'axios'
 register();
-import 'swiper/css';
 
 export default {
   name:'ItemView',
   components: {
-    SwipeBox,
+    Swiper,
+    SwiperSlide,
     ItemDetail,
   },
   data () {
@@ -52,6 +61,9 @@ export default {
   },
   props: ['category'],
   methods: {
+    printHi() {
+      alert('hei')
+    },
     selectItem(i,j) {
       var idx = (i-1)*9+j
       if (!this.selectMode) {
@@ -102,7 +114,8 @@ export default {
         console.log(e)
       })
     },
-    mySwipeChanged (index) {
+    mySwipeChanged (swiper) {
+      var index = swiper.realIndex
       if (index === Math.ceil(this.pages.length/9)-1) {
         this.viewMultipleItems(this.category,index+1,9)
       }
@@ -130,7 +143,17 @@ export default {
       console.log(this.modalOpen)
       this.pages.splice(this.selectedIdx,1)
     },
+    onSlideChange () {
+      console.log('slide change');
+    },
+    onSwiper (swiper) {
+      console.log(swiper)
+    },
+    slideChange() {
+      console.log('fuck you')
+    },
   },
+
   async beforeMount() {
    this.viewMultipleItems(this.category,0,9)
    this.viewMultipleItems(this.category,1,9)
@@ -141,7 +164,7 @@ export default {
 
 <style>
 .imgI {
-  width: 40%
+  width: 50%
 }
 
 .wrapperI {
