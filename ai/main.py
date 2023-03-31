@@ -3,6 +3,8 @@ from fastapi.responses import JSONResponse
 
 from style_classifier import *
 from single_classifier import *
+from object_detection import *
+
 from category_classifier import *
 from texture_classifier import *
 from print_classifier import *
@@ -42,6 +44,38 @@ def from_image_to_bytes(img):
     # Base64로 ascii로 디코딩
     decoded = encoded.decode('ascii')
     return decoded
+
+def detection_clothes(img):
+    
+    hide_labels = False 
+    hide_conf = False 
+
+    img_size = 640
+
+    conf_thres =.25
+    iou_thres =.45
+    max_det =  1000
+    agnostic_nms = False
+
+    img_size = check_img_size(img_size, s=stride)
+
+    img, img_src = process_image(img, img_size, stride, half)
+    img = img.to(device)
+    if len(img.shape) == 3:
+        img = img[None]
+        # expand for batch dim
+    pred_results = model_detect(img)
+    classes = [0,1,2,3] # the classes to keep
+    det = non_max_suppression(pred_results, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)[0]
+    
+    if len(det) >= 1:
+        
+        return True
+    
+    else:
+        
+        return False
+    
 
 
 @app.get("/")
@@ -130,6 +164,11 @@ async def style_classification(imageFile: UploadFile = File(...)):
     img = io.BytesIO(img)
     # open image
     img = Image.open(img).convert('RGB')
+    
+    if detection_clothes(img) == False:
+        
+        return {}
+    
     # transformation
     if val_transform is not None:
 
