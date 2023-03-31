@@ -158,13 +158,13 @@ change_class_style = {0: "classic",
 
 num_classes_style = 23
 
-adj = "./style/adj_file.pkl"
+adj = "./style/single_adj_file.pkl"
 
-model_style = gcn_resnet101(num_classes=num_classes_style, t=0.03, adj_file=adj)
+model_single = gcn_resnet101(num_classes=num_classes_style, t=0.03, adj_file=adj)
 
 """# data augmentation"""
 
-normalize = transforms.Normalize(mean = model_style.image_normalization_mean, std = model_style.image_normalization_std)
+normalize = transforms.Normalize(mean = model_single.image_normalization_mean, std = model_single.image_normalization_std)
 
 val_transform = transforms.Compose([
     Warp(image_size),
@@ -176,13 +176,13 @@ val_transform = transforms.Compose([
 
 """# best model"""
 
-resume = "./style/style_best_model4.pth"
+resume = "./style/single_best_model_v2.pth"
 
 checkpoint = torch.load(resume, map_location=torch.device('cpu'))
 
-model_style.load_state_dict(checkpoint)
+model_single.load_state_dict(checkpoint)
 
-model_style.eval()
+model_single.eval()
 
 """word2vec"""
 
