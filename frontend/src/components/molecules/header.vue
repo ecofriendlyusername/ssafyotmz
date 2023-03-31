@@ -33,7 +33,7 @@ export default {
         nickname: null,
         profileImagePath: null,
       });
-      localStorage.removeItem('vuex')
+      sessionStorage.removeItem('vuex')
     },
   },
   watch: {
