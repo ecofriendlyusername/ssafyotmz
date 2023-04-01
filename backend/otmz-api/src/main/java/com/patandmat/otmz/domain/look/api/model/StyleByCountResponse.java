@@ -11,8 +11,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StyleByCountResponse {
+public class StyleByCountResponse implements Comparable<StyleByCountResponse> {
     private Style style;
     private long count;
 
+    @Override
+    public int compareTo(StyleByCountResponse o) {
+        return (int) (o.count - this.count);
+    }
 }
