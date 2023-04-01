@@ -14,16 +14,15 @@
       </div>
     </swiper-slide>
   </swiper>
-    <button v-if="pages.length!==0" @click="selectItems()" @touchstart="selectItems()">select</button>
-    <button v-if="selectMode" @click="deleteSelectedItems" @touchstart="deleteSelectedItems">delete</button>
+  <div class="selectionBox">
+    <div class="selection" id="selectB" v-if="pages.length!==0" @mousedown="selectItems()">select</div>
+    <div class="selection" id="deleteB" v-if="selectMode" @mousedown="deleteSelectedItems" >delete</div>
+  </div>
     <div v-if="modalOpen" class="modal">
-      <ItemDetail :selected="selected" @close="closeModal" @deleted="deleteItem()">your content...</ItemDetail>
-      <button @click="modalOpen = false" @mousedown="modalOpen = false">Close</button>
+      <ItemDetail :selected="selected" @deleted="deleteItem()" @close="closeModal()">your content...</ItemDetail>
     </div>
   </div>
 </template>
-
-
 <script>
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -64,6 +63,9 @@ export default {
     printHi() {
       alert('hei')
     },
+    closeModal() {
+      this.modalOpen = false
+    },
     selectItem(i,j) {
       var idx = (i-1)*9+j
       if (!this.selectMode) {
@@ -74,11 +76,9 @@ export default {
         document.querySelector('.imgI').style.filter = 'saturate(1)'
       } else {
         if (this.selectedIndices.includes(idx)) {
-          console.log('contains')
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
           this.selectedIndices.splice(this.selectedIndices.indexOf(idx))
         } else {
-          console.log('contains not')
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(50%)'
           this.selectedIndices.push(idx)
         }
@@ -96,6 +96,8 @@ export default {
           document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
           a.pages.splice(idx,1)
         }
+        a.selectMode = false
+        document.getElementById('selectB').style.backgroundColor = 'white'
       })
       .catch((e) => {
         return e
@@ -121,8 +123,17 @@ export default {
       }
     },
     selectItems() {
-      document.querySelector('.imgI').style.filter = 'saturate(1)'
-      this.selectedIndices = []
+      if (this.selectMode) {
+        this.selectedIndices.sort()
+        this.selectedIndices.reverse()
+        for (var idx of this.selectedIndices) {
+          document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
+        }
+        this.selectedIndices = []
+        document.getElementById('selectB').style.backgroundColor = 'white'
+      } else {
+        document.getElementById('selectB').style.backgroundColor = '#FCD2DC'
+      }  
       this.selectMode = !this.selectMode;
     },
     async deleteMultipleItems(array) {
@@ -140,7 +151,6 @@ export default {
     },
     async deleteItem() {
       this.modalOpen = false
-      console.log(this.modalOpen)
       this.pages.splice(this.selectedIdx,1)
     },
     onSlideChange () {
@@ -164,14 +174,23 @@ export default {
 
 <style>
 .imgI {
-  width: 50%
+  width: 80%
+}
+
+.selection {
+  margin: 0 10px;
+}
+
+.selectionBox {
+  display: flex;
+  margin: 10px;
 }
 
 .wrapperI {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  grid-auto-rows: 100px;
+  gap: 5px;
+  grid-auto-rows: 150px;
 }
 </style>
 

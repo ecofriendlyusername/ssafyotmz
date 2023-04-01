@@ -1,22 +1,9 @@
 <template>
-<div>
+<div id="codybookview">
   <div>
-    내 코디북 페이지
+    내 코디북
   </div>
-  <hr>
-  <!-- 스타일 별 코디북 -->
-  <div id="temp">
-    <!-- <SwipeBox v-if="pages.length !== 0" ref="myswipe" @onChange="mySwipeChanged" speed="150">
-      <div style="width: 350px; height: 250px; border: 1px solid black">
-        <div v-for="i in Math.ceil(pages.length/4)">
-          <div class="wrapperIT">
-            <div v-for="(page,index) in pages.slice((i-1)*4,i*4)" class="grid-item">
-              <img v-if="page" :src="env+page.imageId" @click="selectItemMatch(i,index)" @touchstart="viewItem(page.id)" :id="page.id" class="imgIT" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </SwipeBox> -->
+  <br>
     <swiper v-if="pages.length!==0" class="items"
     @activeIndexChange="mySwipeChanged" 
     :space-between="1"
@@ -31,19 +18,18 @@
       </div>
     </swiper-slide>
   </swiper>
-    <div v-if="pages.length===0" style="width: 350px; height: 250px; border: 1px solid black"></div>
-    <Teleport to="body">
+    <div v-if="pages.length===0">
+      아직 코디북이 없습니다!
+    </div>
+    <div class="selectionBox">
+    <div class="selection" id="selectB" v-if="pages.length!==0" @mousedown="selectItemMatches()">select</div>
+    <div class="selection" id="deleteB" v-if="selectMode" @mousedown="deleteSelectedItemMatches">delete</div>
+  </div>
   <div v-if="modalOpen" class="modal">
     <CodyBookDetail :selected="selected" @close="closeModal" @deleted="deleteItemMatch()">your content...</CodyBookDetail>
-    <button @click="modalOpen = false" @mousedown="modalOpen = false">Close</button>
   </div>
-</Teleport>
-  </div>
-  <hr>
   <!-- <router-link to='/Codybook'>코디북 만들기</router-link> | -->
   <router-link to='/Codybook/solo'>코디북 만들러가기</router-link>
-  <button v-if="pages.length!==0" @mousedown="selectItemMatches()">선택</button>
-  <button v-if="selectMode" @mousedown="deleteSelectedItemMatches()">선택된 코디북 삭제</button>
 </div>
 </template>
 
@@ -81,7 +67,6 @@ export default {
   },
   methods:{
     viewMultipleItemMatches(page,size) {
-      console.log('going? : ' + this.Auth.accessToken)
         axios.get(process.env.VUE_APP_CODYBOOKS+`?page=${page}&size=${size}`, {
           headers: {
             'Authorization' : this.Auth.accessToken
@@ -99,22 +84,30 @@ export default {
         })
       },
       selectItemMatches() {
-        document.querySelector('.imgIT').style.filter = 'saturate(1)'
-        this.selectedIndices = []
-        this.selectMode = !this.selectMode;
+        if (this.selectMode) {
+          this.selectedIndices.sort()
+        this.selectedIndices.reverse()
+        for (var idx of this.selectedIndices) {
+          document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
+        }
+          this.selectedIndices = []
+          document.getElementById('selectB').style.backgroundColor = 'white'
+        } else {
+          document.getElementById('selectB').style.backgroundColor = '#FCD2DC'
+        }
+        this.selectMode = !this.selectMode
       },
       mySwipeChanged (index) {
         if (index === Math.ceil(this.pages.length/9)-1) {
           this.viewMultipleItemMatches(this.category,index+1,9)
         }
-        console.log('hh')
       },
       clicked(itemMatch) {
         this.selected = itemMatch
         this.modalOpen = true
       },
       closeModal() {
-        this.isShow = false
+        this.modalOpen = false
       },
       createItemMatchWith() {
         if (this.file == null) {
@@ -143,7 +136,7 @@ export default {
       },
       deleteItemMatch() {
         this.modalOpen = false
-        this.pages.splice(selectedIdx,1)
+        this.pages.splice(this.selectedIdx,1)
       },
       selectItemMatch(i,j) {
         var idx = (i-1)*4+j
@@ -200,6 +193,7 @@ export default {
           document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
           a.pages.splice(idx,1)
         }
+        document.getElementById('selectB').style.backgroundColor = 'white'
         this.selectMode = false
       })
       .catch((e) => {
@@ -226,6 +220,9 @@ export default {
 }
 </script>
 <style>
+.codybookview {
+  font-family: 'NanumSquareNeo-Variable';
+}
 .modal {
   position: fixed;
   z-index: 999;
@@ -233,17 +230,31 @@ export default {
   left: 50%;
   width: 300px;
   margin-left: -150px;
-  background-color: bisque;
+  background-color: white;
+
+  border-radius: 10px;
+  border-style: solid;
+  border-color: #F4C2C2;
 }
 
 .imgIT {
-  width: 30%
+  width: 70%
 }
 
 .wrapperIT {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  grid-auto-rows: 100px;
+  grid-auto-rows: 250px;
 }
+
+.selection {
+  margin: 0 10px;
+}
+
+.selectionBox {
+  display: flex;
+  margin: 10px;
+}
+
 </style>
