@@ -2,6 +2,7 @@ package com.patandmat.otmz.domain.member.api;
 
 
 import com.patandmat.otmz.domain.auth.application.JwtService;
+import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByCountResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByPercentResponse;
 import com.patandmat.otmz.domain.member.api.model.MypageResponse;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/member")
 public class MemberController {
+
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
     private final MemberService memberService;
@@ -87,8 +89,8 @@ public class MemberController {
 
         List<StyleByCountResponse> styleSummaries = memberService.getStyleSummary(member.getId());
         final long total = styleSummaries.stream()
-                .mapToLong(StyleByCountResponse::getCount)
-                .sum();
+                                         .mapToLong(StyleByCountResponse::getCount)
+                                         .sum();
 
         List<StyleByPercentResponse> styleByCountResponse = styleSummaries
                 .stream()
@@ -101,11 +103,11 @@ public class MemberController {
                 .collect(Collectors.toList());
 
         MypageResponse response = MypageResponse.builder()
-                .nickname(nickname)
-                .totalStyleCount(totalStyleCount)
-                .totalItemCount(totalItemCount)
-                .styleByPercentResponseList(styleByCountResponse)
-                .build();
+                                                .nickname(nickname)
+                                                .totalStyleCount(totalStyleCount)
+                                                .totalItemCount(totalItemCount)
+                                                .styleByPercentResponseList(styleByCountResponse)
+                                                .build();
 
         return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -122,5 +124,22 @@ public class MemberController {
         List<StyleByCountResponse> styleSummaries = memberService.getStyleSummary(member.getId());
 
         return new ResponseEntity<>(styleSummaries, HttpStatus.OK);
+    }
+
+    @GetMapping("/styles")
+    public ResponseEntity<Map<String, List<LookResponse>>> getMemberStyles(Authentication authentication,
+                                                                           @RequestParam(name = "size", defaultValue = "5", required = false) int size) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Member member = userDetails.getMember();
+
+        Map<String, List<LookResponse>> styles;
+        try {
+            styles = memberService.getStyles(member.getId(), size);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
+
+        return ResponseEntity.ok(styles);
     }
 }
