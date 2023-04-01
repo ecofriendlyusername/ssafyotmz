@@ -1,8 +1,8 @@
 package com.patandmat.otmz.domain.item.api;
 
-import com.patandmat.otmz.domain.item.dto.ItemResponseDto;
 import com.patandmat.otmz.domain.item.application.ItemService;
 import com.patandmat.otmz.domain.item.dto.ItemRequestDto;
+import com.patandmat.otmz.domain.item.dto.ItemResponseDto;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.global.auth.CustomUserDetails;
 import com.patandmat.otmz.global.exception.NoSuchMemberException;
@@ -38,8 +38,7 @@ public class ItemController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemRequestDto item, @RequestParam String category, Authentication authentication) throws IOException {
-        // Long member_id = 1L;
+    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemRequestDto item, @RequestParam String category, Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = customUserDetails.getMember();
         try {
@@ -50,6 +49,8 @@ public class ItemController {
             return new ResponseEntity<>("Check Attributes of The Item", HttpStatus.BAD_REQUEST);
         } catch (NoSuchMemberException e) {
             return new ResponseEntity<>("User Doesn't Exist", HttpStatus.BAD_REQUEST);
+        } catch (IOException e) {
+            System.out.println("IOException");
         }
 
         return ResponseEntity.ok().build();
@@ -60,12 +61,9 @@ public class ItemController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = ItemResponseDto.class)))
     })
-    public ResponseEntity<?> getItem(@PathVariable Long id, Authentication authentication) {
-        // take name, comment
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Member member = userDetails.getMember();
+    public ResponseEntity<?> getItem(@PathVariable Long id, @PathVariable Long member_id) {
         try {
-            ItemResponseDto itemResponseDto = itemService.getItem(id, member.getId());
+            ItemResponseDto itemResponseDto = itemService.getItem(id, member_id);
             return new ResponseEntity<>(itemResponseDto, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
@@ -96,8 +94,7 @@ public class ItemController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> deleteMultipleItems(@RequestBody List<Long> ids, Authentication authentication) {
-        // take name, comment
+    public ResponseEntity<?> deleteMultipleItems(@RequestParam List<Long> ids, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
         try {
@@ -112,7 +109,7 @@ public class ItemController {
         }
     }
 
-    @GetMapping("/items/{category}")
+    @GetMapping("/items/{member_id}/{category}")
     @Operation(summary = "여러 아이템들을 페이지 안에 넣어 돌려줌(사진 파일은 보내지 않음)", description = "각 아이템의 사진을 제외한 정보들을 보내주며 사진을 얻기 위해서는 imageId(사진 아이디)로 api에 요청하면 됨. " +
             "<br><br> 이미지 요청 endpoint -> http://(host)/api/v1/images/{id}" +
             "<br><br> page 관련 정보를 쿼리 파라미터로 보내면 해당 페이지를 보내줌. " +
@@ -120,17 +117,15 @@ public class ItemController {
             "size : 한 페이지에 몇개의 item이 들어가는지  <br><br>" +
             "page : 몇번째 페이지인지,  <br><br>" +
             "sort : 어떤 속성으로 정렬할것인지, 올림차순인지 내림차순인지 <br><br>" +
-            "요청예시 : http://(host)/api/v1/itempage?page=2&size=3&sort=id,ASC <br><br>" +
+            "요청예시 : http://(host)/api/v1/items?page=2&size=3&sort=id,ASC <br><br>" +
             "설명 : 아이디를 기준으로 오름차순으로 정렬하고 두 번쩨 페이지를 가져온다. 한 페이지에는 두개의 아이템이 있다. <br><br>" +
             " 총 페이지 수는 totalPages에서 찾을 수 있음"
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> getItemPageByCategory(Pageable pageable, @PathVariable String category, Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Member member = userDetails.getMember();
+    public ResponseEntity<?> getItemPageByCategory(Pageable pageable, @PathVariable String category, @PathVariable Long member_id) {
         try {
-            Page<ItemResponseDto> page = itemService.getItems(pageable, category, member.getId());
+            Page<ItemResponseDto> page = itemService.getItems(pageable, category, member_id);
             return new ResponseEntity<>(page, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

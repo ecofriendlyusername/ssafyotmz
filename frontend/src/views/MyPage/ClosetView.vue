@@ -1,42 +1,53 @@
 <template>
-  <!-- 내 옷장 -->
-  
-  <!-- 목차 -->
-  <ul>
-    <li>상의</li>
-    <li>하의</li>
-    <li>아우터</li>
-    <li>원피스</li>
-    <li>ETC</li>
-  </ul>
-  <hr>
-  <!-- 옷 목록 -->
-  <!-- 그리드, 가로 2~3 정도로 -->
-  <ul>
-    <li>
-      <img src="@/assets/img/logo.png" alt="">
-    </li>
-
-    <li>
-      <img src="@/assets/img/logo.png" alt="">
-    </li>
-
-    <li>
-      <img src="@/assets/img/logo.png" alt="">
-    </li>
-  </ul>
-  <hr>
-  <router-link to='/AddClothes'>옷 추가하기</router-link> | 
-  <router-link to='/Codybook'>코디북 만들기</router-link> |
-  <router-link to='/MyPage'>마이페이지</router-link>
+  <div id="closetview">
+    <div class="categories">
+      <div v-for="(category,index) in categories" class="category" :class="{ 'selected': curCategory === category }" @click="changeCategory(category)">{{categoriesKorean[index]}}</div>
+    </div>
+    <ItemView :key="curCategory" :category="curCategory"></ItemView>
+  <router-link to='/AddClothes'>옷 추가하기</router-link>
+</div>
 </template>
 
 <script>
+import ItemView from './tempasset/ItemView.vue'
 export default {
-    name:'MyPageClosetView',
+  name:'MyPageClosetView',
+  components: {
+    ItemView
+  },
+  data () {
+    return {
+      categories: ['outer','upper','lower','dress','etc'],
+      categoriesKorean: ['아우터','상의','하의','원피스','ETC'],
+      curCategory: 'outer',
+    }
+  },
+  methods: {
+    changeCategory(category) {
+      this.selec
+      this.curCategory = category;
+    }
+  },
 }
 </script>
 
 <style>
+  .categories {
+    display: flex;
+    margin: 10px;
+  }
 
+  .category {
+    margin: 0 5px;
+  }
+
+  .selected {
+    background-color: black;
+    color: white;
+  }
+  .closetview {
+  font-family: 'NanumSquareNeo-Variable';
+}
 </style>
+
+

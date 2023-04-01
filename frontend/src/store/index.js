@@ -1,11 +1,17 @@
 import { createStore } from 'vuex'
 import axios from 'axios';
+import createPersistedState from 'vuex-persistedstate'
+
 
 export default createStore({
+  plugins: [createPersistedState({
+    storage: window.sessionStorage,
+  })],
   state: {
     result: {
       img_path: null,
       data: null,
+      imageId: null,
     },
     Auth: {
       accessToken: null,
@@ -103,12 +109,12 @@ export default createStore({
         context.commit('setLookbook', response.data)
       })
     },
-    getClothes(context){
-      axios.post(process.env.VUE_APP_GET_CLOTHES_API_URL)
-      .then(response => {
-        context.commit('setClothes', response.data)
-      })
-    },
+    // getClothes(context){
+    //   axios.post(process.env.VUE_APP_GET_CLOTHES_API_URL)
+    //   .then(response => {
+    //     context.commit('setClothes', response.data)
+    //   })
+    // },
     updateFillter(context, formData){
       axios.post(process.env.VUE_APP_UPDATE_FILLTER_API_URL, formData)
       .then(response => {
@@ -123,5 +129,6 @@ export default createStore({
     },
   },
   modules: {
-  }
+  },
+  
 })

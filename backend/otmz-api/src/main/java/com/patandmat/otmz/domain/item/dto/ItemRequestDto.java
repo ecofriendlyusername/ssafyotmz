@@ -1,14 +1,15 @@
 package com.patandmat.otmz.domain.item.dto;
 
-import com.patandmat.otmz.domain.common.BaseEntity;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ItemRequestDto extends BaseEntity {
+public class ItemRequestDto {
     private String name;
-    private String category;
-    private String categoryVector;
-    private String printVector;
-    private String fabricVector;
+    private String styleVector;
+    private String color;
 }

@@ -4,9 +4,11 @@ import com.patandmat.otmz.domain.imageFile.application.ImageFileService;
 import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
 import com.patandmat.otmz.domain.item.dto.ItemResponseDto;
 import com.patandmat.otmz.domain.item.dto.ItemRequestDto;
+import com.patandmat.otmz.domain.item.dto.ItemResponsePageDto;
 import com.patandmat.otmz.domain.item.entity.Item;
 
 import com.patandmat.otmz.domain.item.repository.ItemRepository;
+import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.domain.member.repository.MemberRepository;
 import com.patandmat.otmz.global.exception.NoSuchMemberException;
@@ -25,10 +27,12 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class ItemService {
+
     private final ImageFileService imageFileService;
     private final ItemRepository itemRepository;
-
     private final MemberRepository memberRepository;
+
+    private final MemberService memberService;
 
     @Transactional
     public void saveItem(MultipartFile file, ItemRequestDto itemRequestDto, String category, Long id) throws IOException, AttributeNotFoundException, NoSuchMemberException {
@@ -37,19 +41,23 @@ public class ItemService {
             Optional<Member> optionalMember = memberRepository.findById(id);
             if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
             Member member = optionalMember.get();
+
             if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
+
             int categoryNum = categoryToNum.getOrDefault(category, -1);
+
             if (categoryNum == -1) throw new AttributeNotFoundException();
+
             Item item = Item.builder()
                     .name(itemRequestDto.getName())
                     .image(imageFile)
-                    .categoryVector(itemRequestDto.getCategoryVector())
-                    .printVector(itemRequestDto.getPrintVector())
-                    .fabricVector(itemRequestDto.getFabricVector())
+                    .styleVector(itemRequestDto.getStyleVector())
+                    .color(itemRequestDto.getColor())
                     .category(categoryNum)
                     .member(member)
                     .build();
             itemRepository.save(item);
+            memberService.updateItemStyleStat(member, item.getStyleVector());
         } catch (Exception e) {
             imageFileService.delete(imageFile.getId());
             throw e;
@@ -60,9 +68,7 @@ public class ItemService {
         Optional<Item> optionalItem = itemRepository.findById(item_id);
         if (!optionalItem.isPresent()) throw new NoSuchElementException();
         Item item = optionalItem.get();
-        ImageFile imageFile = item.getImage();
         try {
-            byte[] image = imageFileService.loadData(imageFile.getPath());
             Optional<Member> optionalMember = memberRepository.findById(member_id);
             if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
             Member member = optionalMember.get();
@@ -70,7 +76,8 @@ public class ItemService {
             ItemResponseDto itemResponseDto = ItemResponseDto.builder()
                     .id(item.getId())
                     .name(item.getName())
-                    .image(image)
+                    .category(numToCategory[item.getCategory()])
+                    .color(item.getColor())
                     .category(numToCategory[item.getCategory()])
                     .build();
             return itemResponseDto;
@@ -110,27 +117,27 @@ public class ItemService {
     }
 
     public Page getItems(Pageable pageable, String category, Long id) throws AttributeNotFoundException, NoSuchMemberException {
-        Optional<Member> optionalMember = memberRepository.findById(id);
-        if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
-        Member member = optionalMember.get();
-        if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
+//        Optional<Member> optionalMember = memberRepository.findById(id);
+//        if (!optionalMember.isPresent()) throw new NoSuchMemberException("No Such Member Exists");
+//        Member member = optionalMember.get();
+//        if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
 
         int categoryNum = categoryToNum.getOrDefault(category, -1);
         if (categoryNum == -1) throw new AttributeNotFoundException();
         Page<Item> page = itemRepository.findAllByCategoryAndMemberId(categoryNum, id, pageable);
-        Page<ItemResponseDto> itemDtoPage = page.map(this::convertToItemDto);
-        return itemDtoPage;
+        Page<ItemResponsePageDto> itemResponseDtoPage = page.map(this::convertToItemResponsePageDto);
+        return itemResponseDtoPage;
     }
 
-    public ItemResponseDto convertToItemDto(Item item) {
+    public ItemResponsePageDto convertToItemResponsePageDto(Item item) {
         ImageFile imageFile = item.getImage();
-        ItemResponseDto itemResponseDto = ItemResponseDto.builder()
+        ItemResponsePageDto itemResponsePageDto = ItemResponsePageDto.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .category(numToCategory[item.getCategory()])
                 .imageId(imageFile.getId())
                 .build();
-        return itemResponseDto;
+        return itemResponsePageDto;
     }
 
     //    private static final Map<String, Integer> fabricToNum;
@@ -145,11 +152,11 @@ public class ItemService {
     //
     static {
         categoryToNum = new HashMap<>();
-        categoryToNum.put("outer", 1);
-        categoryToNum.put("upper", 2);
-        categoryToNum.put("lower", 3);
-        categoryToNum.put("dress", 4);
-        categoryToNum.put("etc", 5);
+        categoryToNum.put("outer", 0);
+        categoryToNum.put("upper", 1);
+        categoryToNum.put("lower", 2);
+        categoryToNum.put("dress", 3);
+        categoryToNum.put("etc", 4);
 //        categoryToNum.put("shirts",4);
 //        categoryToNum.put("vests",5);
 //        categoryToNum.put("coats",6);

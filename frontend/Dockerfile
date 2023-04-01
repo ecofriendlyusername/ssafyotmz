@@ -1,9 +1,9 @@
 #build stage
-FROM node:12.18.1-alpine as build-stage
+FROM node:18.13.0-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm cache clean --force
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npm run build
 

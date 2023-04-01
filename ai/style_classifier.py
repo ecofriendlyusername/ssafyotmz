@@ -129,17 +129,6 @@ def gcn_resnet101(num_classes, t, pretrained=True, adj_file=None, in_channel=300
 
 image_size = 224
 
-# change_class_style = {0: "traditional", 
-#                    1: "manish", 
-#                    2: "feminine", 
-#                    3: "ethnic", 
-#                    4: "contemporary", 
-#                    5: "natural", 
-#                    6: "genderless", 
-#                    7: "sporty", 
-#                    8: "subculture", 
-#                    9: "casual"}
-
 change_class_style = {0: "classic",
          1: "preppy", 
          2: "manish",
@@ -169,9 +158,7 @@ change_class_style = {0: "classic",
 
 num_classes_style = 23
 
-#adj = "./style/custom_adj_final.pkl"
-
-adj = "./style/adj_file_v2.pkl"
+adj = "./style/adj_file.pkl"
 
 model_style = gcn_resnet101(num_classes=num_classes_style, t=0.03, adj_file=adj)
 
@@ -189,7 +176,7 @@ val_transform = transforms.Compose([
 
 """# best model"""
 
-resume = "./style/style_best_model.pth"
+resume = "./style/style_best_model4.pth"
 
 checkpoint = torch.load(resume, map_location=torch.device('cpu'))
 
@@ -199,7 +186,6 @@ model_style.eval()
 
 """word2vec"""
 
-#wordvec = "./style/custom_glove_word2vec_final.pkl"
 wordvec = "./style/custom_word2vec.pkl"
 
 with open(wordvec, 'rb') as f:

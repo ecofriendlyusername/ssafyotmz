@@ -3,6 +3,7 @@ package com.patandmat.otmz.domain.item.application;
 import com.patandmat.otmz.domain.imageFile.application.ImageFileService;
 import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
 import com.patandmat.otmz.domain.item.dto.ItemMatchRequestDto;
+import com.patandmat.otmz.domain.item.dto.ItemMatchResponsePageDto;
 import com.patandmat.otmz.domain.item.entity.ItemMatch;
 import com.patandmat.otmz.domain.item.dto.ItemMatchResponseDto;
 
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.AttributeNotFoundException;
@@ -82,19 +84,19 @@ public class ItemMatchService {
         Member member = optionalMember.get();
         if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
         Page<ItemMatch> page = itemMatchRepository.findAllByMemberId(member_id,pageable);
-        Page<ItemMatchResponseDto> itemMatchDtoPage = page.map(this:: convertToItemMatchDto);
-        return itemMatchDtoPage;
+        Page<ItemMatchResponsePageDto> itemMatchDtoResponsePage = page.map(this:: convertToItemMatchPageDto);
+        return itemMatchDtoResponsePage;
     }
 
-    public ItemMatchResponseDto convertToItemMatchDto(ItemMatch itemMatch) {
+    public ItemMatchResponsePageDto convertToItemMatchPageDto(ItemMatch itemMatch) {
         ImageFile imageFile = itemMatch.getImage();
-        ItemMatchResponseDto itemMatchResponseDto = ItemMatchResponseDto.builder()
+        ItemMatchResponsePageDto itemMatchResponsePageDto = ItemMatchResponsePageDto.builder()
                 .id(itemMatch.getId())
                 .name(itemMatch.getName())
                 .imageId(imageFile.getId())
                 .comment(itemMatch.getComment())
                 .build();
-        return itemMatchResponseDto;
+        return itemMatchResponsePageDto;
     }
 
     public void deleteItemMatch(Long id, Long memberId) throws NoSuchMemberException, IOException {
