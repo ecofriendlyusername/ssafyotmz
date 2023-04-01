@@ -1,20 +1,15 @@
 <template>
   <header>
     <div>
-      <router-link class="logo" to="/" style=" text-decoration:none;">
-        <p style="color:white;">O't MZ</p>
+        <p class="logo">O't MZ</p>
         <!-- <img src="@/assets/img/logo.png" style="width:65px;"> -->
-      </router-link>
     </div>
-    <!-- <h1>제목</h1> -->
-    <button class="hamburger" @click="toggleMenu">☰</button>
-    <ul v-if="showMenu" class="menu">
-      <li><router-link to='/MyPage'>마이 페이지</router-link></li>
-      <li><router-link to='/Find/index'>내 스타일 찾기</router-link></li>
-      <li><router-link to='/Codybook'>코디북 만들기</router-link></li>
-      <li><router-link to='/Recom'>스타일 추천</router-link></li>
-      <li><router-link to='/store'>상태 확인</router-link></li>      
-    </ul>
+
+    
+    <div v-if="login['memberId']" id="Logout" v-on:click="logOut()">
+      LOGOUT
+    </div>
+
   </header>
 
 
@@ -23,16 +18,28 @@
 <script>
 
 export default {
-    name:'headerComponent',
-    data() {
-    return {
-      showMenu: false
-    };
+  name:'headerComponent',
+  computed: {
+    login() {
+      return this.$store.state.Auth
+    }
   },
   methods: {
-    toggleMenu() {
-      this.showMenu = !this.showMenu;
+    logOut() {
+      this.$store.commit('setAuth', {
+        accessToken: null,
+        refreshToken: null,
+        memberId: null,
+        nickname: null,
+        profileImagePath: null,
+      });
+      sessionStorage.removeItem('vuex')
     },
+  },
+  watch: {
+    login() {
+      this.$router.push('/')
+    }
   }
 }
 </script>
@@ -44,15 +51,17 @@ header {
   justify-content: space-between;
   height: 60px;
   padding: 0 20px;
-  background-color: black;
+  background-color: rgb(255, 255, 255);
+  border-bottom: rgb(220, 220, 220) solid 0.1px;
 }
 
 .logo {
   font-weight: bold;
-  font-size: 24px;
+  font-size: 19px;
   display: flex; 
   align-items: center; 
   justify-content: center;
+  color: rgb(0, 0, 0);
 }
 
 h1 {
@@ -96,6 +105,13 @@ display: block;
 
 .menu a:hover {
 background-color: #f0f0f0;
+}
+
+#Logout {
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  color: black;
 }
 
 

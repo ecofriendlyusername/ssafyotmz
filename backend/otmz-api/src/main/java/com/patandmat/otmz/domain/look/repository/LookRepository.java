@@ -1,7 +1,8 @@
 package com.patandmat.otmz.domain.look.repository;
 
-import com.patandmat.otmz.domain.look.api.model.LookCountDto;
+import com.patandmat.otmz.domain.look.api.model.StyleByCountResponse;
 import com.patandmat.otmz.domain.look.entity.Look;
+import com.patandmat.otmz.domain.look.entity.Style;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,10 +17,10 @@ public interface LookRepository extends JpaRepository<Look, Long> {
 
     int countByMemberId(long memberId);
 
-    @Query("SELECT new com.patandmat.otmz.domain.look.api.model.LookCountDto(l.style, COUNT(*)) FROM Look l WHERE l.member.id = :memberId GROUP BY l.style ORDER BY COUNT(*) DESC")
-    List<LookCountDto> findByMemberIdOrderByStyleDesc(@Param("memberId") long memberId);
-
-    Page<Look> findAllByMemberId(Long id, Pageable pageable);
+    @Query("SELECT new com.patandmat.otmz.domain.look.api.model.StyleByCountResponse(l.style, COUNT(*)) FROM Look l WHERE l.member.id = :memberId GROUP BY l.style ORDER BY COUNT(*) DESC")
+    List<StyleByCountResponse> findByMemberIdOrderByStyleDesc(@Param("memberId") long memberId);
 
     List<Look> findAllByMemberIdNot(Long memberId);
+
+    Page<Look> findAllByStyleOrderByCreatedAtDesc(Style style, Pageable pageable);
 }

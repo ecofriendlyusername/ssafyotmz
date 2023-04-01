@@ -1,12 +1,18 @@
 from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import JSONResponse
 
 from style_classifier import *
+from single_classifier import *
+from object_detection import *
+
 from category_classifier import *
 from texture_classifier import *
 from print_classifier import *
 from rembg import remove
 
 import io
+import base64
+
 from starlette.middleware.cors import CORSMiddleware
 
 origins = [
@@ -25,6 +31,52 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def from_image_to_bytes(img):
+    """
+    pillow image 객체를 bytes로 변환
+    """
+    # Pillow 이미지 객체를 Bytes로 변환
+    imgByteArr = io.BytesIO()
+    img.save(imgByteArr, format=img.format)
+    imgByteArr = imgByteArr.getvalue()
+    # Base64로 Bytes를 인코딩
+    encoded = base64.b64encode(imgByteArr)
+    # Base64로 ascii로 디코딩
+    decoded = encoded.decode('ascii')
+    return decoded
+
+def detection_clothes(img):
+    
+    hide_labels = False 
+    hide_conf = False 
+
+    img_size = 640
+
+    conf_thres =.25
+    iou_thres =.45
+    max_det =  1000
+    agnostic_nms = False
+
+    img_size = check_img_size(img_size, s=stride)
+
+    img, img_src = process_image(img, img_size, stride, half)
+    img = img.to(device)
+    if len(img.shape) == 3:
+        img = img[None]
+        # expand for batch dim
+    pred_results = model_detect(img)
+    classes = [0,1,2,3] # the classes to keep
+    det = non_max_suppression(pred_results, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)[0]
+    
+    if len(det) >= 1:
+        
+        return True
+    
+    else:
+        
+        return False
+    
+
 
 @app.get("/")
 async def root():
@@ -42,38 +94,81 @@ async def test(img: UploadFile = File(...)):
 
 
 @app.post("/ai/v1/remove")
-async def remove_bg(image: UploadFile = File(...)):
+async def remove_bg_and_style_classification(image: UploadFile = File(...)):
+    
+    #read image data
+    img = await image.read()
+    img = io.BytesIO(img)
+    #open image
+    img = Image.open(img)
+    
+    ##########################################################
+    #inference style
+    
+    inf_img = img.convert('RGB')
+    # transformation
+    if val_transform is not None:
 
-    # filename = "./dummy/test12.jpg"
+        inf_img = val_transform(inf_img)
+    
+    # prepare feature
+    inf_img = inf_img.unsqueeze(0)
 
-    img = Image.open(filename)
+    feature_var = torch.autograd.Variable(inf_img).float()
+    
+    # data
+    output = model_single(feature_var, inp_var)
+    percentage_output = F.softmax(output, dim=1)
 
-    # img = await image.read()
-    # img = io.BytesIO(img)
-    # #open image
-    # img = Image.open(img)
+    pred = output.cpu().detach().numpy()
 
+    sorted_pred = np.argsort(pred, axis=1)
+
+    # result
+    result = {}
+
+    for i in range(num_classes_style-1, -1, -1):
+
+        result[23-i] = {"style": change_class_style[sorted_pred[0][i]],
+                        "score": round((percentage_output[0][sorted_pred[0][i]].item())*100, 4)}
+    
+    
+    ###############################################################################
     # remove background
-
     img = remove(img, alpha_matting=True, alpha_matting_erode_size=15)
-
+    
     # fix output
     # save image
-    img.save("./remove/output.png", "png")
+    x = int(round(np.random.rand(),5)*(10**5))
+    
+    img.save(f"./remove/{x}.png", "png")
+    
+    img = Image.open(f"./remove/{x}.png")
+    
+    img_converted = from_image_to_bytes(img)
+    
+    return {"image":JSONResponse(img_converted),"style":result}
+    
+    
 
 
 @app.post("/ai/v1/style")
-async def style_classification(image: UploadFile = File(...)):
+async def style_classification(imageFile: UploadFile = File(...)):
 
-    # filename = "./dummy/test12.jpg"
+    #filename = "./dummy/test12.jpg"
 
-    img = Image.open(filename).convert('RGB')
+    #img = Image.open(filename).convert('RGB')
 
     """inference"""
-    img = await image.read()
+    img = await imageFile.read()
     img = io.BytesIO(img)
     # open image
     img = Image.open(img).convert('RGB')
+    
+    if detection_clothes(img) == False:
+        
+        return {}
+    
     # transformation
     if val_transform is not None:
 

@@ -16,11 +16,15 @@
 
     <br>
     <router-link to='Find/result'>결과 보기</router-link>
+
+    <p id="temp"></p>
   </div>
 </template>
 
 <script>
+import { templateElement } from '@babel/types';
 import axios from 'axios';
+import watermark from 'watermarkjs';
 
 export default {
   name: 'HelloWorld',
@@ -32,6 +36,18 @@ export default {
   },
 
   methods: {
+    dataURLtoFile(dataurl, filename) {
+      const arr = dataurl.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, {type: mime});
+    },
+
     fileUpload(event) {
       this.file = event.target.files[0];
       this.image = URL.createObjectURL(this.file);
@@ -42,58 +58,40 @@ export default {
       if (this.file == null) {
         return;
       }
-      // 폼 데이터 만들기 - 위에서 form 양식 쓸 필요 없으니까 지우기
+      // 폼 데이터 만들기
       const formData = new FormData();
-      formData.append('image', this.file);
-
+      formData.append('imageFile', this.file);
       // api요청으로 이미지 분석하기
-      axios.post(process.env.VUE_APP_KAKAO_PREDICTION_API_URL, formData, {
+
+      axios.post(process.env.VUE_APP_AI_URL + '/style', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data' 
         }
       })
       // 결과 받아서 저장
       .then(response => {
         // 검출 결과 저장
         this.result = response.data;
-        formData.append('result', this.result);
+        formData.append('styleVector', this.result);
       })
       // 워터마크 찍기
       .then(() => {
-        const reader = new FileReader();
-        reader.onload(evnet => {
-          const tmp_img = this.file
-          // 이미지 파일 읽어서 워터마크 찍기
-          tmp_img.onload(() => {
-            watermark([tmp_img, require('@/assets/img/watermark/logo.png')])
-            .image(watermark.image.upperRight(0.5))
-            .then((img) => {
-              // 폼데이터 이미지 워터마크 찍힌걸로 변경
-              formData.image = img
-            });
+        watermark([this.image, require('@/assets/img/watermark/logo.png')])
+          .image(watermark.image.upperRight(0.5))
+          .load([require('@/assets/img/watermark/MyStyleStreet.png')])
+          .image(watermark.image.lowerLeft(0.5))
+          .then((img) => {
+            const watermark = this.dataURLtoFile(img.src, 'temp.jpg')
+            this.file = watermark
+          })      
+          .then(() => {
+            this.$store.commit('SET_RESULT', {img_path: this.file, data: this.result, imageId: null})
           });
-        });
       })
-      // (워터마크 찍힌 이미지 + 결과값) 서버에 저장하기
+      // 상태에 저장하고 라우트 이동
+
       .then(() => {
-        axios.post('URL', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
-        .then((response) => {
-          // 파일 저장하는 api 리턴값으로 파일 경로 달라고 해야 함
-          this.image = response.data
-        })
-        .catch(error =>{
-          console.log(error)
-          this.$router.push('/Find/Error')
-        })
-      })
-      // 상태에 저장 경로 저장하고 라우트 이동
-      .then(() => {
-        this.$store.commit('SET_RESULT', {img_path: this.image, data: this.result});
-        this.$router.push('/Find/result');
+        this.$router.push('/Find/loading');
       })
       .catch(error => {
         console.log(error);
@@ -146,10 +144,12 @@ button {
 }
 
 #InnerCard {
-  display: inline-block;
+  display: flex;
+  /* display: inline-block; */
+  /* align-content: center; */
   object-fit: cover;
   margin-top: 17%;
-  margin-left: 4%;
+  margin-left: 12%;
   width:80%;
   height: 325px;
   /* height: 50%; */

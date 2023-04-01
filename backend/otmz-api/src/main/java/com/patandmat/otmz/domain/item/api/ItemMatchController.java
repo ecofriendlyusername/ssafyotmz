@@ -1,9 +1,8 @@
 package com.patandmat.otmz.domain.item.api;
 
-import com.patandmat.otmz.domain.item.dto.ItemMatchResponseDto;
-import com.patandmat.otmz.domain.item.dto.ItemMatchRequestDto;
 import com.patandmat.otmz.domain.item.application.ItemMatchService;
-
+import com.patandmat.otmz.domain.item.dto.ItemMatchRequestDto;
+import com.patandmat.otmz.domain.item.dto.ItemMatchResponseDto;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.global.auth.CustomUserDetails;
 import com.patandmat.otmz.global.exception.NoSuchMemberException;
@@ -20,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -32,8 +32,9 @@ public class ItemMatchController {
     private final String SUCCESS = "SUCCESS";
     private final String FAIL = "FAIL";
     private final ItemMatchService itemMatchService;
+
     @PostMapping("/itemmatch")
-    @Operation(summary= "코디북 저장", description = "코디북을 저장한다."
+    @Operation(summary = "코디북 저장", description = "코디북을 저장한다."
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
@@ -42,7 +43,7 @@ public class ItemMatchController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
         try {
-            itemMatchService.saveItemMatch(file,itemMatch,member.getId());
+            itemMatchService.saveItemMatch(file, itemMatch, member.getId());
         } catch (AttributeNotFoundException e) {
             return new ResponseEntity<>("Check Attributes of The Item", HttpStatus.BAD_REQUEST);
         } catch (NoSuchMemberException e) {
@@ -53,7 +54,7 @@ public class ItemMatchController {
     }
 
     @GetMapping("/itemmatch/{id}")
-    @Operation(summary= "코디북 조회", description = "조회하고자하는 코디북의 아이디를 담아서 넘겨준다."
+    @Operation(summary = "코디북 조회", description = "조회하고자하는 코디북의 아이디를 담아서 넘겨준다."
             , responses = {
             @ApiResponse(responseCode = "200", description = "success", content = @Content(schema = @Schema(implementation = ItemMatchResponseDto.class)))
     })
@@ -61,19 +62,19 @@ public class ItemMatchController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
         try {
-            ItemMatchResponseDto itemMatchResponseDto = itemMatchService.getItemMatch(id,member.getId());
+            ItemMatchResponseDto itemMatchResponseDto = itemMatchService.getItemMatch(id, member.getId());
             return new ResponseEntity<>(itemMatchResponseDto, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
         } catch (NoSuchMemberException e) {
             return new ResponseEntity<>("User Doesn't Exist", HttpStatus.BAD_REQUEST);
         } catch (UnauthorizedException e) {
-            return new ResponseEntity<>("Unauthorized Operation",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Unauthorized Operation", HttpStatus.UNAUTHORIZED);
         }
     }
 
     @DeleteMapping("/itemmatch/{id}")
-    @Operation(summary= "코디북 삭제", description = "삭제하고 싶은 코디북의 아이디를 담아서 넘겨준다."
+    @Operation(summary = "코디북 삭제", description = "삭제하고 싶은 코디북의 아이디를 담아서 넘겨준다."
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
@@ -81,7 +82,7 @@ public class ItemMatchController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
         try {
-            itemMatchService.deleteItemMatch(id,member.getId());
+            itemMatchService.deleteItemMatch(id, member.getId());
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
@@ -90,16 +91,14 @@ public class ItemMatchController {
         }
     }
 
-    @DeleteMapping("/itemmatch")
-    @Operation(summary= "여러개의 코디북 삭제", description = "여러개의 코디북을 삭제하고 싶다면 ids 배열에 각 코디북들의 아이디를 담아서 넘겨주면 된다."
-            , responses = {
-            @ApiResponse(responseCode = "200", description = "success")
-    })
-    public ResponseEntity<?> deleteMultipleItemMatches(@RequestBody List<Long> ids, Authentication authentication) {
+    @DeleteMapping("/itemmatches")
+    @Operation(summary = "여러개의 코디북 삭제", description = "여러개의 코디북을 삭제하고 싶다면 ids 배열에 각 코디북들의 아이디를 담아서 넘겨주면 된다.",
+            responses = {@ApiResponse(responseCode = "200", description = "success")})
+    public ResponseEntity<?> deleteMultipleItemMatches(@RequestParam List<Long> ids, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = userDetails.getMember();
         try {
-            itemMatchService.deleteMultipleItemMatches(ids,member.getId());
+            itemMatchService.deleteMultipleItemMatches(ids, member.getId());
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
@@ -110,15 +109,15 @@ public class ItemMatchController {
         }
     }
 
-    @GetMapping("/itemmatchpage")
-    @Operation(summary= "여러 코디북들을 페이지 안에 넣어 돌려줌(사진 파일은 보내지 않음)", description = "각 코디북의 사진을 제외한 정보들을 보내주며 사진을 얻기 위해서는 imageId(사진 아이디)로 api에 요청하면 됨. " +
+    @GetMapping("/itemmatches")
+    @Operation(summary = "여러 코디북들을 페이지 안에 넣어 돌려줌(사진 파일은 보내지 않음)", description = "각 코디북의 사진을 제외한 정보들을 보내주며 사진을 얻기 위해서는 imageId(사진 아이디)로 api에 요청하면 됨. " +
             "<br><br> 이미지 요청 endpoint -> http://(host)/api/v1/images/{id}" +
             "<br><br> page 관련 정보를 쿼리 파라미터로 보내면 해당 페이지를 보내줌. " +
             "<br><br> ------------ 쿼리파라미터 설명 ------------<br><br> " +
             "size : 한 페이지에 몇개의 item match가 들어가는지  <br><br>" +
             "page : 몇번째 페이지인지,  <br><br>" +
             "sort : 어떤 속성으로 정렬할것인지, 올림차순인지 내림차순인지 <br><br>" +
-            "요청예시 : http://(host)/api/v1/itemmatchpage?page=2&size=3&sort=id,ASC <br><br>" +
+            "요청예시 : http://(host)/api/v1/itemmatches?page=2&size=3&sort=id,ASC <br><br>" +
             "설명 : 아이디를 기준으로 오름차순으로 정렬하고 두 번쩨 페이지를 가져온다. 한 페이지에는 두개의 아이템매치가 있다. <br><br>" +
             " 총 페이지 수는 totalPages에서 찾을 수 있음<br><br>" +
             "ItemMatch의 스키마는 getItemMatch에서 확인"
