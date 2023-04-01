@@ -4,22 +4,19 @@
     옷 추가하기
   </div>
   <hr>
+  <img v-if="userUploadedImgExist" :src="userUploadedImg">
     <label for="imagefile">옷 이미지를 추가하세요</label><input type="file" id="imagefile" name="imagefile" @change="fileUpload">
     <br>
-    <label for="text">옷 이름을 입력하세요</label><input type="text" id="name" name="name">
-    <select id="categories">
-  <option value="outer" selected>아우터</option>
-  <option value="upper" selected="selected">상의</option>
-  <option value="lower">하의</option>
-  <option value="dress">원피스</option>
-  <option value="etc">기타</option>
-</select>
-<img v-if="isLoading" :src="loadingImage">
+    <label for="text">이름</label><input type="text" id="name" name="name">
+    <div class="categories">
+      <div v-for="(category,index) in categories" class="category" :class="{ 'uploadedItemCat': curCategory === category }" @click="changeCategory(category)">{{categoriesKorean[index]}}</div>
+    </div>
+<img v-if="isLoading" src="../assets/img/loading.gif" width="50%">
 <div v-if="haveImage">
   <img :src="processedImageStr">
   <div>이 이미지로 등록하시겠습니까?</div>
-  <button @click="createItemWithProcessedImage()"></button>
-  <button @click="no()"></button>
+  <button class="buttons" @click="createItemWithProcessedImage()">등록하기</button>
+  <button class="buttons" @click="no()">사진 다시 올리기</button>
 </div>
     <br>
     <br>
@@ -45,8 +42,12 @@ export default {
       style: null,
       cropped: null,
       isLoading: false,
+      userUploadedImg: null,
+      categories: ['outer','upper','lower','dress','etc'],
+      categoriesKorean: ['아우터','상의','하의','원피스','ETC'],
+      curCategory: 'outer',
+      userUploadedImgExist: false,
       processedImageStr: "",
-      loadingImage: "https://upload.wikimedia.org/wikipedia/commons/b/b9/Youtube_loading_symbol_1_(wobbly).gif",
       haveImage: false,
       Auth: this.$store.state.Auth,
     }
@@ -54,10 +55,15 @@ export default {
   methods: {
     fileUpload(event) {
       this.file = event.target.files[0];
+      this.userUploadedImg = URL.createObjectURL(this.file);
+      this.userUploadedImgExist = true
     },
     no() {
       this.haveImage = false
       this.processedImageStr = ""    
+    },
+    changeCategory(category) {
+      this.curCategory = category;
     },
     dataURLtoFile(dataurl, filename) {
       var arr = dataurl.split(','),
@@ -99,6 +105,8 @@ export default {
       }
       this.isLoading = true
       const formDataAI = new FormData();
+      this.userUploadedImg = null
+      this.userUploadedImgExist = false
       formDataAI.append('image', this.file);
       await this.removeBackground(formDataAI)
     },
@@ -125,16 +133,28 @@ export default {
         }
       })
       .then(response => {
-        a.processedImageStr = 'data:image/png;base64,' + response.data.image
+        console.log('why')
+        var len = response.data.image.body.length
+        var str = response.data.image.body.substring(1,len-1)
+        console.log(str)
+        a.processedImageStr = 'data:image/png;base64,' + str
+        console.log('why2')
         const style = response.data.style
+        console.log('why3')
         this.processedImage = this.dataURLtoFile(a.processedImageStr,'processedImage.jpeg')
+        console.log('why4')
         this.style = style
+        console.log('why5')
         this.isLoading = false
+        console.log('why6')
         this.haveImage = true
+        console.log('why7')
+        console.log('success')
         return response
       })
       .catch(e => {
         this.isLoading = false
+        console.log('failed')
         alert('이미지 처리에 문제가 있었습니다 다시 등록해주세요')
         return e
       })
@@ -163,5 +183,33 @@ export default {
 </script>
 
 <style>
+.buttons {
+  background-color: blanchedalmond;
+  border: none;
+}
 
+input {
+        border-top-style: hidden;
+        border-right-style: hidden;
+        border-left-style: hidden;
+        border-bottom-style: groove;
+        border-bottom: 1px solid;
+      }
+
+      select {
+        border-top-style: hidden;
+        border-right-style: hidden;
+        border-left-style: hidden;
+        border-bottom-style: groove;
+        border-bottom: 1px solid;
+      }
+
+      select option {
+  display:inline-block;
+}
+
+.uploadedItemCat {
+    background-color: grey;
+    color: white;
+  }
 </style>
