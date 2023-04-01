@@ -1,14 +1,10 @@
 <template>
-<div>
-  <div style="list-style-type:none;">
-    <li v-for="(category,index) in categories" @click="changeCategory(category)">{{ categoriesKorean[index] }}</li>
-    <!-- <div style="width: 350px; height: 250px; border: 1px solid black"> -->
-      <ItemView :key="curCategory" :category="curCategory"></ItemView>
-    <!-- </div> -->
-  </div>
-  <hr>
+  <div id="closetview">
+    <div class="categories">
+      <div v-for="(category,index) in categories" class="category" :class="{ 'selected': curCategory === category }" @click="changeCategory(category)">{{categoriesKorean[index]}}</div>
+    </div>
+    <ItemView :key="curCategory" :category="curCategory"></ItemView>
   <router-link to='/AddClothes'>옷 추가하기</router-link>
-  <router-link to='/MyPage'>마이페이지</router-link>
 </div>
 </template>
 
@@ -28,6 +24,7 @@ export default {
   },
   methods: {
     changeCategory(category) {
+      this.selec
       this.curCategory = category;
     }
   },
@@ -35,6 +32,22 @@ export default {
 </script>
 
 <style>
+  .categories {
+    display: flex;
+    margin: 10px;
+  }
+
+  .category {
+    margin: 0 5px;
+  }
+
+  .selected {
+    background-color: black;
+    color: white;
+  }
+  .closetview {
+  font-family: 'NanumSquareNeo-Variable';
+}
 </style>
 
 
