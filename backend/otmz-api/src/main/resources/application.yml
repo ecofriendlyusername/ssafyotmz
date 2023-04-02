@@ -19,3 +19,5 @@ oauth:
     authorizationUrl: https://kapi.kakao.com/v2/user/me
     grantType: authorization_code
     clientId: 899719034b2557a7c9b9ed80e93b5afd
+
+OPENVIDU_SECRET: MY_SECRET
