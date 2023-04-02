@@ -65,11 +65,11 @@ footer{
   padding-top: 7px;
 }
 
-#otmz {
+/* #otmz {
   position: relative;
   width: 100%;
   height: 100%;
   overflow-x: hidden
-}
+} */
 
 </style>
