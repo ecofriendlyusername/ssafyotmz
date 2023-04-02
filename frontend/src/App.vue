@@ -1,11 +1,8 @@
 <template>
-  <div id="app">
+
   <headerComponent/>
-  <div id="otmz">
-    <router-view/>
-  </div>
-  <footerComponent/>  
-</div>
+  <router-view/>
+  <footerComponent/>
 </template>
 
 <script>
@@ -56,24 +53,11 @@ nav a.router-link-exact-active {
 
 body {
   padding-bottom: 73px;
-  width: 100%;
 }
 
 footer{
-  width: 100%;
+  width: 95.8%;
   padding-top: 7px;
-}
-
-#otmz {
-  /* overflow-x: hidden; */
-  width: 100%;
-  height: 100%;
-  /* overflow-y: scroll; */
-}
-
-#app {
-  width: 100%;
-  /* position: fixed; */
 }
 
 </style>
