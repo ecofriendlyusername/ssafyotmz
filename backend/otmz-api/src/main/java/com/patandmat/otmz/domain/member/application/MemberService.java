@@ -2,25 +2,23 @@ package com.patandmat.otmz.domain.member.application;
 
 
 import com.patandmat.otmz.domain.item.repository.ItemRepository;
-import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByCountResponse;
-import com.patandmat.otmz.domain.look.entity.Style;
 import com.patandmat.otmz.domain.look.repository.LookRepository;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.domain.member.repository.MemberRepository;
 import com.patandmat.otmz.global.utils.VectorParser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-
     private final MemberRepository memberRepository;
     private final LookRepository lookRepository;
     private final ItemRepository itemRepository;
@@ -120,37 +118,12 @@ public class MemberService {
 
         if (member.getLookStyleStat() != null) {
             memberStyleStatMap = VectorParser.parseToMap(member.getItemStyleStat());
-            memberStyleStatMap.replaceAll((style, score) -> (memberStyleStatMap.get(style) + styleMap.getOrDefault(style, 0d)) / 2);
+            memberStyleStatMap.replaceAll((style, score) -> (memberStyleStatMap.get(style) + styleMap.getOrDefault(style, 0d))/2);
         } else {
             memberStyleStatMap = styleMap;
         }
 
         member.setItemStyleStat(VectorParser.parseToString(memberStyleStatMap));
         memberRepository.save(member);
-    }
-
-    public Map<String, List<LookResponse>> getStyles(Long memberId, int size) {
-        Map<String, List<LookResponse>> result = new HashMap<>();
-
-        List<StyleByCountResponse> styleByCountResponses = lookRepository.findByMemberIdOrderByStyleDesc(memberId);
-        for (int i = 0; i < Math.min(size, styleByCountResponses.size()); i++) {
-            Style style = styleByCountResponses.get(i)
-                                               .getStyle();
-
-            result.put(style.getKey(), lookRepository.findAllByStyleOrderByCreatedAtDesc(style, PageRequest.of(0, size))
-                                                     .stream()
-                                                     .parallel()
-                                                     .map(look ->
-                                                             LookResponse.builder()
-                                                                         .id(look.getId())
-                                                                         .imageId(look.getImage().getId())
-                                                                         .memberId(look.getMember().getId())
-                                                                         .ownerName(look.getMember().getNickname())
-                                                                         .style(look.getStyle().getKey())
-                                                                         .build())
-                                                     .collect(Collectors.toList()));
-        }
-
-        return result;
     }
 }
