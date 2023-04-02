@@ -149,7 +149,7 @@ const height = 400;
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8000/';
+const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080/';
 
 export default {
   name: 'MainComponent',
@@ -642,15 +642,21 @@ export default {
     },
 
     async createSession(sessionId) {
-      const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
-        headers: { 'Content-Type': 'application/json', },
+      const response = await axios.post(APPLICATION_SERVER_URL + 'api/v1/codiboard/live/sessions', { customSessionId: sessionId }, {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': this.$store.state.Auth['accessToken']
+        },
       });
       return response.data; // The sessionId
     },
 
     async createToken(sessionId) {
-      const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
-        headers: { 'Content-Type': 'application/json', },
+      const response = await axios.post(APPLICATION_SERVER_URL + 'api/v1/codiboard/live/' + sessionId + '/connections', {}, {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': this.$store.state.Auth['accessToken']
+        },
       });
       return response.data; // The token
     },
