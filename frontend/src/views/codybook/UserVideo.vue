@@ -1,7 +1,7 @@
 <template>
 <div class="member" v-if="streamManager">
 	<div id="profile" :class="{ 'active': isSpeaking }">
-		<img src="https://k.kakaocdn.net/dn/CezCL/btrKatXtJFO/8X2UHivEyLVjnx9wZyHM9K/img_110x110.jpg">
+		<img :src='`${profileImage}`'>
 	</div>
 	<ov-video :stream-manager="streamManager"/>
 	<p>{{ clientData }}</p>
@@ -28,6 +28,10 @@ export default {
 			const { clientData } = this.getConnectionData();
 			return clientData;
 		},
+		profileImage () {
+			const { profileImage } = this.getConnectionData();
+			return profileImage ? profileImage : 'http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg';
+		}
 	},
 
 	methods: {
@@ -55,8 +59,8 @@ export default {
 }
 
 #profile > img {
-	width: 55px;
-  height: 55px;
+	width: 91%;
+  height: 91%;
   border-radius: 50%;
   background-position: 50%;
   background-size: cover;
