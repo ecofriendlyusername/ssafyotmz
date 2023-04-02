@@ -1,7 +1,5 @@
 <template>
   <headerComponent/>
-
-  <headerComponent/>
   <router-view/>
   <footerComponent/>
 </template>
