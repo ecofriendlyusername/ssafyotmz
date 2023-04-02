@@ -45,7 +45,6 @@ public class ImageFileServiceImpl implements ImageFileService {
                 .build();
 
         File file = new File(absolutePath + imageFile.getPath());
-        System.out.println("path when saving : " + absolutePath + imageFile.getPath());
 
         try(OutputStream outputStream = new FileOutputStream(file)) {
             outputStream.write(multipartFile.getBytes());
@@ -68,7 +67,6 @@ public class ImageFileServiceImpl implements ImageFileService {
         imageFileRepository.delete(imageFile);
 
         File f = new File(absolutePath+path);
-        System.out.println("path when saving : " + absolutePath + path);
         if (!f.exists()) return;
         Files.delete(Path.of(absolutePath,path));
     }
