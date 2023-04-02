@@ -1,11 +1,10 @@
 <template>
-  <div id="otmz">
   <headerComponent/>
 
   <router-view/>
   
   <footerComponent/>
-</div>
+
 
   
 </template>
@@ -64,12 +63,5 @@ footer{
   width: 95.8%;
   padding-top: 7px;
 }
-
-/* #otmz {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden
-} */
 
 </style>
