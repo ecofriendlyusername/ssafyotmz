@@ -1,12 +1,7 @@
 <template>
   <headerComponent/>
-
   <router-view/>
-  
   <footerComponent/>
-
-
-  
 </template>
 
 <script>
