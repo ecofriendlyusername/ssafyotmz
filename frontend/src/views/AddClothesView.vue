@@ -1,5 +1,5 @@
 <template>
-<div id="AC">
+<div>
   <div>
     옷 추가하기
   </div>
@@ -11,26 +11,21 @@
   <br>
     <label for="imagefile">옷 이미지 선택하기</label><input type="file" id="imagefile" name="imagefile" @change="fileUpload" >
     <br>
-<!-- <img v-if="isLoading" :src="loadingImg"> -->
-<div v-if="haveImage">
-  <img :src="processedImageStr" class="uploadedImage">
-  <div>이 이미지로 등록하시겠습니까?</div>
-  <button class="buttons" @click="createItemWithProcessedImage()">등록하기</button>
-  <button class="buttons" @click="no()">사진 다시 올리기</button>
-</div>
-<label for="text">이름</label><input type="text" id="name" name="name">
+
+    <label for="text">이름</label><input type="text" id="name" name="name">
     <div class="cats">
       <div v-for="(category,index) in categories" class="itemCat" :class="{ 'uploadedItemCat': curCategory === category }" @click="changeCategory(category)">{{categoriesKorean[index]}}</div>
     </div> 
-    <br>
-    <br>
-    <input type="file"
-       id="avatar" name="avatar"
-       accept="image/png, image/jpeg">
-       <br>
-  <hr>
-  <!-- <img src="@/assets/img/StartBtn.png" id="StartBtn" v-on:click=processImageAndCreateItem() @touchstart="processImageAndCreateItem()" > -->
-  <div @mousedown="processImageAndCreateItem()">이미지 업로드</div>
+
+<img v-if="isLoading" :src="loadingImage">
+<div v-if="haveImage">
+  <div>이 이미지로 등록하시겠습니까?</div>
+  <img :src="processedImageStr" class="uploadedImage">
+  <br>
+  <button class="buttons" @click="createItemWithProcessedImage()">등록하기</button>
+  <button class="buttons" @click="no()">사진 다시 올리기</button>
+</div>
+<div @mousedown="processImageAndCreateItem()">이미지 업로드</div>
 </div>
 </div>
 </template>
@@ -48,13 +43,12 @@ export default {
       style: null,
       cropped: null,
       isLoading: false,
+      processedImageStr: "",
       userUploadedImg: null,
-      loadingImg: "https://upload.wikimedia.org/wikipedia/commons/b/b9/Youtube_loading_symbol_1_(wobbly).gif",
       categories: ['outer','upper','lower','dress','etc'],
       categoriesKorean: ['아우터','상의','하의','원피스','ETC'],
       curCategory: 'outer',
       userUploadedImgExist: false,
-      processedImageStr: "",
       haveImage: false,
       Auth: this.$store.state.Auth,
     }
@@ -65,13 +59,15 @@ export default {
       this.file = event.target.files[0];
       this.userUploadedImg = URL.createObjectURL(this.file);
       this.userUploadedImgExist = true
-    },
-    no() {
-      this.haveImage = false
-      this.processedImageStr = ""    
+
     },
     changeCategory(category) {
       this.curCategory = category;
+    },
+
+    no() {
+      this.haveImage = false
+      this.processedImageStr = ""    
     },
     dataURLtoFile(dataurl, filename) {
       var arr = dataurl.split(','),
@@ -105,7 +101,6 @@ export default {
         return e
       })
     },
-
     async processImageAndCreateItem() {
       var a = this
       if (this.file == null) {
@@ -113,7 +108,6 @@ export default {
         return;
       }
       this.isLoading = true
-      console.log(this.isLoading + " <- this.isLoading")
       const formDataAI = new FormData();
       this.userUploadedImg = null
       this.userUploadedImgExist = false
@@ -133,7 +127,7 @@ export default {
       type: 'application/json'});
       formData.append('item',itemBlob);
       formData.append('category',this.curCategory)
-      await this.createItem(formData)
+      this.createItem(formData)
       .then((res) => {
         this.haveImage = false
         this.processedImageStr = ""
@@ -141,6 +135,7 @@ export default {
       }).catch((e) => {
         return e
       })
+
     },
     async removeBackground(formData) {
       var a = this
@@ -163,7 +158,6 @@ export default {
       })
       .catch(e => {
         this.isLoading = false
-        console.log('failed')
         alert('이미지 처리에 문제가 있었습니다 다시 등록해주세요')
         return e
       })
@@ -179,6 +173,7 @@ export default {
       }).catch((e) => {
         return e
       })
+
     },
     deleteItem() {
       axios.delete(process.env.VUE_APP_ITEMS + '/' + id, {
@@ -243,4 +238,5 @@ input {
 .loadingImg {
   width: 70%;
 }
+
 </style>
