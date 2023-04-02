@@ -1,5 +1,5 @@
 <template>
-<div>
+<div id="x">
   <div>
     옷 추가하기
   </div>
@@ -32,9 +32,15 @@
 
 <script>
 import axios from 'axios'
+import headerComponent from "@/components/molecules/header.vue";
+import footerComponent from "@/components/molecules/footer.vue";
 
 export default {
   name:'AddClothesView',
+  components: {
+    headerComponent,
+    footerComponent
+  },
   data () {
     return {
       file: null,
@@ -239,4 +245,11 @@ input {
   width: 70%;
 }
 
+#x {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden; 
+  position: relative;
+}
 </style>

@@ -4,8 +4,8 @@
       <div v-for="(category,index) in categories" class="category" :class="{ 'selected': curCategory === category }" @click="changeCategory(category)">{{categoriesKorean[index]}}</div>
     </div>
     <ItemView :key="curCategory" :category="curCategory"></ItemView>
-  <router-link to='/AddClothes'>옷 추가하기</router-link>
 </div>
+<router-link to='/AddClothes'>옷 추가하기</router-link>
 </template>
 
 <script>
@@ -47,6 +47,8 @@ export default {
   }
   .closetview {
   font-family: 'NanumSquareNeo-Variable';
+  width: 100%;
+  position: fixed;
 }
 </style>
 
