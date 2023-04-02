@@ -34,7 +34,6 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     public void setErrorResponse(HttpStatus status, HttpServletResponse res, Throwable ex) throws IOException {
         res.setStatus(status.value());
         res.setContentType("application/json; charset=UTF-8");
-        HttpStatus.UNAUTHORIZED.value();
 
         BaseResponseBody jwtExceptionResponse = new BaseResponseBody(401 ,ex.getMessage());
         res.getWriter().write(objectMapper.writeValueAsString(jwtExceptionResponse));
