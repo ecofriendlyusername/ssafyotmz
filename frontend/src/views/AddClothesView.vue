@@ -4,31 +4,29 @@
     옷 추가하기
   </div>
   <hr>
-    <label for="imagefile">옷 이미지를 추가하세요</label><input type="file" id="imagefile" name="imagefile" @change="fileUpload">
+  <img v-if="isLoading" src="../assets/img/loading.gif" class="loadingImg">
+
+<div v-show="!isLoading">
+  <img v-if="userUploadedImgExist" :src="userUploadedImg" class="uploadedImage" >
+  <br>
+    <label for="imagefile">옷 이미지 선택하기</label><input type="file" id="imagefile" name="imagefile" @change="fileUpload" >
     <br>
-    <label for="text">옷 이름을 입력하세요</label><input type="text" id="name" name="name">
-    <select id="categories">
-  <option value="outer" selected>아우터</option>
-  <option value="upper" selected="selected">상의</option>
-  <option value="lower">하의</option>
-  <option value="dress">원피스</option>
-  <option value="etc">기타</option>
-</select>
+
+    <label for="text">이름</label><input type="text" id="name" name="name">
+    <div class="cats">
+      <div v-for="(category,index) in categories" class="itemCat" :class="{ 'uploadedItemCat': curCategory === category }" @click="changeCategory(category)">{{categoriesKorean[index]}}</div>
+    </div> 
+
 <img v-if="isLoading" :src="loadingImage">
 <div v-if="haveImage">
-  <img :src="processedImageStr">
   <div>이 이미지로 등록하시겠습니까?</div>
-  <button @click="createItemWithProcessedImage()"></button>
-  <button @click="no()"></button>
+  <img :src="processedImageStr" class="uploadedImage">
+  <br>
+  <button class="buttons" @click="createItemWithProcessedImage()">등록하기</button>
+  <button class="buttons" @click="no()">사진 다시 올리기</button>
 </div>
-    <br>
-    <br>
-    <input type="file"
-       id="avatar" name="avatar"
-       accept="image/png, image/jpeg">
-       <br>
-  <hr>
-  <img src="@/assets/img/StartBtn.png" id="StartBtn" v-on:click=processImageAndCreateItem() @touchstart="processImageAndCreateItem()" >
+<div @mousedown="processImageAndCreateItem()">이미지 업로드</div>
+</div>
 </div>
 </template>
 
@@ -46,15 +44,27 @@ export default {
       cropped: null,
       isLoading: false,
       processedImageStr: "",
-      loadingImage: "https://upload.wikimedia.org/wikipedia/commons/b/b9/Youtube_loading_symbol_1_(wobbly).gif",
+      userUploadedImg: null,
+      categories: ['outer','upper','lower','dress','etc'],
+      categoriesKorean: ['아우터','상의','하의','원피스','ETC'],
+      curCategory: 'outer',
+      userUploadedImgExist: false,
       haveImage: false,
       Auth: this.$store.state.Auth,
     }
   },
   methods: {
     fileUpload(event) {
+      if (event.target.files.length == 0) return 
       this.file = event.target.files[0];
+      this.userUploadedImg = URL.createObjectURL(this.file);
+      this.userUploadedImgExist = true
+
     },
+    changeCategory(category) {
+      this.curCategory = category;
+    },
+
     no() {
       this.haveImage = false
       this.processedImageStr = ""    
@@ -99,6 +109,8 @@ export default {
       }
       this.isLoading = true
       const formDataAI = new FormData();
+      this.userUploadedImg = null
+      this.userUploadedImgExist = false
       formDataAI.append('image', this.file);
       await this.removeBackground(formDataAI)
     },
@@ -114,8 +126,16 @@ export default {
       const itemBlob = new Blob([jsonString], {
       type: 'application/json'});
       formData.append('item',itemBlob);
-      formData.append('category',document.getElementById("categories").value)
+      formData.append('category',this.curCategory)
       this.createItem(formData)
+      .then((res) => {
+        this.haveImage = false
+        this.processedImageStr = ""
+        return res
+      }).catch((e) => {
+        return e
+      })
+
     },
     async removeBackground(formData) {
       var a = this
@@ -125,7 +145,10 @@ export default {
         }
       })
       .then(response => {
-        a.processedImageStr = 'data:image/png;base64,' + response.data.image
+        var len = response.data.image.body.length
+        var str = response.data.image.body.substring(1,len-1)
+        console.log(str)
+        a.processedImageStr = 'data:image/png;base64,' + str
         const style = response.data.style
         this.processedImage = this.dataURLtoFile(a.processedImageStr,'processedImage.jpeg')
         this.style = style
@@ -139,13 +162,18 @@ export default {
         return e
       })
     },
-    createItem(formData) {
+    async createItem(formData) {
       axios.post(process.env.VUE_APP_ITEM,formData, {
         headers: {
           'Content-Type' : 'multipart/form-data',
           'Authorization' : this.Auth.accessToken,
         }
+      }).then((res) => {
+        return res
+      }).catch((e) => {
+        return e
       })
+
     },
     deleteItem() {
       axios.delete(process.env.VUE_APP_ITEMS + '/' + id, {
@@ -163,5 +191,52 @@ export default {
 </script>
 
 <style>
+.buttons {
+  background-color: blanchedalmond;
+  border: none;
+}
+
+input {
+        border-top-style: hidden;
+        border-right-style: hidden;
+        border-left-style: hidden;
+        border-bottom-style: groove;
+        border-bottom: 1px solid;
+      }
+
+      select {
+        border-top-style: hidden;
+        border-right-style: hidden;
+        border-left-style: hidden;
+        border-bottom-style: groove;
+        border-bottom: 1px solid;
+      }
+
+      select option {
+  display:inline-block;
+}
+
+.uploadedItemCat {
+    background-color: grey;
+    color: white;
+  }
+
+  .itemCat {
+    margin: 0 12px;
+  }
+
+  .cats {
+    /* display: flex; */
+    margin: 10px;
+  }
+
+  .uploadedImage {
+    width: 100%;
+    max-width: 280px;
+  }
+
+.loadingImg {
+  width: 70%;
+}
 
 </style>
