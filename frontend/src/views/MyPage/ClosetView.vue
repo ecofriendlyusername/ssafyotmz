@@ -24,7 +24,6 @@ export default {
   },
   methods: {
     changeCategory(category) {
-      this.selec
       this.curCategory = category;
     }
   },
