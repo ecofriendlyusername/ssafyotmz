@@ -83,15 +83,15 @@ export default {
       else {
         // 카테고리별 추천
         console.log(this.isStyle, this.filter)
-        // axios.get(process.env.VUE_APP_API_URL + '/looks', this.filter, {
-        //   headers: {
-        //     'Authorization': this.$store.Auth['accessToken']
-        //   }
-        // })
-        // .then(response => {
-        //   console.log(response.data)
-        // })
-        // .catch(error => console.log(error))
+        axios.get(process.env.VUE_APP_API_URL + `/looks?style=${ this.filter }`, {
+          headers: {
+            'Authorization': this.$store.state.Auth['accessToken']
+          }
+        })
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(error => console.log(error))
       }
     }
   },
