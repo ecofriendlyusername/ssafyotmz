@@ -55,8 +55,4 @@ footer{
   padding-top: 7px;
 }
 
-#h{
-  width: 100%;
-}
-
 </style>

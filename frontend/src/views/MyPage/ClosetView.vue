@@ -45,11 +45,6 @@ export default {
     background-color: black;
     color: white;
   }
-  .closetview {
-  font-family: 'NanumSquareNeo-Variable';
-  width: 100%;
-  position: fixed;
-}
 </style>
 
 
