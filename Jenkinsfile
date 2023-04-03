@@ -5,7 +5,7 @@ pipeline {
             agent {
                  dockerfile {
                         dir './backend/otmz-api'
-                        additionalBuildArgs '-t back -l otmz'
+                        additionalBuildArgs '-t back'
                  }
             }
             steps {
@@ -16,7 +16,7 @@ pipeline {
             agent {
                  dockerfile {
                         dir './frontend'
-                        additionalBuildArgs '-t front -l otmz'
+                        additionalBuildArgs '-t front'
                  }
             }
             steps {
@@ -27,7 +27,7 @@ pipeline {
             agent {
                   dockerfile {
                         dir './ai'
-                        additionalBuildArgs '-t ai -l otmz'
+                        additionalBuildArgs '-t ai'
                   }
             }
             steps {
