@@ -1,8 +1,6 @@
 <template>
-  <div>
-    코디북 만들기 페이지
-  </div>
-  <hr>
+
+
   <div class="categories">
     <div class="category" :class="{ 'selected': selected === 'outer' }" @click="getItems('outer')">아우터</div>
     <div class="category" :class="{ 'selected': selected === 'upper' }" @click="getItems('upper')">상의</div>
@@ -18,10 +16,41 @@
     :slidesPerView="5"
   >
     <swiper-slide v-for="item in items" @click="choice(item)" :key="item.id" >
-      <img :src='`${item.src}`' style="width:80px;hegiht:80px"/>
+      <img :src='`${item.src}`' style="width:90px;hegiht:80px"/>
     </swiper-slide>
   </swiper>
-  <hr>
+
+  <br>
+
+  <div style="display:flex; justify-content:center;">
+    <div style="display:flex; width: 95%;">
+      <div style="width: 30%;">
+        <label for="text" style="font-weight:bold">코디 이름</label>
+      </div>
+      <div style="width: 70%;">
+        <input type="text" id="name" name="name" v-model="name">
+      </div>
+    </div>
+  </div>
+  <br>
+
+  <div style="display:flex; justify-content:center;">
+    <div style="display:flex; width: 95%;">
+      <div style="width: 30%;">
+        <label for="text" style="font-weight:bold">설명</label>
+      </div>
+      <div style="width: 70%;">
+        <input type="text" id="comment" name="comment" v-model="comment">
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <!-- <label for="text" style="font-weight:bold">코디 이름</label>&nbsp;&nbsp;&nbsp;<input type="text" id="name" name="name" v-model="name">
+  <br>
+  <label for="text">설명</label><input type="text" id="comment" name="comment" v-model="comment">
+   -->
   <div>
     <div class="settings">
       <div class="box">
@@ -29,8 +58,11 @@
           <input title="Color Picker" type="color" id="color" v-model="backgroundColor">
         </span>
       </div>
-      <div @click="clear">clear</div>
-      <div v-if="dragItemId" @click="removeItem">삭제</div>
+
+<!-- 
+        <div @click="clear">전체 삭제</div>
+        <div v-if="dragItemId" @click="removeItem">선택항목 삭제</div> -->
+
     </div>
 
     <div :style="{margin: '10px', backgroundColor: backgroundColor}">
@@ -88,16 +120,47 @@
       </v-stage>
     </div>
   </div>
-  <div>
-    <label for="text">이름</label><input type="text" id="name" name="name" v-model="name">
-    <label for="text">메모</label><input type="text" id="comment" name="comment" v-model="comment">
-  </div>
-  <div @click="captureCodiBoard">캡처</div>
-  <div @click="saveCodiBoard">저장</div>
 
-  <hr>
-  <router-link to='/Codybook/live'>라이브 하기</router-link> |
-  <router-link to='/'>메인페이지</router-link>
+  <div style="display:flex; justify-content:space-between;">
+    <router-link to='/Codybook/live' id="goTogether">← 함께 코디하러 가기</router-link>
+    <div v-if="dragItemId" @click="removeItem" id="DelBtn" style="margin-right:-50px">선택항목 삭제</div>
+    <div @click="clear" id="DelBtn">전체 삭제</div>
+  </div>
+
+  <br> <br>
+
+
+
+  <div style="display:flex; justify-content:center; align-items:center;">
+    <div @click="captureCodiBoard" style="border:2px solid black; border-radius: 10px; font-weight: bold;">
+      <div style="padding:10px 40px;">
+        <div style="height:30px;">
+          <img src="@/assets/img/camera.png" style="width:30px;">
+        </div>
+        <div>
+          캡처
+        </div>
+      </div>
+    </div>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    <div @click="saveCodiBoard" style="border:2px solid black; border-radius: 10px; font-weight: bold;">
+      <div style="padding:10px 40px;">
+        <div style="height:30px;">
+          <img src="@/assets/img/comp.png" style="width:23px; margin-top:3px">
+        </div>
+        <div>
+          저장
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <br><br><br>
+
+
+
 </template>
 
 <script>
@@ -360,10 +423,12 @@ export default {
   .categories {
     display: flex;
     margin: 10px;
+    
   }
 
   .category {
     margin: 0 5px;
+    
   }
 
   .selected {
@@ -375,5 +440,26 @@ export default {
     display: flex;
     flex-direction: row-reverse;
     margin: 10px;
+  }
+
+  .items {
+    min-height: 150px;
+    background-color: #F5F5F7;
+    width: 95%;
+  }
+
+  #DelBtn {
+    background-color: #F5F5F7;
+    padding: 5px;
+    margin: 0px 3%;
+    border: 2px solid black;
+    border-radius: 5px;
+  }
+
+  #goTogether {
+    margin-left: 10px;
+    margin-top: 7px;
+    text-decoration: none;
+    font-weight: bold;
   }
 </style>
