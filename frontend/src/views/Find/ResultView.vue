@@ -1,6 +1,10 @@
 <template>
-  <div id="BackgroundCard">
-    <div id="InnerCard"> 
+  <div>
+      <div id="StyleHead">
+        WHAT’S MY STYLE
+      </div>
+
+    <div id="InnerCard2"> 
       <!-- 워터마크 찍은 이미지 사이즈 맞춰서 넣기 -->
         <img style="width:100%; border-radius: 20px; max-height: 325px; " :src="imgsrc" />
       </div>
@@ -8,23 +12,22 @@
       <!-- 스타일 출력 -->
       <!-- 스타일 별 설명 값 넣기 -->
       <div id="ResultText">
-        <div style="font-size:115%; font-weight: bold; margin-top: 7px;">
+        <div id="ResultStyle">
           <span>#{{ result['data']['1'].style.toUpperCase()}}</span> &nbsp;&nbsp;
           <span>#{{ result['data']['2'].style.toUpperCase()}}</span> &nbsp;&nbsp;
           <span>#{{ result['data']['3'].style.toUpperCase()}}</span>
         </div>
-        <!-- <h3>#{{ result['data']['1'].style}} #{{ result['data']['2'].style}} #{{ result['data']['3'].style}}</h3> -->
-        <div style="width:80%; margin-left: 11%;">
-          <div style="dispaly:flex; justify-self:center; ">
-            <p style="font-size:100%">{{ explanation[result['data']['1'].style][0] }}</p>
-            <p style="font-size:100%">{{ explanation[result['data']['1'].style][1] }}</p>
-          </div>
+
+        <div id="ExpBox">
+            <p>{{ explanation[result['data']['1'].style][0] }}</p>
+            <p>{{ explanation[result['data']['1'].style][1] }}</p>
         </div>
+        <!-- <h3>#{{ result['data']['1'].style}} #{{ result['data']['2'].style}} #{{ result['data']['3'].style}}</h3> -->
       </div>
     </div>
 
 
-      <div style="display:flex; justify-content: center; margin-top: -55px;">
+      <div style="display:flex; justify-content: center;">
         <!-- 카카오 링크 공유 연결 -->
             <div v-on:click=shareKakao() id="kakaotalk-sharing-btn" class="ResultBtn">
               <div>
@@ -183,8 +186,49 @@ export default {
   font-weight: bold;
   padding: 5px;
   box-shadow: 5px 5px 5px rgb(192, 192, 192);
-  line-height: 7px;
-  
+  line-height: 7px; 
 }
 
+#StyleHead {
+  font-family: 'NanumSquareNeo-Variable';
+  display: inline-block;
+  background-color:black;
+  color: white;
+  width: 80%;
+  padding: 8px;
+  font-weight: bold;
+  box-shadow: 2px 2px 2px 2px gray;
+}
+
+#InnerCard2 {
+  display: flex;
+  object-fit: cover;
+  margin-top: 5%;
+  margin-left: 10.5%;
+  width:80%;
+  height: 325px;
+  background-color: white;
+  border: 1px solid #a7a7a7;
+  border-radius: 20px;
+}
+
+#ResultStyle {
+  background-color: black;
+  color: white;
+  display: inline-block;
+  width: 80%;
+  padding: 8px;
+  font-size:110%;
+  font-weight: bold;
+  margin-top: 7px;
+}
+
+
+#ExpBox {
+  display:inline-block;
+  width:85%;
+  font-size: 90%;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 </style>
