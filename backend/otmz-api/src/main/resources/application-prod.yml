@@ -15,4 +15,4 @@ oauth:
   kakao:
     redirectUri: https://j8c105.p.ssafy.io/
 
-OPENVIDU_URL: https://j8c105.p.ssafy.io/openvidu
+OPENVIDU_URL: https://j8c105.p.ssafy.io:4443
