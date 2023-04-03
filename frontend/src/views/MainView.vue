@@ -256,8 +256,6 @@ export default {
 }
 
 
-
-
 .fade-enter-from {
   opacity: 0;
   transform: translateY(150px);
@@ -322,6 +320,5 @@ export default {
 .item:nth-child(1) {
   grid-column: 1 / 3;
 }
-
 
 </style>
