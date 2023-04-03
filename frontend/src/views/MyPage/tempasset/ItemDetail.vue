@@ -1,12 +1,12 @@
 <template>
     <div>
-        <div>
+        <div style="margin:10px; font-weight:bold">
           <div>{{ this.selected.name }}</div>
         </div>
-        <div id="item">
+        <div id="item" style="margin:10px">
             <img :src="env+selected.imageId" width="100"/>
         </div>
-      <div class="selectionBox">
+      <div class="selectionBox" style="display: flex; justify-content: end;">
         <div class="selection" @mousedown="deleteItem()">삭제</div>
         <div class="selection" @mousedown="$emit('close')">Close</div>
       </div>
@@ -43,4 +43,5 @@
     </script>
       
     <style>
+
     </style>
