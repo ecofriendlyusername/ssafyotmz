@@ -42,9 +42,13 @@
 import axios from 'axios';
 
 export default {
+
   methods: {
     // 서버에 저장하기
     saveData(){
+      if (!this.$store.state.result['check']){
+        return this.$router.push('/Find')
+      }
       const formData = new FormData()
       formData.append('styleVector', JSON.stringify(this.$store.state.result['data']))
       formData.append('imageFile', this.$store.state.result['img_path'])
