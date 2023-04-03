@@ -158,8 +158,6 @@ const height = 400;
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080/';
-
 export default {
   name: 'MainComponent',
 
@@ -221,7 +219,7 @@ export default {
         formData.append('imagefile', this.dataURLtoFile(stage.toDataURL({ pixelRatio: 3 }), 'codiboard.png'));
         formData.append('itemMatch', new Blob([JSON.stringify({'name': this.name, 'comment': this.comment})], {type: 'application/json'}));
 
-        axios.post(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/itemmatch', formData, { // outer, upper, lower, dress, etc
+        axios.post(process.env.VUE_APP_API_URL  + '/itemmatch', formData, { // outer, upper, lower, dress, etc
           headers: {
             'Content-Type' : 'multipart/form-data',
             'Authorization': this.$store.state.Auth['accessToken']
@@ -246,7 +244,7 @@ export default {
     loadItems(swiper) {
       const index = swiper.realIndex;
       if (index % 10 === 5 && index + 5 === this.items.length) {
-        axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + this.mySessionId + '/' + this.selected +'?page=' + (parseInt(index / 10) + 1) + '&size=10', { // outer, upper, lower, dress, etc
+        axios.get(process.env.VUE_APP_API_URL + '/items/' + this.mySessionId + '/' + this.selected +'?page=' + (parseInt(index / 10) + 1) + '&size=10', { // outer, upper, lower, dress, etc
           headers: {
             'Content-Type': 'application/json',
             'Authorization': this.$store.state.Auth['accessToken']
@@ -412,7 +410,7 @@ export default {
     },
     getItems(category) {
       this.selected = category;
-      axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + this.mySessionId + '/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
+      axios.get(process.env.VUE_APP_API_URL + '/items/' + this.mySessionId + '/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
         headers: {
           'Content-Type': 'application/json',
           'Authorization': this.$store.state.Auth['accessToken']
@@ -685,7 +683,7 @@ export default {
     },
 
     async createSession(sessionId) {
-      const response = await axios.post(APPLICATION_SERVER_URL + 'api/v1/codiboard/live/sessions', { customSessionId: String(sessionId) }, {
+      const response = await axios.post(process.env.VUE_APP_API_URL + '/codiboard/live/sessions', { customSessionId: String(sessionId) }, {
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': this.$store.state.Auth['accessToken']
@@ -695,7 +693,7 @@ export default {
     },
 
     async createToken(sessionId) {
-      const response = await axios.post(APPLICATION_SERVER_URL + 'api/v1/codiboard/live/' + sessionId + '/connections', {}, {
+      const response = await axios.post(process.env.VUE_APP_API_URL  + '/codiboard/live/' + sessionId + '/connections', {}, {
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': this.$store.state.Auth['accessToken']
@@ -705,7 +703,7 @@ export default {
     },
 
     async createInviteCode() {
-      const response = await axios.post(APPLICATION_SERVER_URL + 'api/v1/codiboard/live/sessions/' +  this.$store.state.Auth.memberId + '/inviteCodes', {}, {
+      const response = await axios.post(process.env.VUE_APP_API_URL  + '/codiboard/live/sessions/' +  this.$store.state.Auth.memberId + '/inviteCodes', {}, {
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': this.$store.state.Auth['accessToken']
@@ -716,7 +714,7 @@ export default {
     },
   
     async getSessionId(inviteCode) {
-      const response = await axios.get(APPLICATION_SERVER_URL + 'api/v1/codiboard/live/inviteCodes/' +  inviteCode , {
+      const response = await axios.get(process.env.VUE_APP_API_URL  + '/codiboard/live/inviteCodes/' +  inviteCode , {
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': this.$store.state.Auth['accessToken']
@@ -729,7 +727,7 @@ export default {
     },
 
     async deleteInviteCode(inviteCode) {
-      const response = await axios.delete(APPLICATION_SERVER_URL + 'api/v1/codiboard/live/inviteCodes/' +  inviteCode, {
+      const response = await axios.delete(process.env.VUE_APP_API_URL  + '/codiboard/live/inviteCodes/' +  inviteCode, {
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': this.$store.state.Auth['accessToken']
