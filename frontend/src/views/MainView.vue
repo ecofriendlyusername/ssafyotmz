@@ -34,7 +34,7 @@
     </swiper>
 
     <div>
-      <div id="LoginDiv1">
+      <div id="LoginDiv1" v-on:click="$router.push('/Recom')">
         랭킹 보기
       </div>
     </div>
@@ -43,12 +43,24 @@
       <div id="LoginDiv1">
         {{ Auth['nickname'] }} 님의 취향이 담긴 코디
       </div>
-      <div id="LoginDiv2">
-        # 러블리
+      <div v-for="(items, key) in dressDatas">
+        <div id="LoginDiv2">
+          # {{ key }}
+        </div>
+        <div style="display:flex; justify-content:center; margin-top:7px;">
+          <div class="container">
+            <div class="item" v-for="unit in items">
+              <img :src='`http://localhost:8080/api/v1/images/${unit.imageId}`' id="picture">
+            </div>
+          </div>
+        </div>
       </div>
+      <!-- <div id="LoginDiv2">
+        # 러블리
+      </div> -->
 
       <!-- 그리드 -->
-      <div style="display:flex; justify-content:center; margin-top:7px;">
+      <!-- <div style="display:flex; justify-content:center; margin-top:7px;">
         <div class="container">
           <div class="item">
             <img src="https://d20s70j9gw443i.cloudfront.net/t_GOODS_INFORMATION/https://imgb.a-bly.com/data/editor/20220828_1661640468492713l.jpg" id="picture">
@@ -70,10 +82,10 @@
 
       <div id="LoginDiv2" style="margin-top:26px;">
         # 페미닌
-      </div>
+      </div> -->
 
       <!-- 그리드 -->
-      <div style="display:flex; justify-content:center; margin-top:7px;">
+      <!-- <div style="display:flex; justify-content:center; margin-top:7px;">
         <div class="container">
           <div class="item">1</div>
           <div class="item">2</div>
@@ -81,7 +93,7 @@
           <div class="item">4</div>
           <div class="item">5</div>
         </div>
-      </div>
+      </div> -->
       
 
     </div>
@@ -180,6 +192,7 @@ export default {
     return {
       EndPoint: false,
       Auth: this.$store.state.Auth,
+      dressDatas: null,
     }
   },
   created(){
@@ -204,20 +217,45 @@ export default {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const state = urlParams.get('state');
-    let auth = null;
+    // let auth = null;
     if (code) {
       console.log(code)
       axios.get(process.env.VUE_APP_KAKAO_CERTIFIED_API_URL + '?code=' + code + process.env.VUE_APP_LOCAL_USE_API_URL)
         .then(response => {
+          console.log(response.data)
           this.$store.commit('setAuth', response.data); // auth 값을 스토어에 저장
         })
         .then(() => {
           console.log(this.$store.state.Auth)
           this.Auth = this.$store.state.Auth  
         })
+        .then(()=>{
+          axios.get(process.env.VUE_APP_API_URL + '/member/styles', {
+        headers: {
+          'Authorization': this.$store.state.Auth['accessToken']
+        }
+      })
+      .then(response => {
+        console.log(response.data)
+        this.dressDatas = response.data
+      })
+      .catch(error => console.log(error))
+        })
         .catch(error => console.log(error))
     }
 
+    if (this.Auth) {
+      axios.get(process.env.VUE_APP_API_URL + '/member/styles?size=3', {
+        headers: {
+          'Authorization': this.$store.state.Auth['accessToken']
+        }
+      })
+      .then(response => {
+        console.log(response.data)
+        this.dressDatas = response.data
+      })
+      .catch(error => console.log(error))
+    }
  
 
 
@@ -289,6 +327,7 @@ export default {
 #picture {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .item {
@@ -304,6 +343,10 @@ export default {
   font-weight: 900;
 }
 
+.item::after {
+  padding-bottom: 100%;
+}
+
 .container {
   width: 97%;
   display: grid;
@@ -314,11 +357,13 @@ export default {
   grid-template-columns: repeat(3, 1fr); */
   /* grid-auto-rows: 100px; */
   grid-auto-rows:minmax(100px, auto)
-  
 }
+
+
 
 .item:nth-child(1) {
   grid-column: 1 / 3;
+  max-height: 300px;
 }
 
 </style>
