@@ -204,7 +204,7 @@ export default {
     }
 
     if (this.Auth) {
-      axios.get(process.env.VUE_APP_API_URL + '/member/styles?size=3', {
+      axios.get(process.env.VUE_APP_API_URL + '/member/styles', {
         headers: {
           'Authorization': this.$store.state.Auth['accessToken']
         }
