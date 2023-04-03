@@ -190,7 +190,8 @@ export default {
 }
 
 #StyleHead {
-  margin-top: 20px;
+  margin-top: 2
+  0px;
   font-family: 'NanumSquareNeo-Variable';
   display: inline-block;
   background-color:black;
@@ -219,7 +220,7 @@ export default {
   display: inline-block;
   width: 80%;
   padding: 8px;
-  font-size:110%;
+  font-size:99%;
   font-weight: bold;
   margin-top: 7px;
 }
@@ -228,7 +229,7 @@ export default {
 #ExpBox {
   display:inline-block;
   width:85%;
-  font-size: 90%;
+  font-size: 78%;
   font-weight: bold;
   margin-bottom: 10px;
 }
