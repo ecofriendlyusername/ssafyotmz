@@ -14,8 +14,10 @@
       </div>
     </swiper-slide>
   </swiper>
+
+  <br> <br>
   <div class="selectionBox">
-    <div class="selection" id="selectB" v-if="pages.length!==0" @mousedown="selectItems()">선택하기</div>
+    <div class="selection" id="selectB" v-if="pages.length!==0" @mousedown="selectItems()">선택</div>
     <div class="selection" id="deleteB" v-if="selectMode" @mousedown="deleteSelectedItems" >선택항목 삭제</div>
   </div>
     <div v-if="modalOpen" class="modal">
@@ -131,11 +133,12 @@ export default {
         this.selectedIndices.reverse()
         for (var idx of this.selectedIndices) {
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
+          document.getElementById(this.pages[idx].id).style.backgroundColor = '#F5F5F7'
         }
         this.selectedIndices = []
-        document.getElementById('selectB').style.backgroundColor = 'white'
+        document.getElementById('selectB').style.backgroundColor = '#a4a4a4'
       } else {
-        document.getElementById('selectB').style.backgroundColor = '#FCD2DC'
+        document.getElementById('selectB').style.backgroundColor = 'black'
       }  
       this.selectMode = !this.selectMode;
     },
@@ -177,8 +180,9 @@ export default {
 
 <style>
 .imgI {
+  margin-top: 10px;
   width: 90%;
-  height: 110px;
+  height: 100px;
 }
 
 .selection {
@@ -198,9 +202,9 @@ export default {
 }
 
 #selectB {
-  background-color: white;
-  color: black;
-  padding: 6px;
+  background-color: #a4a4a4;
+  color: white;
+  padding: 6px 15px;
   /* border: 1px solid black; */
   border-radius: 10px;
 }
