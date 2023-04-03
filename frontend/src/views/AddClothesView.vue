@@ -1,33 +1,73 @@
 <template>
 <div id="x">
-  <div>
-    옷 추가하기
-  </div>
-  <hr>
+
   <img v-if="isLoading" src="../assets/img/loading.gif" class="loadingImg">
+  <div v-if="isLoading">
+    배경을 제거 중입니다
+  </div>
 
-<div v-show="!isLoading">
-  <img v-if="userUploadedImgExist" :src="userUploadedImg" class="uploadedImage" >
-  <br>
-    <label for="imagefile">옷 이미지 선택하기</label><input type="file" id="imagefile" name="imagefile" @change="fileUpload" >
+  
+  <div v-show="!isLoading">
+    <div v-if="!haveImage">
+      <div id="selecBtn">
+        <label for="imagefile">① 옷 이미지 선택하기</label><input type="file" id="imagefile" name="imagefile" @change="fileUpload" >
+      </div>
+      &nbsp;&nbsp;
+      <div id="selecBtn" @mousedown="processImageAndCreateItem()">② 옷 추출하기</div>
+      <br>
+    </div>
+    
+    <div v-if="!haveImage" id="closetbox">
+      <p v-if="!userUploadedImgExist" id="notImg">선택된 옷 미리보기</p>
+      <img v-if="userUploadedImgExist" :src="userUploadedImg" class="uploadedImage" >
+    </div>
+
+    <div v-if="haveImage">
+      <div style="font-size:95%; padding:2px;">
+        <p style="margin-top:0px;">
+          배경이 제거되었습니다!
+        </p>
+        <p style="margin-top:-13px;">
+          정보 입력을 완료하고 옷장에 등록해 보세요.
+        </p>
+      </div>
+      <img :src="processedImageStr" class="uploadedImage">
+      <br>
+    </div>
     <br>
+    
 
-    <label for="text">이름</label><input type="text" id="name" name="name">
-    <div class="cats">
-      <div v-for="(category,index) in categories" class="itemCat" :class="{ 'uploadedItemCat': curCategory === category }" @click="changeCategory(category)">{{categoriesKorean[index]}}</div>
-    </div> 
+    <div style="width:90%; display:inline-block; margin: 15px 0px;">
+      <div style="display:flex;">
+        <div style="width:40%; font-weight:bold; font-size: 100%;">
+          <label for="text">ㆍ 옷 이름</label>
+        </div>
+        <div style="width:60%">
+          <input type="text" id="name" name="name">
+        </div>
+      </div>
+    </div>
+    
 
-<img v-if="isLoading" :src="loadingImage">
-<div v-if="haveImage">
-  <div>이 이미지로 등록하시겠습니까?</div>
-  <img :src="processedImageStr" class="uploadedImage">
-  <br>
-  <button class="buttons" @click="createItemWithProcessedImage()">등록하기</button>
-  <button class="buttons" @click="no()">사진 다시 올리기</button>
-</div>
-<div @mousedown="processImageAndCreateItem()">이미지 업로드</div>
-</div>
-</div>
+    <div style="width:90%; display:inline-block;">
+      <div style="display:flex;">
+        <div style="width:40%; font-weight:bold; font-size: 100%;">
+          ㆍ 종류 선택
+        </div>
+        <div style="width:60%">
+          <div v-for="(category,index) in categories" class="itemCat" :class="{ 'uploadedItemCat': curCategory === category }" @click="changeCategory(category)">{{categoriesKorean[index]}}</div>
+        </div>
+      </div>
+    </div>
+
+    <br><br>
+      <div v-if="haveImage">
+        <button id="selecBtn" @click="createItemWithProcessedImage()">등록하기</button> &nbsp;&nbsp;
+        <button id="selecBtn" @click="no()">사진 다시 올리기</button>
+      </div>
+    </div>
+  </div>
+  <br> <br>
 </template>
 
 <script>
@@ -197,11 +237,6 @@ export default {
 </script>
 
 <style>
-.buttons {
-  background-color: blanchedalmond;
-  border: none;
-}
-
 input {
         border-top-style: hidden;
         border-right-style: hidden;
@@ -232,13 +267,17 @@ input {
   }
 
   .cats {
-    /* display: flex; */
+    display: inline-block;
+    background-color: #F5F5F7;
+    width: 90%;
     margin: 10px;
+    font-size: 100%;
   }
 
   .uploadedImage {
-    width: 100%;
+    width: 90%;
     max-width: 280px;
+    max-height: 250px;
   }
 
 .loadingImg {
@@ -246,10 +285,46 @@ input {
 }
 
 #x {
+  margin-top: 10px;
   width: 100%;
   height: 100%;
   overflow-y: scroll;
   overflow-x: hidden; 
   position: relative;
 }
+
+#closetbox {
+  display: inline-block;
+  width: 90%;
+  height: 250px;
+  background-color: #F5F5F7;
+}
+
+#selecBtn {
+  display: inline-block;
+  width: 35%;
+  font-size: 80%;
+  padding: 6px;
+  font-weight: bold;
+  border-radius: 10px;
+  border: 1px solid black;
+  background-color: white;
+  box-shadow: 1px 1px 1px 1px gray;
+  margin: 10px 0px;
+}
+
+#notImg {
+  height: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: gray;
+}
+
+#name {
+  margin-top: -20px;
+  margin-bottom: 5px;
+}
+
+
 </style>
