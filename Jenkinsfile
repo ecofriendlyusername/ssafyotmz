@@ -37,6 +37,7 @@ pipeline {
          stage('run') {
             agent any
             steps {
+                sh 'docker ps --filter label=otmz -aq | xargs docker stop | xargs docker rm'
                 sh 'docker run -d --label otmz -v back:/app -p 8081:8080 back'
                 sh 'docker run -d --label otmz -p 3000:3000 front'
                 sh 'docker run -d --label otmz -p 8000:8000 ai'
