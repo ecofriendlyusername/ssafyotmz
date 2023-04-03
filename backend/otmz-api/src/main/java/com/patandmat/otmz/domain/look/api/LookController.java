@@ -1,7 +1,6 @@
 package com.patandmat.otmz.domain.look.api;
 
-import com.patandmat.otmz.domain.look.api.model.LookListDto;
-import com.patandmat.otmz.domain.look.api.model.LookResponseDto;
+import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.api.model.LookSaveResponse;
 import com.patandmat.otmz.domain.look.api.model.RecommendedLookResponse;
 import com.patandmat.otmz.domain.look.application.LookRecommendService;
@@ -26,6 +25,7 @@ import javax.management.AttributeNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -80,21 +80,21 @@ public class LookController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getLookPage(Pageable pageable, Authentication authentication) throws AttributeNotFoundException, NoSuchMemberException {
-
-        LookListDto result = new LookListDto();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Member member = userDetails.getMember();
-        int totalStyle = lookService.getCountOfLooks(member.getId());
-        String nickname = member.getNickname();
-
-        result.setTotalStyle(totalStyle);
-        result.setNickname(nickname);
-
+    public ResponseEntity<?> getLookPage(@RequestParam(name = "style") String style, Pageable pageable) {
         try {
-            Page<LookResponseDto> page = lookService.getLooks(pageable, member.getId());
-            result.setPage(page);
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            Page<Look> looks = lookService.getLooksWithPageable(style, pageable);
+            List<LookResponse> response = looks.stream()
+                                       .map(look ->
+                                               LookResponse.builder()
+                                                           .id(look.getId())
+                                                           .imageId(look.getImage().getId())
+                                                           .memberId(look.getMember().getId())
+                                                           .ownerName(look.getMember().getNickname())
+                                                           .style(look.getStyle().getKey())
+                                                           .build())
+                                       .collect(Collectors.toList());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (NoSuchElementException e) {
 
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
