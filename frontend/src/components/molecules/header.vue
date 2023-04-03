@@ -56,6 +56,7 @@ header {
 }
 
 .logo {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   font-weight: bold;
   font-size: 19px;
   display: flex; 
