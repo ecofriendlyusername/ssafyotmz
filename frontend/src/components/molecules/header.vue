@@ -50,7 +50,7 @@ header {
   align-items: center;
   justify-content: space-between;
   height: 60px;
-  padding: 0 20px;
+  padding: 0 2px;
   background-color: rgb(255, 255, 255);
   border-bottom: rgb(220, 220, 220) solid 0.1px;
 }
