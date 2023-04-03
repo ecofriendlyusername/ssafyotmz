@@ -133,6 +133,11 @@
         </v-stage>
       </div>
     </div>
+    <div v-if="mySessionId === $store.state.Auth.memberId">
+      <label for="text">이름</label><input type="text" id="name" name="name" v-model="name">
+      <label for="text">메모</label><input type="text" id="comment" name="comment" v-model="comment">
+      <div @click="saveCodiBoard">저장</div>
+    </div>
     <div @click="captureCodiBoard">캡처</div>
     <hr>
   </div>
@@ -208,6 +213,31 @@ export default {
   },
 
   methods: {
+    saveCodiBoard() {
+        const formData = new FormData();
+
+        const stage = this.$refs.stage.getNode();
+
+        formData.append('imagefile', this.dataURLtoFile(stage.toDataURL({ pixelRatio: 3 }), 'codiboard.png'));
+        formData.append('itemMatch', new Blob([JSON.stringify({'name': this.name, 'comment': this.comment})], {type: 'application/json'}));
+
+        axios.post(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/itemmatch', formData, { // outer, upper, lower, dress, etc
+          headers: {
+            'Content-Type' : 'multipart/form-data',
+            'Authorization': this.$store.state.Auth['accessToken']
+          }
+        })
+        .then((response) => {
+          // 파일 저장하는 api 리턴값으로 파일 경로 달라고 해야 함
+          // this.image = response.data
+          console.log(response.data);
+          alert('코디가 저장되었습니다!');
+          history.go(-1);
+        })
+        .catch(error =>{
+          console.log(error)
+        });
+    },
     copyCode() {
       navigator.clipboard.writeText(this.inviteCode).then(() => {
         alert('초대 코드가 복사되었습니다!');
@@ -216,7 +246,7 @@ export default {
     loadItems(swiper) {
       const index = swiper.realIndex;
       if (index % 10 === 5 && index + 5 === this.items.length) {
-        axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + this.$store.state.Auth.memberId + '/' + this.selected +'?page=' + (parseInt(index / 10) + 1) + '&size=10', { // outer, upper, lower, dress, etc
+        axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + this.mySessionId + '/' + this.selected +'?page=' + (parseInt(index / 10) + 1) + '&size=10', { // outer, upper, lower, dress, etc
           headers: {
             'Content-Type': 'application/json',
             'Authorization': this.$store.state.Auth['accessToken']
@@ -382,7 +412,7 @@ export default {
     },
     getItems(category) {
       this.selected = category;
-      axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + this.$store.state.Auth.memberId + '/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
+      axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + this.mySessionId + '/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
         headers: {
           'Content-Type': 'application/json',
           'Authorization': this.$store.state.Auth['accessToken']
@@ -691,7 +721,10 @@ export default {
           'Content-Type': 'application/json',
           'Authorization': this.$store.state.Auth['accessToken']
         },
+      }).then((response) => {
+        return response;
       });
+      console.log('리스폰스', response.data);
       this.mySessionId = response.data;
     },
 

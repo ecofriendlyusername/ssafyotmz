@@ -103,10 +103,10 @@ export default {
         return e
       })
     },
-    viewMultipleItems(category,page,size) {
+    async viewMultipleItems(category,page,size) {
       var a = this
       var member_id = this.Auth.memberId;
-      axios.get(process.env.VUE_APP_ITEMS+`/${member_id}/${category}?page=${page}&size=${size}&sort=id,DESC`).then((res) => {
+      await axios.get(process.env.VUE_APP_ITEMS+`/${member_id}/${category}?page=${page}&size=${size}&sort=id,DESC`).then((res) => {
         if (res.data.content.length !== 0) {
           for (var item of res.data.content) {
             a.pages.push(item)
@@ -165,9 +165,9 @@ export default {
   },
 
   async beforeMount() {
-   this.viewMultipleItems(this.category,0,9)
-   this.viewMultipleItems(this.category,1,9)
-   this.viewMultipleItems(this.category,2,9)
+   await this.viewMultipleItems(this.category,0,9)
+   await this.viewMultipleItems(this.category,1,9)
+   await this.viewMultipleItems(this.category,2,9)
   },
 }
 </script>

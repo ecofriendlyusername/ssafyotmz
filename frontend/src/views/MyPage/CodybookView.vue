@@ -66,8 +66,8 @@ export default {
     }
   },
   methods:{
-    viewMultipleItemMatches(page,size) {
-        axios.get(process.env.VUE_APP_CODYBOOKS+`?page=${page}&size=${size}`, {
+    async viewMultipleItemMatches(page, size) {
+        await axios.get(process.env.VUE_APP_CODYBOOKS+`?page=${page}&size=${size}`, {
           headers: {
             'Authorization' : this.Auth.accessToken
           }
@@ -97,9 +97,11 @@ export default {
         }
         this.selectMode = !this.selectMode
       },
-      mySwipeChanged (index) {
-        if (index === Math.ceil(this.pages.length/9)-1) {
-          this.viewMultipleItemMatches(this.category,index+1,9)
+      mySwipeChanged (swiper) {
+        const index = swiper.realIndex;
+        console.log('인덱스', index, this.pages);
+        if (index === Math.ceil(this.pages.length/4)-1) {
+          this.viewMultipleItemMatches(index+1, 4)
         }
       },
       clicked(itemMatch) {
@@ -213,9 +215,9 @@ export default {
     }
   },
   async beforeMount() {
-    this.viewMultipleItemMatches(0,4)
-    this.viewMultipleItemMatches(1,4)
-    this.viewMultipleItemMatches(2,4)
+    await this.viewMultipleItemMatches(0,4)
+    await this.viewMultipleItemMatches(1,4)
+    await this.viewMultipleItemMatches(2,4)
   },
 }
 </script>
