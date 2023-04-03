@@ -5,7 +5,7 @@ pipeline {
             agent {
                  dockerfile {
                         dir './backend/otmz-api'
-                        additionalBuildArgs '-t back'
+                        additionalBuildArgs '-t back -l otmz'
                  }
             }
             steps {
@@ -16,7 +16,7 @@ pipeline {
             agent {
                  dockerfile {
                         dir './frontend'
-                        additionalBuildArgs '-t front'
+                        additionalBuildArgs '-t front -l otmz'
                  }
             }
             steps {
@@ -27,7 +27,7 @@ pipeline {
             agent {
                   dockerfile {
                         dir './ai'
-                        additionalBuildArgs '-t ai'
+                        additionalBuildArgs '-t ai -l otmz'
                   }
             }
             steps {
@@ -37,7 +37,6 @@ pipeline {
          stage('run') {
             agent any
             steps {
-                sh 'docker ps --filter ancestor=back | xargs docker stop | xargs docker rm'
                 sh 'docker run -d -v back:/app -p 8081:8080 back'
                 sh 'docker run -d -p 3000:3000 front'
                 sh 'docker run -d -p 8000:8000 ai'
