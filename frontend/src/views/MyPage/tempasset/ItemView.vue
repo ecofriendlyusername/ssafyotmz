@@ -15,8 +15,8 @@
     </swiper-slide>
   </swiper>
   <div class="selectionBox">
-    <div class="selection" id="selectB" v-if="pages.length!==0" @mousedown="selectItems()">select</div>
-    <div class="selection" id="deleteB" v-if="selectMode" @mousedown="deleteSelectedItems" >delete</div>
+    <div class="selection" id="selectB" v-if="pages.length!==0" @mousedown="selectItems()">선택하기</div>
+    <div class="selection" id="deleteB" v-if="selectMode" @mousedown="deleteSelectedItems" >선택항목 삭제</div>
   </div>
     <div v-if="modalOpen" class="modal">
       <ItemDetail :selected="selected" @deleted="deleteItem()" @close="closeModal()">your content...</ItemDetail>
@@ -77,9 +77,12 @@ export default {
       } else {
         if (this.selectedIndices.includes(idx)) {
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
+          document.getElementById(this.pages[idx].id).style.backgroundColor = '#F5F5F7'
+          
           this.selectedIndices.splice(this.selectedIndices.indexOf(idx))
         } else {
-          document.getElementById(this.pages[idx].id).style.filter = 'saturate(50%)'
+          document.getElementById(this.pages[idx].id).style.filter = 'saturate(10%)'
+          document.getElementById(this.pages[idx].id).style.backgroundColor = '#e7e7e7'
           this.selectedIndices.push(idx)
         }
       }
@@ -174,7 +177,8 @@ export default {
 
 <style>
 .imgI {
-  width: 80%
+  width: 90%;
+  height: 110px;
 }
 
 .selection {
@@ -190,7 +194,20 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 5px;
-  grid-auto-rows: 150px;
+  /* grid-auto-rows: 150px; */
+}
+
+#selectB {
+  background-color: white;
+  color: black;
+  padding: 6px;
+  /* border: 1px solid black; */
+  border-radius: 10px;
+}
+
+#deleteB {
+  padding: 6px 0px;
+  margin-left: -2px;
 }
 </style>
 
