@@ -1,7 +1,7 @@
 <template>
   <headerComponent/>
-  <router-view/>
   <footerComponent/>
+  <router-view/>
 </template>
 
 <script>
@@ -50,12 +50,8 @@ nav a.router-link-exact-active {
   color: #42b983;
 }
 
-body {
-  padding-bottom: 73px;
-}
-
 footer{
-  width: 95.8%;
+  width: 100%;
   padding-top: 7px;
 }
 
