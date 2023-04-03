@@ -55,24 +55,31 @@ export default {
 
     uploadImage() {
       // 예외처리
+
       if (this.file == null) {
         return;
       }
+      const source = axios.CancelToken.source();
       // 폼 데이터 만들기
       const formData = new FormData();
       formData.append('imageFile', this.file);
       // api요청으로 이미지 분석하기
 
       axios.post(process.env.VUE_APP_AI_URL + '/style', formData, {
+        cancelToken: source.token,
         headers: {
           'Content-Type': 'multipart/form-data' 
         }
       })
       // 결과 받아서 저장
       .then(response => {
-        // 검출 결과 저장
+        console.log(response.data)
+          // 검출 결과 저장
         this.result = response.data;
-        formData.append('styleVector', this.result);
+        // if (this.result['data']) {
+        //   formData.append('styleVector', this.result['data']);
+        //   formData.append('style', this.result['data']['1']['style']);
+        // }
       })
       // 워터마크 찍기
       .then(() => {
@@ -85,7 +92,7 @@ export default {
             this.file = watermark
           })      
           .then(() => {
-            this.$store.commit('SET_RESULT', {img_path: this.file, data: this.result, imageId: null})
+            this.$store.commit('SET_RESULT', {img_path: this.file, data: this.result['data'], imageId: null, check: this.result['check']})
           });
       })
       // 상태에 저장하고 라우트 이동
@@ -95,7 +102,7 @@ export default {
       })
       .catch(error => {
         console.log(error);
-        this.$router.push('/Find/Error')
+        this.$router.push('/Find')
       });
     },
   }

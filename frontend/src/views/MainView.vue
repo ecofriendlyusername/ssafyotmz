@@ -34,7 +34,7 @@
     </swiper>
 
     <div>
-      <div id="LoginDiv1">
+      <div id="LoginDiv1" v-on:click="$router.push('/Recom')">
         랭킹 보기
       </div>
     </div>
@@ -209,6 +209,7 @@ export default {
       console.log(code)
       axios.get(process.env.VUE_APP_KAKAO_CERTIFIED_API_URL + '?code=' + code + process.env.VUE_APP_LOCAL_USE_API_URL)
         .then(response => {
+          console.log(response.data)
           this.$store.commit('setAuth', response.data); // auth 값을 스토어에 저장
         })
         .then(() => {
