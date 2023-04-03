@@ -20,10 +20,7 @@
   </div>
   <hr>
   <ul>
-    <li>현재 필터에 맞는 스타일</li>
-    <li>현재 필터에 맞는 스타일</li>
-    <li>현재 필터에 맞는 스타일</li>
-    <li>현재 필터에 맞는 스타일</li>
+    <!-- <li v-for=""></li> -->
   </ul>
 </template>
 
@@ -69,16 +66,22 @@ export default {
       // 여기서 axios로 데이터 불러오기
       if (this.isOMZ) {
         // 우리 추천
-        console.log(this.isOMZ, this.filter)
-        // axios.get(process.env.VUE_APP_API_URL + '/looks/recommeded', this.filter, {
-        //   headers: {
-        //     'Authorization': this.$store.Auth['accessToken']
-        //   }
-        // })
-        // .then(response => {
-        //   console.log(response.data)
-        // })
-        // .catch(error => console.log(error))
+        // console.log(this.isOMZ, this.filter)
+        const reverse = ''
+        if (!isOMZ) {
+          this.isOMZ = !this.isOMZ
+          reverse = '?/reversed= true'
+        } 
+        axios.get(process.env.VUE_APP_API_URL + '/looks/recommended' + reverse, {
+          headers: {
+            'Authorization': this.$store.state.Auth['accessToken']
+          }
+        })
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(error => console.log(error))
+      
       }
       else {
         // 카테고리별 추천

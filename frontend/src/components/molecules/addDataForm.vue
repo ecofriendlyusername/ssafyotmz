@@ -55,27 +55,29 @@ export default {
       if (this.file == null) {
         return;
       }
-      const source = axios.CancelToken.source();
       // 폼 데이터 만들기
       const formData = new FormData();
       formData.append('imageFile', this.file);
       // api요청으로 이미지 분석하기
 
       axios.post(process.env.VUE_APP_AI_URL + '/style', formData, {
-        cancelToken: source.token,
         headers: {
           'Content-Type': 'multipart/form-data' 
         }
       })
       // 결과 받아서 저장
       .then(response => {
-        console.log(response.data)
+        console.log(response.data.keys)
+        if (!response.data.keys) {
+          console.log('break!')
+          this.$router.push('/Find')
+        }
+        else {
           // 검출 결과 저장
-        this.result = response.data;
-        // if (this.result['data']) {
-        //   formData.append('styleVector', this.result['data']);
-        //   formData.append('style', this.result['data']['1']['style']);
-        // }
+          this.result = response.data;
+          formData.append('styleVector', this.result);
+          formData.append('style', this.result['1']['style']);
+        }
       })
       // 워터마크 찍기
       .then(() => {
