@@ -167,7 +167,10 @@ async def style_classification(imageFile: UploadFile = File(...)):
     
     if detection_clothes(img) == False:
         
-        return {}
+        return {
+            'check': False,
+            'data': {}
+        }
     
     # transformation
     if val_transform is not None:
@@ -188,11 +191,11 @@ async def style_classification(imageFile: UploadFile = File(...)):
     sorted_pred = np.argsort(pred, axis=1)
 
     # result
-    result = {}
+    result = {'check': True,
+              'data': {}}
 
     for i in range(num_classes_style-1, -1, -1):
-
-        result[23-i] = {"style": change_class_style[sorted_pred[0][i]],
+        result['data'][23-i] = {"style": change_class_style[sorted_pred[0][i]],
                         "score": round((percentage_output[0][sorted_pred[0][i]].item())*100, 4)}
 
     return result
