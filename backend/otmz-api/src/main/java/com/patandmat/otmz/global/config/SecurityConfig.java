@@ -34,7 +34,7 @@ public class SecurityConfig {
                              .requestMatchers(AntPathRequestMatcher.antMatcher("/v3/api-docs/**")).permitAll()
                              .requestMatchers(AntPathRequestMatcher.antMatcher("/oauth/**")).permitAll()
                              .requestMatchers(AntPathRequestMatcher.antMatcher("/images/**")).permitAll()
-                             .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/item/**")).permitAll()
+                            .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/item/**")).permitAll()
                              .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/items/**")).permitAll()
                              .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/items/brandi")).permitAll()
                              .anyRequest().authenticated()

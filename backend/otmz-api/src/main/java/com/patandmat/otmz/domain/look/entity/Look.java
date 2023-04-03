@@ -17,18 +17,15 @@ public class Look extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
     private ImageFile image;
-
     @ManyToOne
     private Member member;
-
     @Column(nullable = false, length = 2000)
     private String styleVector;
-
     @Enumerated(EnumType.STRING)
+    @Column(nullable = true) // TODO
     private Style style;
 
     @Builder
