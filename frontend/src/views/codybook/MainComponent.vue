@@ -4,16 +4,20 @@
     <div id="join-dialog" class="jumbotron vertical-center">
       <h1>Join a video session</h1>
       <div class="form-group">
-        <p>
-          <label>Participant</label>
-          <input v-model="myUserName" class="form-control" type="text" required />
+        <p @click="createInviteCode" v-if="!inviteCode">
+          내 옷장 초대 코드 생성
         </p>
+        <div v-if="inviteCode">
+          초대 링크
+          <span>{{inviteCode}}</span>
+          <span @click="copyCode"> -> copy!!</span>
+        </div>
         <p>
-          <label>Session</label>
-          <input v-model="mySessionId" class="form-control" type="text" required />
+          <label>초대 코드</label>
+          <input v-model="inviteCode" class="form-control" type="text" required />
         </p>
         <p class="text-center">
-          <button class="btn btn-lg btn-success" @click="joinSession()">
+          <button class="btn btn-lg btn-success" @click="joinWithInviteCode">
             Join!
           </button>
         </p>
@@ -23,7 +27,7 @@
 
   <div id="session" v-if="session">
     <div id="session-header">
-      <h1 id="session-title">{{ mySessionId }} 님의 옷장</h1>
+      <h1 id="session-title">{{ myUserName }} 님의 옷장</h1>
         <div>
           라이브 코디북 만들기 페이지
         </div>
@@ -149,7 +153,7 @@ const height = 400;
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8000/';
+const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080/';
 
 export default {
   name: 'MainComponent',
@@ -171,8 +175,9 @@ export default {
       audioEnabled: true,
 
       // Join form
-      mySessionId: "SessionA",
-      myUserName: "Participant" + Math.floor(Math.random() * 100),
+      mySessionId: "",
+      myUserName: "",
+      inviteCode: '',
 
       items: [],
       count: 0,
@@ -184,7 +189,7 @@ export default {
       },
       backgroundColor: '#FFDAB9',
       logo: null,
-      selected: 'outer'
+      selected: 'outer',
     };
   },
 
@@ -194,6 +199,8 @@ export default {
     logoImage.onload = () => {
       this.logo = logoImage;
     }
+
+    this.myUserName = this.$store.state.Auth.nickname;
   },
 
   mounted() {
@@ -201,6 +208,11 @@ export default {
   },
 
   methods: {
+    copyCode() {
+      navigator.clipboard.writeText(this.inviteCode).then(() => {
+        alert('초대 코드가 복사되었습니다!');
+      });
+    },
     loadItems(swiper) {
       const index = swiper.realIndex;
       if (index % 10 === 5 && index + 5 === this.items.length) {
@@ -213,7 +225,6 @@ export default {
         .then((response) => {
           // 파일 저장하는 api 리턴값으로 파일 경로 달라고 해야 함
           // this.image = response.data
-          console.log(response.data)
           response.data.content.forEach(item => {
             item.src = process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/images/' + item.imageId;
             this.items.push(item);
@@ -270,7 +281,6 @@ export default {
       this.updateItemsOnBoard();
     },
     handleMouseDown(e) {
-      console.log('click', e.target)
       if (e.target.id() === 'background') {
         this.dragItemId = null;
         this.updateTransformer();
@@ -381,7 +391,6 @@ export default {
       .then((response) => {
         // 파일 저장하는 api 리턴값으로 파일 경로 달라고 해야 함
         // this.image = response.data
-        console.log(response.data)
         this.items = response.data.content;
         this.items.forEach(item => item.src = process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/images/' + item.imageId);
       })
@@ -425,7 +434,6 @@ export default {
         item.image = i.image.src;
         data.items.push(item);
       });
-      console.log(data);
       this.session.signal({
         data: JSON.stringify(data),
         to: this.subscribers,
@@ -456,7 +464,13 @@ export default {
           console.error(error);
       });
     },
+    async joinWithInviteCode() {
+      await this.getSessionId(this.inviteCode);
+      await this.joinSession();
+    },
     joinSession() {
+      console.log('세션 ', this.mySessionId, this.myUserName);
+      
       // --- 1) Get an OpenVidu object ---
       this.OV = new OpenVidu();
 
@@ -470,7 +484,7 @@ export default {
         const subscriber = this.session.subscribe(stream);
         subscriber.isSpeaking = false;
         this.subscribers.push(subscriber);
-        if (this.mySessionId === this.myUserName) {
+        if (this.mySessionId === this.$store.state.Auth.memberId) {
           this.alertSetUpBoard();
         }
       });
@@ -495,7 +509,7 @@ export default {
 
         // First param is the token. Second param can be retrieved by every user on event
         // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
-        this.session.connect(token, { clientData: this.myUserName })
+        this.session.connect(token, { clientData: this.myUserName, profileImage: this.$store.state.Auth.profileImagePath })
           .then(() => {
 
             // --- 5) Get your own camera stream with the desired properties ---
@@ -537,7 +551,6 @@ export default {
             this.session.on('signal:setUpBoard', (event) => {
               console.log('setUpBoard');
               const data = JSON.parse(event.data);
-              console.log(data)
               this.backgroundColor = data.backgroundColor;
               data.items.forEach(x => {
                 if (this.list.findIndex(i => i.name === x.name) === -1) {
@@ -584,14 +597,11 @@ export default {
             this.session.on('signal:alertSpeaker', (event) => {
               console.log('alertSpeaker');
               const data = JSON.parse(event.data)
-              console.log(data)
-              console.log(this.subscribers)
               if (this.subscribers.length === 0) {
                 return;
               }
               let speaker = this.subscribers.find(sub => {
                 return sub.stream.connection.connectionId === data.id});
-              console.log(speaker)
               if (speaker !== undefined) {
                 speaker.isSpeaking = data.isSpeaking;
               }
@@ -607,6 +617,9 @@ export default {
 
     leaveSession() {
       // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
+      if (this.mySessionId === this.$store.state.Auth.memberId) {
+        this.deleteInviteCode(this.inviteCode);
+      }
       if (this.session) this.session.disconnect();
 
       // Empty all properties...
@@ -642,19 +655,59 @@ export default {
     },
 
     async createSession(sessionId) {
-      const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
-        headers: { 'Content-Type': 'application/json', },
+      const response = await axios.post(APPLICATION_SERVER_URL + 'api/v1/codiboard/live/sessions', { customSessionId: String(sessionId) }, {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': this.$store.state.Auth['accessToken']
+        },
       });
       return response.data; // The sessionId
     },
 
     async createToken(sessionId) {
-      const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
-        headers: { 'Content-Type': 'application/json', },
-      });
+      const response = await axios.post(APPLICATION_SERVER_URL + 'api/v1/codiboard/live/' + sessionId + '/connections', {}, {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': this.$store.state.Auth['accessToken']
+        },
+      }); 
       return response.data; // The token
     },
+
+    async createInviteCode() {
+      const response = await axios.post(APPLICATION_SERVER_URL + 'api/v1/codiboard/live/sessions/' +  this.$store.state.Auth.memberId + '/inviteCodes', {}, {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': this.$store.state.Auth['accessToken']
+        },
+      });
+      this.inviteCode = response.data;
+      await this.getSessionId(this.inviteCode);
+    },
+  
+    async getSessionId(inviteCode) {
+      const response = await axios.get(APPLICATION_SERVER_URL + 'api/v1/codiboard/live/inviteCodes/' +  inviteCode , {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': this.$store.state.Auth['accessToken']
+        },
+      });
+      this.mySessionId = response.data;
+    },
+
+    async deleteInviteCode(inviteCode) {
+      const response = await axios.delete(APPLICATION_SERVER_URL + 'api/v1/codiboard/live/inviteCodes/' +  inviteCode, {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': this.$store.state.Auth['accessToken']
+        },
+      });
+    }
   },
+
+  beforeUnmount() {
+    this.leaveSession();
+  }
 }
 </script>
 

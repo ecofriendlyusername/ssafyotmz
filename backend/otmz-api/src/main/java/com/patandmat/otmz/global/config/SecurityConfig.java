@@ -1,6 +1,7 @@
 package com.patandmat.otmz.global.config;
 
 import com.patandmat.otmz.global.auth.JwtAuthenticationFilter;
+import com.patandmat.otmz.global.auth.JwtExceptionFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +35,8 @@ public class SecurityConfig {
                              .requestMatchers(AntPathRequestMatcher.antMatcher("/v3/api-docs/**")).permitAll()
                              .requestMatchers(AntPathRequestMatcher.antMatcher("/oauth/**")).permitAll()
                              .requestMatchers(AntPathRequestMatcher.antMatcher("/images/**")).permitAll()
-                            .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/item/**")).permitAll()
+                             .requestMatchers(AntPathRequestMatcher.antMatcher("/error/**")).permitAll()
+                             .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/item/**")).permitAll()
                              .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/items/**")).permitAll()
                              .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/items/brandi")).permitAll()
                              .anyRequest().authenticated()
@@ -44,7 +46,8 @@ public class SecurityConfig {
             .logout().disable()
             .headers(headers -> headers.frameOptions().disable())
             .csrf().disable()
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
         return http.build();
     }
 

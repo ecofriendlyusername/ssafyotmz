@@ -1,6 +1,5 @@
 package com.patandmat.otmz.global.auth;
 
-import com.patandmat.otmz.domain.member.entity.Member;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.SignatureException;
@@ -21,6 +20,7 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
     private final JwtUtil jwtTokenUtil;
 
     @Override
@@ -38,13 +38,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if (jwtTokenUtil.validateToken(accessToken)) {
                     this.setAuthentication(accessToken);
                 }
-            }catch (ExpiredJwtException e){
+            } catch (ExpiredJwtException e) {
                 log.info("ExpiredJwtException: {}", e.getMessage());
                 throw new JwtException("토큰 기한이 만료");
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 log.info("IllegalArgumentException: {}", e.getMessage());
                 throw new JwtException("유효하지 않은 토큰");
-            }catch (SignatureException e){
+            } catch (SignatureException e) {
                 log.info("SignatureException: {}", e.getMessage());
                 throw new JwtException("사용자 인증 실패");
             }
@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public void setAuthentication(String token) {
         // 토큰으로부터 유저 정보를 받아옵니다.
         Authentication authentication = jwtTokenUtil.getAuthentication(token);
-       // SecurityContext 에 Authentication 객체를 저장합니다.
+        // SecurityContext 에 Authentication 객체를 저장합니다.
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

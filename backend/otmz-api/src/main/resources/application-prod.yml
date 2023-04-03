@@ -14,3 +14,5 @@ file:
 oauth:
   kakao:
     redirectUri: https://j8c105.p.ssafy.io/
+
+OPENVIDU_URL: http://localhost:4443/
