@@ -114,7 +114,7 @@ footer {
     height: 80px;
     background-color: rgb(255, 255, 255);
     color: rgb(0, 0, 0);
-    border-top: rgb(220, 220, 220) solid 0.1px;
+    border-bottom: rgb(220, 220, 220) solid 0.1px;
 }
 
 #footerText{
