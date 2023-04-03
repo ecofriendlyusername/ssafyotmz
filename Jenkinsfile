@@ -37,7 +37,6 @@ pipeline {
          stage('run') {
             agent any
             steps {
-                sh 'docker ps --filter ancestor=ai | xargs docker stop | xargs docker rm'
                 sh 'docker ps --filter ancestor=front | xargs docker stop | xargs docker rm'
                 sh 'docker ps --filter ancestor=back | xargs docker stop | xargs docker rm'
                 sh 'docker run -d -v back:/app -p 8081:8080 back'
