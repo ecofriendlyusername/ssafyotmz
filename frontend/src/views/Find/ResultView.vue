@@ -135,7 +135,7 @@ export default {
         container: '#kakaotalk-sharing-btn',
         templateId: 91677,
         templateArgs: {
-          img_path: process.env.VUE_APP_API_URL + '/image' + this.result['imageId'],
+          img_path: process.env.VUE_APP_API_URL + '/images/' + this.result['imageId'],
           username: this.$store.state.Auth.nickname,
           style: this.result['data']['1']['style'],
         },

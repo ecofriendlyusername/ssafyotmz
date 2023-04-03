@@ -54,48 +54,7 @@
             </div>
           </div>
         </div>
-      </div>
-      <!-- <div id="LoginDiv2">
-        # 러블리
-      </div> -->
-
-      <!-- 그리드 -->
-      <!-- <div style="display:flex; justify-content:center; margin-top:7px;">
-        <div class="container">
-          <div class="item">
-            <img src="https://d20s70j9gw443i.cloudfront.net/t_GOODS_INFORMATION/https://imgb.a-bly.com/data/editor/20220828_1661640468492713l.jpg" id="picture">
-          </div>
-          <div class="item">
-            <img src="https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20230302_1677698198733017m.jpg" id="picture">
-          </div>
-          <div class="item">
-            <img src="https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20230308_1678255054352384m.jpg" id="picture">
-          </div>
-          <div class="item">
-            <img src="https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/064e6fd8f60339b7e2ea452c06bcf244.jpg" id="picture">
-          </div>
-          <div class="item">
-            <img src="https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20230206_1675654028387077m.jpg" id="picture">
-          </div>
-        </div>
-      </div>
-
-      <div id="LoginDiv2" style="margin-top:26px;">
-        # 페미닌
-      </div> -->
-
-      <!-- 그리드 -->
-      <!-- <div style="display:flex; justify-content:center; margin-top:7px;">
-        <div class="container">
-          <div class="item">1</div>
-          <div class="item">2</div>
-          <div class="item">3</div>
-          <div class="item">4</div>
-          <div class="item">5</div>
-        </div>
-      </div> -->
-      
-
+      </div>   
     </div>
     
     <!-- {{ Auth }} -->
