@@ -60,7 +60,7 @@ export default {
     display: inline-block;
     width: 94%;
     background-color: #F5F5F7;
-    min-height: 120px;
+    min-height: 130px;
     margin-bottom: 20px;
   }
 

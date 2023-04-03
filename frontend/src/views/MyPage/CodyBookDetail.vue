@@ -1,13 +1,13 @@
 <template>
 <div>
-    <div>
+    <div style="margin:10px; font-weight:bold">
       <div>{{ this.selected.name }}</div>
     </div>
-    <div id="item">
-        <img :src="env+selected.imageId" width="100"/>
-        <div>{{ this.selected.comment }}</div>
+    <div id="item" style="margin:10px">
+        <img :src="env+selected.imageId" width="200"/>
+        <div style="margin:10px;">{{ this.selected.comment }}</div>
     </div>
-    <div class="selectionBox">
+    <div class="selectionBox" style="display: flex; justify-content: end;">
         <div class="selection" @mousedown="deleteItemMatch()">삭제</div>
         <div class="selection" @mousedown="$emit('close')">Close</div>
       </div>

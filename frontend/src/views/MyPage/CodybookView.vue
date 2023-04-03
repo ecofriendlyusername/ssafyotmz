@@ -1,8 +1,6 @@
 <template>
 <div id="codybookview">
-  <div>
-    내 코디북
-  </div>
+
   <br>
     <swiper v-if="pages.length!==0" class="items"
     @activeIndexChange="mySwipeChanged" 
@@ -19,17 +17,25 @@
     </swiper-slide>
   </swiper>
     <div v-if="pages.length===0">
-      아직 코디북이 없습니다!
+      <img src="@/assets/img/noresult.png" style="width:38%">
+      <div>
+        아직 생성된 코디북이 없습니다!
+      </div>
     </div>
+  
     <div class="selectionBox">
-    <div class="selection" id="selectB" v-if="pages.length!==0" @mousedown="selectItemMatches()">select</div>
-    <div class="selection" id="deleteB" v-if="selectMode" @mousedown="deleteSelectedItemMatches">delete</div>
+    <div class="selection" id="selectB" v-if="pages.length!==0" @mousedown="selectItemMatches()">선택</div>
+    <div class="selection" id="deleteB" v-if="selectMode" @mousedown="deleteSelectedItemMatches">선택항목 삭제</div>
   </div>
   <div v-if="modalOpen" class="modal">
     <CodyBookDetail :selected="selected" @close="closeModal" @deleted="deleteItemMatch()">your content...</CodyBookDetail>
   </div>
   <!-- <router-link to='/Codybook'>코디북 만들기</router-link> | -->
-  <router-link to='/Codybook/solo'>코디북 만들러가기</router-link>
+  <router-link to='/Codybook/solo' style="text-decoration:none; color: black;">
+    <div id="selecBtn">
+      코디북 만들러가기
+    </div>
+  </router-link>
 </div>
 </template>
 
@@ -91,9 +97,9 @@ export default {
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
         }
           this.selectedIndices = []
-          document.getElementById('selectB').style.backgroundColor = 'white'
+          document.getElementById('selectB').style.backgroundColor = '#a4a4a4'
         } else {
-          document.getElementById('selectB').style.backgroundColor = '#FCD2DC'
+          document.getElementById('selectB').style.backgroundColor = 'black'
         }
         this.selectMode = !this.selectMode
       },
@@ -195,7 +201,7 @@ export default {
           document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
           a.pages.splice(idx,1)
         }
-        document.getElementById('selectB').style.backgroundColor = 'white'
+        document.getElementById('selectB').style.backgroundColor = '#a4a4a4'
         this.selectMode = false
       })
       .catch((e) => {
@@ -231,23 +237,23 @@ export default {
   top: 20%;
   left: 50%;
   width: 300px;
+  min-height: 250px;
   margin-left: -150px;
   background-color: white;
-
   border-radius: 10px;
   border-style: solid;
-  border-color: #F4C2C2;
+  border-color: #000000;
 }
 
 .imgIT {
-  width: 70%
+  width: 80%
 }
 
 .wrapperIT {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  grid-auto-rows: 250px;
+
+  grid-auto-rows: 180px;
 }
 
 .selection {
