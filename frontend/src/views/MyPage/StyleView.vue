@@ -1,6 +1,9 @@
 <template>
-  <div>
+  <div id="MyPage">
+    <div class="SubNav">
+        <div class="SubNavText">
     내 스타일 페이지
+  </div>
   </div>
   <hr>
   <div>
@@ -9,7 +12,7 @@
     <p>스타일 진단 횟수 {{ this.myData['totalStyleCount'] }} 회</p>
   </div>
   <div>
-    <canvas id="myChart"></canvas>
+    <canvas id="myChart" ></canvas>
   </div>
   <!-- 스타일 구분별 스타일 사진 -->
   <!-- 얘도 가로 2~3 정도로  -->
@@ -29,6 +32,7 @@
     </ul>
   <hr>
   <router-link to='/MyPage'>마이페이지</router-link>
+</div>
 </template>
 
 <script>
@@ -99,7 +103,9 @@ export default {
         datasets: [{
         // label: '# of Votes',
           data: data.map(x => x['count']),
-          borderWidth: 1
+          borderWidth: 1,
+              backgroundColor: '#000000',
+              pointBorderColor: '#000000',
         }]
       },
         options: {
