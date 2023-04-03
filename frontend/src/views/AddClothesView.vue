@@ -9,6 +9,9 @@
   
   <div v-show="!isLoading">
     <div v-if="!haveImage">
+      <div style="font-size:95%; font-weight: bold; margin-top: 5px;">
+        ① → ② 순서대로 작업을 수행하세요.
+      </div>
       <div id="selecBtn">
         <label for="imagefile">① 옷 이미지 선택하기</label><input type="file" id="imagefile" name="imagefile" @change="fileUpload" >
       </div>
@@ -23,7 +26,7 @@
     </div>
 
     <div v-if="haveImage">
-      <div style="font-size:95%; padding:2px;">
+      <div style="font-size:95%; padding:2px; font-weight: bold; margin-top: 5px;">
         <p style="margin-top:0px;">
           배경이 제거되었습니다!
         </p>
