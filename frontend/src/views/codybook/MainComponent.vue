@@ -2,7 +2,18 @@
 <div id="main-container">
   <div id="join" v-if="!session">
     <div id="join-dialog" class="jumbotron vertical-center">
+
       <h1>Join a video session</h1>
+      <br>
+      <div>
+        친구를 초대할래요!
+      </div>
+
+      <div>
+        초대를 받았어요!
+      </div>
+
+
       <div class="form-group">
         <p @click="createInviteCode" v-if="!inviteCode">
           내 옷장 초대 코드 생성
