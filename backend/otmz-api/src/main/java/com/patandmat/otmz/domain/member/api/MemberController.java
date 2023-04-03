@@ -89,25 +89,26 @@ public class MemberController {
 
         List<StyleByCountResponse> styleSummaries = memberService.getStyleSummary(member.getId());
         final long total = styleSummaries.stream()
-                                         .mapToLong(StyleByCountResponse::getCount)
-                                         .sum();
+                .mapToLong(StyleByCountResponse::getCount)
+                .sum();
 
         List<StyleByPercentResponse> styleByCountResponse = styleSummaries
                 .stream()
                 .map(summary -> {
                     double cal = summary.getCount() / (double) total * 100;
-                    double percentage = Math.round(cal);
+                    double count = Math.round(cal);
 
-                    return new StyleByPercentResponse(summary.getStyle(), percentage);
+                    return new StyleByPercentResponse(summary.getStyle(), count);
                 })
                 .collect(Collectors.toList());
 
+
         MypageResponse response = MypageResponse.builder()
-                                                .nickname(nickname)
-                                                .totalStyleCount(totalStyleCount)
-                                                .totalItemCount(totalItemCount)
-                                                .styleByPercentResponseList(styleByCountResponse)
-                                                .build();
+                .nickname(nickname)
+                .totalStyleCount(totalStyleCount)
+                .totalItemCount(totalItemCount)
+                .styleByPercentResponseList(styleByCountResponse)
+                .build();
 
         return new ResponseEntity<>(response, HttpStatus.OK);
 

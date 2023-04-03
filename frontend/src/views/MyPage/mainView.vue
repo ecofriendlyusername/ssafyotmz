@@ -1,15 +1,11 @@
 <template>
   <div id="MyPage">
-    <div class="SubNav">
-        <div class="SubNavText">
-            MY PAGE
-        </div>
-    </div>
+
 
     <div v-if="Auth['nickname']">
       <!-- 유저 정보 칸 -->
       <img :src="Auth['profileImagePath']" id="Profile">
-      <p id="Nickname">{{ myData['nickname'] }}</p>
+      <p id="Nickname">{{ Auth['nickname'] }}</p>
       
 
       <div id="mydiv1">
@@ -38,8 +34,8 @@
         </div>
         <div style="width:100%">
           <p>TOP 3</p>
-          <p v-for="look in myData['lookCountDtoList']" style="margin-top:-10px;">
-          {{ look['style'] }} : {{ look['count']/this.myData['totalStyleCount']*100 }}%</p>
+          <p v-for="look in myData['styleByPercentResponseList']" style="margin-top:-10px;">
+          {{ look['style'] }} : {{ look['count'] }}%</p>
         </div>
       </div>
     </div>
@@ -114,43 +110,43 @@ export default {
       .then(response => {
         console.log(response.data)
         this.myData = response.data
-        this.myData = {
-          clothCountDtoList:[
-          {
-              'style': '스트릿',
-              'count':5
-            },
-            {
-              'style': '캐주얼',
-              'count':3
-            },
-            {
-              'style': '러블리',
-              'count':1
-            },
-          ],
-          lookCountDtoList: [
-            {
-              'style': '스트릿',
-              'count':5
-            },
-            {
-              'style': '캐주얼',
-              'count':3
-            },
-            {
-              'style': '러블리',
-              'count':1
-            },
-          ], 
-          nickname: "최선호", 
-          totalItemCount: 10, 
-          totalStyleCount: 10
-        }
+        // this.myData = {
+        //   clothCountDtoList:[
+        //   {
+        //       'style': '스트릿',
+        //       'count':5
+        //     },
+        //     {
+        //       'style': '캐주얼',
+        //       'count':3
+        //     },
+        //     {
+        //       'style': '러블리',
+        //       'count':1
+        //     },
+        //   ],
+        //   lookCountDtoList: [
+        //     {
+        //       'style': '스트릿',
+        //       'count':5
+        //     },
+        //     {
+        //       'style': '캐주얼',
+        //       'count':3
+        //     },
+        //     {
+        //       'style': '러블리',
+        //       'count':1
+        //     },
+        //   ], 
+        //   nickname: "최선호", 
+        //   totalItemCount: 10, 
+        //   totalStyleCount: 10
+        // }
       })
       .then(() => {
         const ctx = document.getElementById('myChart');
-        const data = Object.values(this.myData['lookCountDtoList'])
+        const data = Object.values(this.myData['styleByPercentResponseList'])
         new Chart(ctx, {
           type: 'bar',
           data: {
@@ -158,7 +154,9 @@ export default {
             datasets: [{
               // label: '# of Votes',
               data: data.map(x => x['count']),
-              borderWidth: 1
+              borderWidth: 1,
+              backgroundColor: '#000000',
+              pointBorderColor: '#000000',
             }]
           },
           options: {
@@ -190,7 +188,10 @@ export default {
             datasets: [{
               // label: '# of Votes',
               data: data2.map(x => x['count']),
-              borderWidth: 1
+              borderWidth: 1,
+              backgroundColor: '#000000',
+              pointBorderColor: '#000000',
+       
             }]
           },
           options: {
