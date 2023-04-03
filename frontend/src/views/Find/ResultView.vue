@@ -130,6 +130,7 @@ export default {
   },
   methods:{
     async shareKakao(){
+      await Kakao.init(process.env.VUE_APP_KAKAO_JAVASCRIPT_API_URL);
       await Kakao.Share.createCustomButton({
         container: '#kakaotalk-sharing-btn',
         templateId: 91677,
@@ -149,7 +150,6 @@ export default {
   mounted() {
     console.log(this.result)
     this.imgsrc = URL.createObjectURL(this.result['img_path']);
-    Kakao.init(process.env.VUE_APP_KAKAO_JAVASCRIPT_API_URL);
     // 여기 아래에 워터마크 찍는 코드 붙여야 함
 
   }
