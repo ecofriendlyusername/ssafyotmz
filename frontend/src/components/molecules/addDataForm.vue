@@ -14,10 +14,6 @@
 
     <img src="@/assets/img/StartBtn.png" id="StartBtn" v-on:click=uploadImage()>
 
-    <br>
-    <router-link to='Find/result'>결과 보기</router-link>
-
-    <p id="temp"></p>
   </div>
 </template>
 
