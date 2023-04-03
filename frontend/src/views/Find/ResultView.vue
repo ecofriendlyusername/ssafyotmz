@@ -190,6 +190,7 @@ export default {
 }
 
 #StyleHead {
+  margin-top: 20px;
   font-family: 'NanumSquareNeo-Variable';
   display: inline-block;
   background-color:black;
