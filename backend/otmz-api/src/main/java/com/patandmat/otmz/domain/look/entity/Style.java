@@ -3,6 +3,7 @@ package com.patandmat.otmz.domain.look.entity;
 import lombok.Getter;
 
 @Getter
+
 public enum Style {
     CLASSIC("classic", "클래식"),
     PREPPY("preppy", "프레피"),
@@ -28,11 +29,11 @@ public enum Style {
     STREET("street", "스트릿"),
     MILITARY("military", "밀리터리");
 
-    private final String key;
+    private final String value;
     private final String name;
 
-    Style(String key, String name) {
-        this.key = key;
+    Style(String value, String name) {
+        this.value = value;
         this.name = name;
     }
 }
