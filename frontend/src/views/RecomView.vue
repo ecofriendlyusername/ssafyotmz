@@ -1,29 +1,41 @@
 <template>
-  <div>
+  <!-- <div>
     스타일 추천 페이지
-  </div>
-  <hr>
-  <p>현재 필터: {{ this.filter }}</p>
-  <div>
-    <button v-on:click="btnToggle('isOMZ')">옷엠지 추천</button>
-    <button v-on:click="btnToggle('isStyle')">스타일 필터</button>
-  </div>
-  
-  <div v-if="isOMZ">
-    <label for="similar" v-on:click="this.filter='similar'">나랑 비슷한거</label><input type="radio" name="OMZ" id="similar">
-    <label for="issimilar" v-on:click="this.filter='issimilar'">안비슷한거</label><input type="radio" name="OMZ" id="issimilar"> 
-  </div>
-  <div v-if="isStyle">
-    <div v-for="category in labels">
-      <label :for="category" v-on:click="this.filter=category">{{ category }}</label><input type="radio" name="OMZ" :id="category">
+  </div> -->
+  <br>
+
+
+  <div style="display:flex; justify-content:space-between; margin: 10px;">
+    <div style="font-weight:bold; font-size:120%">
+      {{ this.labels[this.filter] }}
+    </div>
+
+    <div>
+      <button v-on:click="btnToggle('isOMZ')" id="recomBtn">옷엠지 추천</button>
+      <button v-on:click="btnToggle('isStyle')" id="recomBtn">스타일 필터</button>
     </div>
   </div>
+  
+  <div v-if="isOMZ" style="display:flex; justify-content:end;">
+    <label for="similar" v-on:click="this.filter='similar'" id="category">나랑 비슷한거</label><input type="radio" name="OMZ" id="similar">
+    <label for="issimilar" v-on:click="this.filter='issimilar'" id="category" style="margin-left:-17px; margin-right: 23px;">안비슷한거</label><input type="radio" name="OMZ" id="issimilar"> 
+  </div>
+
+  <div v-if="isStyle" style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; margin-top: 10px;">
+      <div v-for="(key, value) in labels">
+        <label :for="category" v-on:click="this.filter=value">
+              <div id="category">{{ key }}</div>
+        </label>
+      </div>
+    </div>
   <hr>
-  <ul>
-    <li v-for="item in items">
-      <img :src= '`http://localhost:8080/api/v1/images/${ item.imageId }`' alt="">
-    </li>
-  </ul>
+
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; grid-gap: 10px 5px;">
+    <div v-for="item in items">
+      <img :src= '`http://localhost:8080/api/v1/images/${ item.imageId }`' style="width:100%;">
+    </div>
+  </div>
 </template>
 
 <script>
@@ -36,31 +48,31 @@ export default {
       isOMZ:false,
       isStyle: false,
       filter: null,
-      labels: [
-        'romantic',
-        'feminine',
-        'street',
-        'country',
-        'resort',
-        'retro',
-        'classic',
-        'sexy',
-        'hippie',
-        'modern',
-        'sophisticated',
-        'kitsch',
-        'avantgarde',
-        'western',
-        'oriental',
-        'preppy',
-        'sporty',
-        'hiphop',
-        'manish',
-        'tomboy',
-        'genderless',
-        'punk',
-        'military'
-      ],
+      labels: {
+        'romantic': '로맨틱',
+        'feminine':'페미닌',
+        'street':'스트릿',
+        'country':'컨트리',
+        'resort':'리조트',
+        'retro':'리조트',
+        'classic':'클래식',
+        'sexy':'섹시',
+        'hippie':'히피',
+        'modern':'모던',
+        'sophisticated':'스피스티케이트',
+        'kitsch':'키치',
+        'avantgarde':'아방가르드',
+        'western':'웨스턴',
+        'oriental':'오리엔탈',
+        'preppy':'프레피',
+        'sporty':'스포티',
+        'hiphop':'힙합',
+        'manish':'매니쉬',
+        'tomboy':'톰보이',
+        'genderless':'젠더리스',
+        'punk':'펑크',
+        'military':'밀리터리'
+      },
       items: []
     }
   },
@@ -124,5 +136,34 @@ input[type="radio"] {
   opacity: 0;
   z-index: -1;
 }
+
+#recomBtn {
+  background-color: white;
+  border: 1px solid gray;
+  border-radius: 15px;
+  padding: 5px 15px;
+  color: gray;
+  font-weight: bold;
+}
+#recomBtn:hover {
+  background-color: black;
+  border: 1px solid black;
+  color: rgb(255, 255, 255);
+}
+
+#category {
+  border: 2px solid gray;
+  /* border-radius: 15px; */
+  color: black;
+  font-weight: bold;
+  padding: 2px 5px;
+  margin: 3px;
+  font-size: 80%;
+} 
+#category:hover {
+  background-color: black;
+  color: white;
+}
+
 
 </style>
