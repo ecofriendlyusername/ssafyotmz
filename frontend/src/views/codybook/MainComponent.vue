@@ -129,7 +129,7 @@
       :slidesPerView="5"
     >
       <swiper-slide  v-for="item in items" @click="choice(item)" :key="item.id">
-      <img :src='`${item.src}`' style="width:90px;height:80px"/>
+      <img :src='`${item.src}`' style="max-width:90px;max-height:80px;"/>
       </swiper-slide >
     </swiper>
     
