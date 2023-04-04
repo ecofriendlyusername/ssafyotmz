@@ -16,7 +16,7 @@
     :slidesPerView="5"
   >
     <swiper-slide v-for="item in items" @click="choice(item)" :key="item.id" >
-      <img :src='`${item.src}`' style="width:90px;hegiht:80px"/>
+      <img :src='`${item.src}`' style="width:90px;height:80px"/>
     </swiper-slide>
   </swiper>
 
@@ -65,7 +65,7 @@
 
     </div>
 
-    <div :style="{margin: '10px', backgroundColor: backgroundColor}">
+    <div :style="{margin: '10px'}">
       <v-stage
         ref="stage"
         :config="configKonva"
@@ -81,14 +81,14 @@
             :config="{
               x: 0,
               y: 0,
-              width: 400,
-              height: 400,
+              width: width,
+              height: height,
               fill: backgroundColor
             }"
           />
           <v-image :config="{
-            x: 330,
-            y: 330,
+            x: width - 60,
+            y: height - 60,
             width: 50,
             height: 50,
             image: logo
@@ -170,7 +170,7 @@ import {Swiper, SwiperSlide} from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-const width = 400;
+const width = window.innerWidth < 415 ? window.innerWidth * 0.91 : 400;
 const height = 400;
 
 export default {
@@ -194,6 +194,8 @@ export default {
 
         name: '',
         comment: '',
+        width: width,
+        height: height
       }
     },
 
@@ -304,6 +306,10 @@ export default {
         if (e.target.id() === 'background') {
           this.dragItemId = null;
           this.updateTransformer();
+          return;
+        }
+
+        if (e.target.getParent() == null) {
           return;
         }
 
