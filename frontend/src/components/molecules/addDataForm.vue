@@ -102,9 +102,11 @@ export default {
       })
       // 워터마크 찍기
       .then(() => {
-        watermark([this.image, require('@/assets/img/watermark/logo.png')])
+        watermark([this.image, require('@/assets/img/watermark/logo_left.png')])
+          .image(watermark.image.upperLeft(0.5))
+          .load([require('@/assets/img/watermark/logo_right.png')])
           .image(watermark.image.upperRight(0.5))
-          .load([require('@/assets/img/watermark/MyStyleStreet.png')])
+          .load([require('@/assets/img/watermark/' + this.result['data']['1']['style'] + '.png')])
           .image(watermark.image.lowerLeft(0.5))
           .then((img) => {
             const watermark = this.dataURLtoFile(img.src, 'temp.jpg')
