@@ -102,6 +102,11 @@ public class MemberController {
                 })
                 .collect(Collectors.toList());
 
+        if(styleByCountResponse.size()>3){
+            for (int i=3; i<styleByCountResponse.size(); i++){
+                styleByCountResponse.remove(i);
+            }
+        }
 
         MypageResponse response = MypageResponse.builder()
                 .nickname(nickname)

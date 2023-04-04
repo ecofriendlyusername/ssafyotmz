@@ -231,6 +231,8 @@ export default {
 #Profile {
   width: 50%;
   margin: 15px;
+  border-radius: 100%;
+  border: 4px solid black;
 }
 
 #Nickname {
