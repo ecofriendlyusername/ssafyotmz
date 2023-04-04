@@ -257,7 +257,7 @@ export default {
 
     },
     deleteItem() {
-      axios.delete(process.env.VUE_APP_API_URL + '/items' + id, {
+      axios.delete(process.env.VUE_APP_API_URL + '/items/' + id, {
         headers: {
           'Authorization' : this.Auth.accessToken
         }
