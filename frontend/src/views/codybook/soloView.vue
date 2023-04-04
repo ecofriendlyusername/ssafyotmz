@@ -446,6 +446,7 @@ export default {
     min-height: 150px;
     background-color: #F5F5F7;
     width: 95%;
+    margin-top: -10px;
   }
 
   #DelBtn {
