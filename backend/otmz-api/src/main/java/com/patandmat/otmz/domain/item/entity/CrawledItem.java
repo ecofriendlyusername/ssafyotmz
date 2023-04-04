@@ -31,7 +31,7 @@ public class CrawledItem {
     @Column
     private String seller;
 
-    @Column
+    @Column(length = 2000)
     private String styleVector;
 
     @Builder
