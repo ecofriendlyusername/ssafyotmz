@@ -184,7 +184,7 @@ export default {
       },
       choice(item) {
         const img = new Image();
-        img.src = process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/images/' + item.imageId;
+        img.src = process.env.VUE_APP_API_URL + '/images/' + item.imageId;
 
         const targetIndex = this.list.findIndex(x => x.name === String(item.id));
         this.dragItemId = null;
@@ -212,7 +212,7 @@ export default {
         console.log(this.list)
       },
       getItems(category) {
-        axios.get(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/items/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
+        axios.get(process.env.VUE_APP_API_URL + '/items/' + category +'?page=0&size=10', { // outer, upper, lower, dress, etc
           headers: {
             'Content-Type': 'application/json',
             'Authorization': this.$store.state.Auth['accessToken']
@@ -223,7 +223,7 @@ export default {
           // this.image = response.data
           console.log(response.data)
           this.items = response.data.content;
-          this.items.forEach(item => item.src = process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/images/' + item.imageId);
+          this.items.forEach(item => item.src = process.env.VUE_APP_API_URL + '/images/' + item.imageId);
         })
         .catch(error =>{
           console.log(error)

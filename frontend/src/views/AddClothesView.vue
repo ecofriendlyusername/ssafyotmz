@@ -166,7 +166,7 @@ export default {
       this.viewMultipleItems('upper',2,3)
     },
     async getStyle(formData) {
-      await axios.post(process.env.VUE_APP_AI_STYLE, formData, {
+      await axios.post(process.env.VUE_APP_AI_URL + '/style', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -221,7 +221,7 @@ export default {
     },
     async removeBackground(formData) {
       var a = this
-      await axios.post(process.env.VUE_APP_AI_REMOVE, formData, {
+      await axios.post(process.env.VUE_APP_AI_URL + '/remove', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -244,7 +244,7 @@ export default {
       })
     },
     async createItem(formData) {
-      axios.post(process.env.VUE_APP_ITEM,formData, {
+      axios.post(process.env.VUE_APP_API_URL + '/item', formData, {
         headers: {
           'Content-Type' : 'multipart/form-data',
           'Authorization' : this.Auth.accessToken,
@@ -257,7 +257,7 @@ export default {
 
     },
     deleteItem() {
-      axios.delete(process.env.VUE_APP_ITEMS + '/' + id, {
+      axios.delete(process.env.VUE_APP_API_URL + '/items' + id, {
         headers: {
           'Authorization' : this.Auth.accessToken
         }
