@@ -16,26 +16,26 @@ public class ImageFile extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String originName;
+//    @Column(nullable = false)
+//    private String originName;
 
-    @Column(nullable = false)
-    private String name;
+//    @Column(nullable = false)
+//    private String name;
     @Column(nullable = false)
     private String path;
 
-    @Column(nullable = false)
-    private String mimeType;
+//    @Column(nullable = false)
+//    private String mimeType;
 
-    @Column(nullable = false)
-    private Long length;
+//    @Column(nullable = false)
+//    private Long length;
 
     @Builder
     public ImageFile(String originName, String name, String path, String mineType, Long length) {
-        this.originName = originName;
-        this.name = name;
+//        this.originName = originName;
+//        this.name = name;
         this.path = path;
-        this.mimeType = mineType;
-        this.length = length;
+//        this.mimeType = mineType;
+//        this.length = length;
     }
 }

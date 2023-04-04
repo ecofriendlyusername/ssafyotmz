@@ -4,17 +4,27 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.patandmat.otmz.domain.auth.api.model.MemberInfoFromKakao;
 import com.patandmat.otmz.domain.auth.api.model.TokenResponse;
+import com.patandmat.otmz.domain.imageFile.application.ImageFileService;
+import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
+import com.patandmat.otmz.domain.item.application.InitItemCopyService;
+import com.patandmat.otmz.domain.item.entity.Item;
+import com.patandmat.otmz.domain.item.repository.ItemRepository;
+import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.domain.member.repository.MemberRepository;
 import com.patandmat.otmz.global.auth.JwtUtil;
+import com.patandmat.otmz.global.exception.NoSuchMemberException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.management.AttributeNotFoundException;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Optional;
 
 
 @Slf4j
@@ -38,6 +48,14 @@ public class OAuthService {
     private String redirectUri;
 
     private final MemberRepository memberRepository;
+
+    private final InitItemCopyService initItemCopyService;
+
+    private final ItemRepository itemRepository;
+
+    private final MemberService memberService;
+
+    private final ImageFileService imageFileService;
 
     public TokenResponse getKakaoTokens(String code, String redirectUri) {
         if (redirectUri == null) {
@@ -149,17 +167,30 @@ public class OAuthService {
         }
         return null;
     }
-
     public Member loginOrJoin(MemberInfoFromKakao memberInfoFromKakao) {
         Member joinedMember = memberRepository.findByAuthId(memberInfoFromKakao.getAuthId());
 
         if (joinedMember == null) {
             //회원가입
             joinedMember = memberRepository.save(memberInfoFromKakao.toEntity());
+
+            try {
+                initItemCopyService.setTestItemsForThisUser(joinedMember);
+            } catch (IOException e) {
+                // not critical
+                System.out.println("Failed to initialize test data");
+            }
         } else if (joinedMember.isDeleted()) {
             joinedMember.restore();
             joinedMember.setNickname(memberInfoFromKakao.getNickname());
             memberRepository.save(joinedMember);
+
+            try {
+                initItemCopyService.setTestItemsForThisUser(joinedMember);
+            } catch (IOException e) {
+                // not critical
+                System.out.println("Failed to initialize test data");
+            }
             //(재가입)로그인
         }
 
