@@ -27,7 +27,8 @@ export default {
     return {
       file: null,
       image: null,
-      resized: null
+      resized: null,
+      result: null
     };
   },
 
@@ -97,7 +98,7 @@ export default {
       })
       // 결과 받아서 저장
       .then(response => {
-        console.log(response.data.check)
+        console.log(response.data)
         this.result = response.data;     
       })
       // 워터마크 찍기
@@ -123,7 +124,7 @@ export default {
       })
       .catch(error => {
         console.log(error);
-        this.$router.push('/Find')
+        // this.$router.push('/Find')
       });
     },
   }
