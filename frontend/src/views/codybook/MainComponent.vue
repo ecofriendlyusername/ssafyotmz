@@ -4,6 +4,7 @@
     <div id="join-dialog" class="jumbotron vertical-center">
 
       <h2>내 코디를 부탁해</h2>
+      <p style="margin-top:-5px;">링크를 생성하여 함께 코디를 진행해 보세요</p>
       <div class="form-group">
         <div id="videoDiv" @click="createInviteCode" v-if="!inviteCode">
           <div>
@@ -133,6 +134,8 @@
     </swiper>
     
     <hr>
+
+
     <div>
       <div class="settings">
         <div class="box">
@@ -140,8 +143,8 @@
             <input title="Color Picker" type="color" id="color" v-model="backgroundColor"  @blur="updateColor()">
           </span>
         </div>
-        <div @click="clear">clear</div>
-        <div v-if="dragItemId" @click="removeItem">삭제</div>
+        <div @click="clear" id="DelBtn">전체 삭제</div>
+        <div v-if="dragItemId" @click="removeItem" id="DelBtn">선택항목 삭제</div>
       </div>
       <div :style="{margin: '10px', backgroundColor: backgroundColor}">
         <v-stage
@@ -201,11 +204,67 @@
       </div>
     </div>
     <div v-if="mySessionId === $store.state.Auth.memberId">
-      <label for="text">이름</label><input type="text" id="name" name="name" v-model="name">
-      <label for="text">메모</label><input type="text" id="comment" name="comment" v-model="comment">
-      <div @click="saveCodiBoard">저장</div>
+
+      <div style="display:flex; justify-content:center; margin-top: 20px;">
+        <div style="display:flex; width: 95%;">
+          <div style="width: 30%;">
+            <label for="text" style="font-weight:bold">코디 이름</label>
+          </div>
+          <div style="width: 70%;">
+            <input type="text" id="name" name="name" v-model="name" style="border: 3px solid black; border-left-width:0; border-right-width:0; border-top-width:0; width: 80%;">
+          </div>
+        </div>
+      </div>
+      <br>
+
+  <div style="display:flex; justify-content:center;">
+    <div style="display:flex; width: 95%;">
+      <div style="width: 30%;">
+        <label for="text" style="font-weight:bold">설명</label>
+      </div>
+      <div style="width: 70%;">
+        <input type="text" id="comment" name="comment" v-model="comment" style="border: 3px solid black; border-left-width:0; border-right-width:0; border-top-width:0; width: 80%;">
+      </div>
     </div>
-    <div @click="captureCodiBoard">캡처</div>
+  </div>
+
+  <div style="display:flex; justify-content:center; align-items:center; margin: 33px;">
+    <div @click="captureCodiBoard" style="border:3px solid black; border-radius: 10px; font-weight: bold;">
+      <div style="padding:10px 40px;">
+        <div style="height:30px;">
+          <img src="@/assets/img/camera.png" style="width:30px;">
+        </div>
+        <div>
+          캡처
+        </div>
+      </div>
+    </div>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    <div @click="saveCodiBoard" style="border:3px solid black; border-radius: 10px; font-weight: bold;">
+      <div style="padding:10px 40px;">
+        <div style="height:30px;">
+          <img src="@/assets/img/comp.png" style="width:23px; margin-top:3px">
+        </div>
+        <div>
+          저장
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+      <!-- <label for="text">이름</label><input type="text" id="name" name="name" v-model="name">
+      <label for="text">메모</label><input type="text" id="comment" name="comment" v-model="comment"> -->
+      <!-- <div @click="saveCodiBoard">저장</div> -->
+    </div>
+    <!-- <div @click="captureCodiBoard">캡처</div> -->
     <hr>
   </div>
 </div>
@@ -928,6 +987,14 @@ export default {
     background-color: #F5F5F7;
     width: 95%;
     margin-top: -10px;
+  }
+
+  #DelBtn {
+    background-color: #F5F5F7;
+    padding: 5px;
+    margin-right: 12px;
+    border: 2px solid black;
+    border-radius: 5px;
   }
 
 

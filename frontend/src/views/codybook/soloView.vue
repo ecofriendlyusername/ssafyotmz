@@ -28,7 +28,7 @@
         <label for="text" style="font-weight:bold">코디 이름</label>
       </div>
       <div style="width: 70%;">
-        <input type="text" id="name" name="name" v-model="name">
+        <input type="text" id="name" name="name" v-model="name" style="border: 3px solid black; border-left-width:0; border-right-width:0; border-top-width:0; width: 80%;">
       </div>
     </div>
   </div>
@@ -40,7 +40,7 @@
         <label for="text" style="font-weight:bold">설명</label>
       </div>
       <div style="width: 70%;">
-        <input type="text" id="comment" name="comment" v-model="comment">
+        <input type="text" id="comment" name="comment" v-model="comment" style="border: 3px solid black; border-left-width:0; border-right-width:0; border-top-width:0; width: 80%;">
       </div>
     </div>
   </div>
@@ -132,7 +132,7 @@
 
 
   <div style="display:flex; justify-content:center; align-items:center;">
-    <div @click="captureCodiBoard" style="border:2px solid black; border-radius: 10px; font-weight: bold;">
+    <div @click="captureCodiBoard" style="border:3px solid black; border-radius: 10px; font-weight: bold;">
       <div style="padding:10px 40px;">
         <div style="height:30px;">
           <img src="@/assets/img/camera.png" style="width:30px;">
@@ -144,7 +144,7 @@
     </div>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-    <div @click="saveCodiBoard" style="border:2px solid black; border-radius: 10px; font-weight: bold;">
+    <div @click="saveCodiBoard" style="border:3px solid black; border-radius: 10px; font-weight: bold;">
       <div style="padding:10px 40px;">
         <div style="height:30px;">
           <img src="@/assets/img/comp.png" style="width:23px; margin-top:3px">
