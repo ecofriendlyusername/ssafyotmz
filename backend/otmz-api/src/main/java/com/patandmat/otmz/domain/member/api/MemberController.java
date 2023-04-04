@@ -6,7 +6,6 @@ import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByCountResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByPercentResponse;
 import com.patandmat.otmz.domain.look.application.LookService;
-import com.patandmat.otmz.domain.look.entity.Look;
 import com.patandmat.otmz.domain.member.api.model.MypageResponse;
 import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
@@ -15,13 +14,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,9 +107,15 @@ public class MemberController {
                 })
                 .collect(Collectors.toList());
 
+        List<StyleByPercentResponse> topStyleList = new ArrayList<>();
+
         if (styleByCountResponse.size() > 3) {
-            for (int i = 3; i < styleByCountResponse.size(); i++) {
-                styleByCountResponse.remove(i);
+            for (int i = 0; i < 3; i++) {
+                topStyleList.add(i, styleByCountResponse.get(i));
+            }
+        } else {
+            for (int i = 0; i<styleByCountResponse.size(); i++ ){
+                topStyleList.add(i, styleByCountResponse.get(i));
             }
         }
 
@@ -119,6 +124,7 @@ public class MemberController {
                 .totalStyleCount(totalStyleCount)
                 .totalItemCount(totalItemCount)
                 .styleByPercentResponseList(styleByCountResponse)
+                .topStyleList(topStyleList)
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.OK);

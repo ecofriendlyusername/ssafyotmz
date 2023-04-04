@@ -34,7 +34,7 @@
         </div>
         <div style="width:100%">
           <p>TOP 3</p>
-          <p v-for="look in myData['styleByPercentResponseList']" style="margin-top:-10px;">
+          <p v-for="look in myData['topStyleList']" style="margin-top:-10px;">
           {{ look['style'] }} : {{ look['count'] }}%</p>
         </div>
       </div>
@@ -146,7 +146,7 @@ export default {
       })
       .then(() => {
         const ctx = document.getElementById('myChart');
-        const data = Object.values(this.myData['styleByPercentResponseList'])
+        const data = Object.values(this.myData['topStyleList'])
         new Chart(ctx, {
           type: 'bar',
           data: {
