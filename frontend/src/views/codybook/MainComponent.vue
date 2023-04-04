@@ -3,18 +3,50 @@
   <div id="join" v-if="!session">
     <div id="join-dialog" class="jumbotron vertical-center">
 
-      <h1>Join a video session</h1>
-      <br>
-      <div>
-        친구를 초대할래요!
-      </div>
-
-      <div>
-        초대를 받았어요!
-      </div>
-
-
+      <h2>내 코디를 부탁해</h2>
       <div class="form-group">
+        <div id="videoDiv" @click="createInviteCode" v-if="!inviteCode">
+          <div>
+            친구를 초대할래요!
+          </div>
+          <div>
+            >
+          </div>
+        </div>
+
+        <div id="videoDiv" v-if="inviteCode">
+          <div>
+            링크가 생성되었어요!
+          </div>
+          <div style="display:flex">
+            <span style="font-weight:bold">{{inviteCode}}</span>
+            &nbsp;
+            <div @click="copyCode" id="copyBtn">
+              링크 복사
+            </div>
+
+          </div>
+        </div>
+
+
+      <div id="videoDiv">
+        <div>
+          코디방 입장하기
+        </div>
+        <div>
+          <input v-model="inviteCode" style="border-radius: 3px; " class="form-control" type="text" required />
+        </div>  
+      </div>
+      <button class="w-btn-outline w-btn-gray-outline" @click="joinWithInviteCode">
+        Join!
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+      <!-- <div class="form-group">
         <p @click="createInviteCode" v-if="!inviteCode">
           내 옷장 초대 코드 생성
         </p>
@@ -32,20 +64,55 @@
             Join!
           </button>
         </p>
-      </div>
-    </div>
-  </div>
+      </div> -->
+
 
   <div id="session" v-if="session">
     <div id="session-header">
-      <h1 id="session-title">{{ myUserName }} 님의 옷장</h1>
+      <div style="display:flex; justify-content:center;">
         <div>
-          라이브 코디북 만들기 페이지
+          <h3 id="session-title">{{ myUserName }} 님의 라이브 옷장</h3>
         </div>
-      <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession"
-        value="Leave session" />
+        <div @click="leaveSession">
+          <img src="@/assets/img/exit.png" style="width:20px; margin-left: 7px; margin-top: 15px;">
+          <!-- <input type="button" id="buttonLeaveSession" @click="leaveSession"
+          value="종료" /> -->
+        </div>
+      </div>
+
+        <div id="live">
+            LIVE
+          </div>
+          
+
+        <br>
     </div>
     <hr>
+
+    <!-- <div style="display:flex;">
+      <div style="text-align:left; ;margin-left: 15px; font-weight: bold;">참여자</div>
+      &nbsp;
+      
+    </div> -->
+
+    <div id="video-container" style="margin-left:8px;">
+      <user-video class="publisher" :stream-manager="publisher" :is-speaking="publisher.isSpeaking && audioEnabled" />
+      <user-video class="subscriber" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" :is-speaking="sub.isSpeaking"/>
+    </div>
+
+    <div v-show="audioEnabled" @click="micOnOff" style="width:50px; margin:-5px">
+        <img src="@/assets/img/mike_on.png" style="width:25px; margin-left: 32px;">
+    </div>
+    <div v-show="!audioEnabled" @click="micOnOff" style="width:50px; margin:-5px">
+      <img src="@/assets/img/no_on.png" style="width:25px; margin-left: 32px;">
+    </div>
+    <hr>
+
+
+
+
+
+
     <div class="categories">
       <div class="category" :class="{ 'selected': selected === 'outer' }" @click="getItems('outer')">아우터</div>
       <div class="category" :class="{ 'selected': selected === 'upper' }" @click="getItems('upper')">상의</div>
@@ -64,18 +131,7 @@
       <img :src='`${item.src}`' style="width:100px;hegiht:100px"/>
       </swiper-slide >
     </swiper>
-    <hr>
-    <div style="text-align:left;">Participants</div>
-    <div id="video-container">
-      <user-video class="publisher" :stream-manager="publisher" :is-speaking="publisher.isSpeaking && audioEnabled" />
-      <user-video class="subscriber" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" :is-speaking="sub.isSpeaking"/>
-    </div>
-    <div v-show="audioEnabled" @click="micOnOff" style="width:50px;height:50px">
-      <img src="https://collusic.com/assets/track/unselected/vocal.svg" >
-    </div>
-    <div v-show="!audioEnabled" @click="micOnOff" style="width:50px;height:50px">
-      <img  src="https://collusic.com/assets/track/unselected/crap.svg" >
-    </div>
+    
     <hr>
     <div>
       <div class="settings">
@@ -784,5 +840,97 @@ export default {
 #video-container {
   display: flex;
 }
+
+#videoDiv {
+  background-color: black;
+  display:flex;
+  justify-content: space-between;
+  color: white;
+  padding: 18px;
+  margin: 20px;
+  margin-top: 25px;
+  box-shadow: 2px 2px 2px 2px gray;
+}
+
+#copyBtn {
+  background-color: gray;
+  padding: 5px;
+  font-size: 13px;
+  border-radius: 5px;
+  margin-top: -3px;
+  margin-left: 5px;
+}
+
+#session-title {
+  margin-top: 15px;
+  margin-bottom: 8px;
+}
+
+#live {
+  display: inline-block;
+  background-color: red;
+  border-radius: 3px;
+  width: 18%;
+  padding: 5px;
+  color: white;
+  font-weight: bold;
+}
+
+#buttonLeaveSession {
+  background-color: white;
+  border: none;
+  font-size: 95%;
+  font-weight: bold;
+  margin-top: -3px;
+  
+}
+
+
+
+.w-btn-outline {
+  margin-top: 10px;
+    padding: 13px 30px;
+    border-radius: 15px;
+    font-family: "paybooc-Light", sans-serif;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.25s;
+}
+
+
+
+.w-btn-gray-outline {
+    border: 3.5px solid #000000;
+    color: #000000;
+}
+
+
+.w-btn-gray-outline:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.w-btn:hover {
+    letter-spacing: 2px;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.w-btn-outline:hover {
+    letter-spacing: 2px;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.items {
+    min-height: 150px;
+    background-color: #F5F5F7;
+    width: 95%;
+    margin-top: -10px;
+  }
+
+
+
 </style>
 
