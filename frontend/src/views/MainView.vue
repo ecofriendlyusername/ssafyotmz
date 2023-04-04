@@ -1,5 +1,6 @@
 <template>
   <!-- 로그인 시 메인화면 -->
+  <div v-on:click="$router.push('/servay')">servay</div>
   <div v-if="Auth.memberId" style="font-family: 'NanumSquareNeo-Variable';">
     <swiper
       :modules="modules"
@@ -56,11 +57,7 @@
         </div>
       </div>   
     </div>
-    
-    <!-- {{ Auth }} -->
   </div>
-
-
 
   <!-- 비로그인 시 메인화면 -->
   <div v-else style="background-color:black" class="main">
@@ -108,8 +105,6 @@
         </div>
       </div>
     </div>
-
-
   </div>
 </template>
 
@@ -177,10 +172,9 @@ export default {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const state = urlParams.get('state');
-    // let auth = null;
     if (code) {
       console.log(code)
-      axios.get(process.env.VUE_APP_KAKAO_CERTIFIED_API_URL + '?code=' + code + process.env.VUE_APP_LOCAL_USE_API_URL)
+      axios.get(process.env.VUE_APP_API_URL + '/oauth/kakao?code=' + code + process.env.VUE_APP_LOCAL_USE_API_URL)
         .then(response => {
           console.log(response.data)
           this.$store.commit('setAuth', response.data); // auth 값을 스토어에 저장
@@ -216,26 +210,7 @@ export default {
       })
       .catch(error => console.log(error))
     }
- 
-
-
-    // window.addEventListener('scroll', () => {
-    //   let scrollLocation = document.documentElement.scrollTop; // 현재 스크롤바 위치
-    //   let windowHeight = window.innerHeight; // 스크린 창
-    //   let fullHeight = document.body.scrollHeight; //  margin 값은 포함 x
-
-    //   if (scrollLocation + windowHeight >= fullHeight) {
-    //     console.log('끝')
-    //     alert('dd')
-    //     this.EndPoint = true
-    //     console.log(this.EndPoint)
-    //   } else {
-    //     this.EndPoint = false
-    //     console.log(this.EndPoint)
-    //   }
-    // })
   }
-
 }
 
 </script>

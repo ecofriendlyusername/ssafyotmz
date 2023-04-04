@@ -1,37 +1,40 @@
 <template>
   <div id="MyPage">
     <div class="SubNav">
-        <div class="SubNavText">
-    내 스타일 페이지
-  </div>
-  </div>
-  <hr>
-  <div>
-    <!-- user profileIMG -->
-    <p>유저이름: {{ myData['nickname'] }}</p>
-    <p>스타일 진단 횟수 {{ this.myData['totalStyleCount'] }} 회</p>
-  </div>
-  <div>
-    <canvas id="myChart" ></canvas>
-  </div>
-  <!-- 스타일 구분별 스타일 사진 -->
-  <!-- 얘도 가로 2~3 정도로  -->
-  <ul>
-    <!-- 라우트 링크 달아서 카테고리 검색 페이지로 이동? 카테고리 props 하고?  -->
+      <div class="SubNavText">
+        내 스타일 페이지
+      </div>
+    </div>
+    <hr>
+    <div>
+      <!-- user profileIMG -->
+      <p>유저이름: {{ myData['nickname'] }}</p>
+      <p>스타일 진단 횟수 {{ this.myData['totalStyleCount'] }} 회</p>
+    </div>
+    <div>
+      <canvas id="myChart" ></canvas>
+    </div>
+
+    <!-- 이걸로 차트에 다 안들어가는 애들 출력 할수도 있음 -->
+    <!-- 
+    <ul>
     <li v-for="style in myData.styleByPercentResponseList">
       {{ style['style'] }}: {{ style['count'] }}
     </li>
-  </ul>
-  <hr>
+    </ul>
+    -->
+
+    <hr>
+
+    <!-- 여기 그리드로 만들면 됨 -->
     <ul>
       <li v-for="style in styleList">
         <img :src='`${path}/images/${style.imageId}`' id="picture">
-        <hr>
       </li>
     </ul>
-  <hr>
-  <!-- <img :src='`${path}/images/${unit.imageId}`' id="picture"> -->
-</div>
+    <!-- 여기까지 -->
+    <hr>
+  </div>
 </template>
 
 <script>
@@ -57,7 +60,7 @@ export default {
       }
     })
     .then(response => {
-      // console.log(response.data)
+      console.log(response.data)
       this.styleList = response.data
     })
     .catch(error => console.log(error))
@@ -69,7 +72,7 @@ export default {
       }
     })
   .then(response => {
-    console.log(response.data)
+    // console.log(response.data)
     this.myData = response.data
   })
   .then(() => {
@@ -78,9 +81,8 @@ export default {
       new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: data.map(x => x['style']),
+        labels: data.map(x => x['style'] + ' : ' + x['count'] + '%'),
         datasets: [{
-        // label: '# of Votes',
           data: data.map(x => x['count']),
           borderWidth: 1,
               backgroundColor: '#000000',
