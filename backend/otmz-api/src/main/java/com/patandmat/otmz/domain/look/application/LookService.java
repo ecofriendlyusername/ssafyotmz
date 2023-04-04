@@ -3,6 +3,7 @@ package com.patandmat.otmz.domain.look.application;
 import com.patandmat.otmz.domain.imageFile.application.ImageFileService;
 import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
 import com.patandmat.otmz.domain.look.api.model.LookResponse;
+import com.patandmat.otmz.domain.look.api.model.SurveyStyleResponse;
 import com.patandmat.otmz.domain.look.entity.Look;
 import com.patandmat.otmz.domain.look.entity.Style;
 import com.patandmat.otmz.domain.look.repository.LookRepository;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.AttributeNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,5 +60,12 @@ public class LookService {
                         .style(look.getStyle().getKey())
                         .imageId(look.getImage().getId())
                         .build()).toList();
+    }
+
+    public List<SurveyStyleResponse> getLooksByStyle(Style style, int limit) {
+        return lookRepository.findByStyle(style, limit)
+                             .stream()
+                             .map(look -> new SurveyStyleResponse(look.getStyle().getKey(), look.getImage().getId()))
+                             .collect(Collectors.toList());
     }
 }
