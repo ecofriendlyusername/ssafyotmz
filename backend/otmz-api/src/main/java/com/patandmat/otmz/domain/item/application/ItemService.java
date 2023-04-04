@@ -35,7 +35,7 @@ public class ItemService {
     private final MemberService memberService;
 
     @Transactional
-    public void saveItem(MultipartFile file, ItemRequestDto itemRequestDto, String category, Long id) throws IOException, AttributeNotFoundException, NoSuchMemberException {
+    public void saveItem(MultipartFile file, ItemRequestDto itemRequestDto, String category, String style, Long id) throws IOException, AttributeNotFoundException, NoSuchMemberException {
         ImageFile imageFile = imageFileService.save(file);
         try {
             Optional<Member> optionalMember = memberRepository.findById(id);
@@ -45,14 +45,16 @@ public class ItemService {
             if (member.isDeleted()) throw new NoSuchMemberException("No Such Member Exists");
 
             int categoryNum = categoryToNum.getOrDefault(category, -1);
+            int styleNum = styleToNum.getOrDefault(style, -1);
 
-            if (categoryNum == -1) throw new AttributeNotFoundException();
+            if (categoryNum == -1 || styleNum == -1) throw new AttributeNotFoundException();
 
             Item item = Item.builder()
                     .name(itemRequestDto.getName())
                     .image(imageFile)
                     .styleVector(itemRequestDto.getStyleVector())
                     .color(itemRequestDto.getColor())
+                    .style(styleNum)
                     .category(categoryNum)
                     .member(member)
                     .build();
@@ -129,6 +131,14 @@ public class ItemService {
         return itemResponseDtoPage;
     }
 
+    public Map<String,Integer> countByStyle(Long id) {
+        Map<String,Integer> map = new HashMap<>();
+        for (int i = 0; i < numToStyle.length; i++) {
+            map.put(numToStyle[i],itemRepository.countByMemberIdAndStyle(id,i));
+        }
+        return map;
+    }
+
     public ItemResponsePageDto convertToItemResponsePageDto(Item item) {
         ImageFile imageFile = item.getImage();
         ItemResponsePageDto itemResponsePageDto = ItemResponsePageDto.builder()
@@ -143,14 +153,41 @@ public class ItemService {
     //    private static final Map<String, Integer> fabricToNum;
 //    private static final Map<String, Integer> printToNum;
     private static final Map<String, Integer> categoryToNum;
+    private static final Map<String, Integer> styleToNum;
     //
 //    private static final String[] numToFabric = {"fur","mouton","suede","angora","corduroy","sequin/glitter","denim","jersey","tweed","velvet","vinyl/pvc","wool/cashmere","synthetic/polyester","knit","lace","linen","mesh","fleece","neoprene","silk","spandex","jacquard","leather","cotton","chiffon"};
 //    private static final String[] numToPrint = {"check","stripe","zigzag","leopard","zebra","dot","camouflage","paisley","argyle","floral","lettering","skull","tie-dye","gradation","solid","graphic","Hound's touth","gingham"};
 // private static final String[] numToCategory = {"tops","blouses","casual-tops","knitwear","shirts","vests","coats","jackets","jumpers","paddings","jeans","pants","skirts","dresses","jumpsuits","swimwear"};
     private static final String[] numToCategory = {"outer", "upper", "lower", "dress", "etc"};
 
-    //
+    private static final String[] numToStyle = {"street","sporty","kitsch","sexy","romantic","hippie","preppy","retro","resort","classic","military","modern","hiphop","feminine","tomboy","country","manish","genderless","avantgarde","oriental","punk","sophisticated","western"};
+
     static {
+        styleToNum = new HashMap<>();
+        styleToNum.put("street",0);
+        styleToNum.put("sporty",1);
+        styleToNum.put("kitsch",2);
+        styleToNum.put("sexy",3);
+        styleToNum.put("romantic",4);
+        styleToNum.put("hippie",5);
+        styleToNum.put("preppy",6);
+        styleToNum.put("retro",7);
+        styleToNum.put("resort",8);
+        styleToNum.put("classic",9);
+        styleToNum.put("military",10);
+        styleToNum.put("modern",11);
+        styleToNum.put("hiphop",12);
+        styleToNum.put("feminine",13);
+        styleToNum.put("tomboy",14);
+        styleToNum.put("country",15);
+        styleToNum.put("manish",16);
+        styleToNum.put("genderless",17);
+        styleToNum.put("avantgarde",18);
+        styleToNum.put("oriental",19);
+        styleToNum.put("punk",20);
+        styleToNum.put("sophisticated",21);
+        styleToNum.put("western",22);
+
         categoryToNum = new HashMap<>();
         categoryToNum.put("outer", 0);
         categoryToNum.put("upper", 1);
