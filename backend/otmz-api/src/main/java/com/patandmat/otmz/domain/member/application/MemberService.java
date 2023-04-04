@@ -25,6 +25,8 @@ public class MemberService {
     private final LookRepository lookRepository;
     private final ItemRepository itemRepository;
 
+    private final int NUM_OF_CATEGORY = 3;
+
     public Member getMemberWithAuthId(Long authId) {
         Member member = memberRepository.findByAuthId(authId);
         if (member == null || member.isDeleted()) {
@@ -133,7 +135,7 @@ public class MemberService {
         Map<String, List<LookResponse>> result = new HashMap<>();
 
         List<StyleByCountResponse> styleByCountResponses = lookRepository.findByMemberIdOrderByStyleDesc(memberId);
-        for (int i = 0; i < Math.min(size, styleByCountResponses.size()); i++) {
+        for (int i = 0; i < Math.min(NUM_OF_CATEGORY, styleByCountResponses.size()); i++) {
             Style style = styleByCountResponses.get(i)
                                                .getStyle();
 
