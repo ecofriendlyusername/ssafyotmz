@@ -5,6 +5,8 @@ import com.patandmat.otmz.domain.auth.application.JwtService;
 import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByCountResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByPercentResponse;
+import com.patandmat.otmz.domain.look.application.LookService;
+import com.patandmat.otmz.domain.look.entity.Look;
 import com.patandmat.otmz.domain.member.api.model.MypageResponse;
 import com.patandmat.otmz.domain.member.application.MemberService;
 import com.patandmat.otmz.domain.member.entity.Member;
@@ -13,6 +15,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,6 +36,8 @@ public class MemberController {
     private static final String FAIL = "fail";
     private final MemberService memberService;
     private final JwtService jwtService;
+
+    private final LookService lookService;
 
     @GetMapping("/refresh")
     public ResponseEntity<Map<String, Object>> refreshToken(@RequestParam Long id, HttpServletRequest request) {
@@ -102,8 +108,8 @@ public class MemberController {
                 })
                 .collect(Collectors.toList());
 
-        if(styleByCountResponse.size()>3){
-            for (int i=3; i<styleByCountResponse.size(); i++){
+        if (styleByCountResponse.size() > 3) {
+            for (int i = 3; i < styleByCountResponse.size(); i++) {
                 styleByCountResponse.remove(i);
             }
         }
@@ -147,5 +153,15 @@ public class MemberController {
         }
 
         return ResponseEntity.ok(styles);
+    }
+
+    @GetMapping("/looks")
+    public ResponseEntity<List<LookResponse>> getLooks(Authentication authentication, Pageable pageable) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Member member = userDetails.getMember();
+
+        List<LookResponse> looks = lookService.findByMemberId(member, pageable);
+
+        return ResponseEntity.ok(looks);
     }
 }

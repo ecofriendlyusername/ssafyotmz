@@ -1,5 +1,6 @@
 package com.patandmat.otmz.domain.look.repository;
 
+import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByCountResponse;
 import com.patandmat.otmz.domain.look.entity.Look;
 import com.patandmat.otmz.domain.look.entity.Style;
@@ -23,4 +24,6 @@ public interface LookRepository extends JpaRepository<Look, Long> {
     List<Look> findAllByMemberIdNot(Long memberId);
 
     Page<Look> findAllByStyleOrderByCreatedAtDesc(Style style, Pageable pageable);
+
+    Page<Look> findAllByMemberId(Long memberId, Pageable pageable);
 }
