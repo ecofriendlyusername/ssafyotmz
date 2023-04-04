@@ -136,9 +136,38 @@ public class MemberService {
         Map<String, List<LookResponse>> result = new HashMap<>();
 
         List<StyleByCountResponse> styleByCountResponses = lookRepository.findByMemberIdOrderByStyleDesc(memberId);
-        for (int i = 0; i < Math.min(NUM_OF_CATEGORY, styleByCountResponses.size()); i++) {
-            Style style = styleByCountResponses.get(i)
-                                               .getStyle();
+        List<Style> styles = styleByCountResponses.stream().map(StyleByCountResponse::getStyle).toList();
+
+        if (styles.size() < 3) {
+            Member member = memberRepository.findById(memberId).orElseThrow(NoSuchElementException::new);
+            Map<String, Double> styleStat = VectorParser.parseToMap(member.getLookStyleStat());
+
+            List<String> sortedStylesFromStats = styleStat.keySet()
+                                           .stream()
+                                           .sorted((o1, o2) -> {
+                                               if (styleStat.get(o1) > styleStat.get(o2)) {
+                                                   return -1;
+                                               } else if (styleStat.get(o2) < styleStat.get(o1)) {
+                                                   return 1;
+                                               }
+                                               return 0;
+                                           }).toList();
+
+            for (int i = 0; i < sortedStylesFromStats.size(); i++) {
+                Style style = Style.valueOf(sortedStylesFromStats.get(i).toUpperCase());
+                if (!styles.contains(style)) {
+                    styles.add(style);
+                }
+
+                if (styles.size() >= 3) {
+                    break;
+                }
+            }
+        }
+
+
+        for (int i = 0; i < styles.size(); i++) {
+            Style style = styles.get(i);
 
             result.put(style.getKey(), lookRepository.findAllByStyleOrderByCreatedAtDesc(style, PageRequest.of(0, size))
                                                      .stream()
