@@ -54,7 +54,7 @@ export default {
       formData.append('imageFile', this.$store.state.result['img_path'])
       formData.append('style', this.$store.state.result['data']['1']['style'])
       console.log(this.$store.state.result['data']['1']['style'])
-      axios.post(process.env.VUE_APP_DEFAULT_API_URL + '/api/v1/looks', formData, {
+      axios.post(process.env.VUE_APP_API_URL + '/looks', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': this.$store.state.Auth['accessToken']
