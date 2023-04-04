@@ -2,7 +2,7 @@
   <div>
     <div id="BackgroundCard">
       <div id="InnerCard">
-        <img style="width:100%; border-radius: 20px; max-height: 325px; " :src="image" />
+        <img id="ImgCard" style="width:100%; border-radius: 20px; max-height: 325px; " :src="image" />
       </div>
 
       <p id="CardText">전신이 나온 사진을 선택해주세요</p>
@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import { templateElement } from '@babel/types';
 import axios from 'axios';
 import watermark from 'watermarkjs';
 
@@ -28,6 +27,7 @@ export default {
     return {
       file: null,
       image: null,
+      resized: null
     };
   },
 
@@ -45,20 +45,50 @@ export default {
     },
 
     fileUpload(event) {
-      this.file = event.target.files[0];
-      this.image = URL.createObjectURL(this.file);
+      var reader = new FileReader();
+      reader.onload = (e) => {
+        console.log(e.target)
+        var img = new Image();
+        img.onload = () => {
+          var thumbFile = (_IMG) => {
+            var canvas = document.createElement("canvas");
+            var width = 360;
+            var height = 480;
+            canvas.width = width;
+            canvas.height = height;
+            canvas.getContext("2d").drawImage(_IMG, 0, 0, width, height);
+
+            var dataURL = canvas.toDataURL("image/jpg");
+            var byteString = atob(dataURL.split(',')[1]);
+            var mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+            var ab = new ArrayBuffer(byteString.length);
+            var ia = new Uint8Array(ab);
+            for (var i = 0; i < byteString.length; i++) {
+              ia[i] = byteString.charCodeAt(i);
+            }
+            var tmpThumbFile = new Blob([ab], {type: mimeString});
+            return tmpThumbFile;
+          };
+          var file = thumbFile(img);
+          this.file = file;
+          this.image = URL.createObjectURL(file);
+        };
+        img.onerror = () => {
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
     },
 
     uploadImage() {
       // 예외처리
-
-      if (this.file == null) {
+      const ImgCard = document.getElementById('ImgCard')
+      if (ImgCard.src == null) {
         return;
       }
-      // 폼 데이터 만들기
+
       const formData = new FormData();
       formData.append('imageFile', this.file);
-      // api요청으로 이미지 분석하기
 
       axios.post(process.env.VUE_APP_AI_URL + '/style', formData, {
         headers: {
@@ -67,23 +97,16 @@ export default {
       })
       // 결과 받아서 저장
       .then(response => {
-        console.log(response.data.keys)
-        if (!response.data.keys) {
-          console.log('break!')
-          this.$router.push('/Find')
-        }
-        else {
-          // 검출 결과 저장
-          this.result = response.data;
-          formData.append('styleVector', this.result);
-          formData.append('style', this.result['1']['style']);
-        }
+        console.log(response.data.check)
+        this.result = response.data;     
       })
       // 워터마크 찍기
       .then(() => {
-        watermark([this.image, require('@/assets/img/watermark/logo.png')])
+        watermark([this.image, require('@/assets/img/watermark/logo_left.png')])
+          .image(watermark.image.upperLeft(0.5))
+          .load([require('@/assets/img/watermark/logo_right.png')])
           .image(watermark.image.upperRight(0.5))
-          .load([require('@/assets/img/watermark/MyStyleStreet.png')])
+          .load([require('@/assets/img/watermark/' + this.result['data']['1']['style'] + '.png')])
           .image(watermark.image.lowerLeft(0.5))
           .then((img) => {
             const watermark = this.dataURLtoFile(img.src, 'temp.jpg')
