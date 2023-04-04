@@ -36,6 +36,12 @@
       코디북 만들러가기
     </div>
   </router-link>
+  <br>
+  <router-link to='/Codybook/live' style="text-decoration:none; color: black;">
+    <div id="selecBtn">
+      함께 코디하기
+    </div>
+  </router-link>
 </div>
 </template>
 
