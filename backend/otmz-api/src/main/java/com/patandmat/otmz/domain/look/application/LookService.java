@@ -2,6 +2,7 @@ package com.patandmat.otmz.domain.look.application;
 
 import com.patandmat.otmz.domain.imageFile.application.ImageFileService;
 import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
+import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.entity.Look;
 import com.patandmat.otmz.domain.look.entity.Style;
 import com.patandmat.otmz.domain.look.repository.LookRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.AttributeNotFoundException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,5 +46,17 @@ public class LookService {
 
     public Page<Look> getLooksWithPageable(String style, Pageable pageable) throws AttributeNotFoundException, NoSuchMemberException {
         return lookRepository.findAllByStyleOrderByCreatedAtDesc(Style.valueOf(style.toUpperCase()), pageable);
+    }
+
+    public List<LookResponse> findByMemberId(Member member, Pageable pageable) {
+        return lookRepository.findAllByMemberId(member.getId(), pageable)
+                .stream()
+                .map(look -> LookResponse.builder()
+                        .id(look.getId())
+                        .memberId(member.getId())
+                        .ownerName(member.getNickname())
+                        .style(look.getStyle().getKey())
+                        .imageId(look.getImage().getId())
+                        .build()).toList();
     }
 }
