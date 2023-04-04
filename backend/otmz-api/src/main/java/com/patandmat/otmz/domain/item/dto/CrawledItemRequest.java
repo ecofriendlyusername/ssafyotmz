@@ -1,5 +1,6 @@
 package com.patandmat.otmz.domain.item.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.patandmat.otmz.domain.item.entity.CrawledItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class CrawledItemRequest {
 
     private String seller;
 
+    @JsonProperty(value = "style_vector")
     private String styleVector;
 
     public CrawledItem toEntity() {
