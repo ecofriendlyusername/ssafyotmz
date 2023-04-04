@@ -1,5 +1,5 @@
 #Set-up model.
-checkpoint="best_ckpt"
+checkpoint="yolov6s"
 device= "cpu"
 
 #half:bool = False 
