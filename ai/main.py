@@ -68,14 +68,16 @@ def detection_clothes(img):
     classes = [0,1,2,3] # the classes to keep
     det = non_max_suppression(pred_results, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)[0]
     
-    if len(det) >= 1:
-        
-        return True
+    find = False
     
-    else:
+    for d in det:
         
-        return False
+        if int(d[5].item()) == 0:
+            
+            find = True
+            break
     
+    return find
 
 
 @app.get("/")
