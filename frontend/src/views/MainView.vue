@@ -50,7 +50,7 @@
         <div style="display:flex; justify-content:center; margin-top:7px;">
           <div class="container">
             <div class="item" v-for="unit in items">
-              <img :src='`http://localhost:8080/api/v1/images/${unit.imageId}`' id="picture">
+              <img :src='`${path}/images/${unit.imageId}`' id="picture">
             </div>
           </div>
         </div>
@@ -152,6 +152,7 @@ export default {
       EndPoint: false,
       Auth: this.$store.state.Auth,
       dressDatas: null,
+      path: process.env.VUE_APP_API_URL
     }
   },
   created(){
