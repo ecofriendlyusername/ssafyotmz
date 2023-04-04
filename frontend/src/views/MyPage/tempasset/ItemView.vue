@@ -181,8 +181,8 @@ export default {
 <style>
 .imgI {
   margin-top: 10px;
-  width: 90%;
-  height: 100px;
+  max-height: 100px;
+  max-width: 100px;
 }
 
 .selection {
