@@ -17,12 +17,14 @@ public class MypageResponse {
     private int totalItemCount;
 
     private List<StyleByPercentResponse> styleByPercentResponseList;
+    private List<StyleByPercentResponse> topStyleList;
 
     @Builder
-    public MypageResponse(String nickname, int totalStyleCount, int totalItemCount, List<StyleByPercentResponse> styleByPercentResponseList) {
+    public MypageResponse(String nickname, int totalStyleCount, int totalItemCount, List<StyleByPercentResponse> styleByPercentResponseList, List<StyleByPercentResponse> topStyleList) {
         this.nickname = nickname;
         this.totalStyleCount = totalStyleCount;
         this.totalItemCount = totalItemCount;
         this.styleByPercentResponseList = styleByPercentResponseList;
+        this.topStyleList = topStyleList;
     }
 }
