@@ -20,7 +20,9 @@
   </div>
   <hr>
   <ul>
-    <!-- <li v-for=""></li> -->
+    <li v-for="item in items">
+      <img :src= '`http://localhost:8080/api/v1/images/${ item.imageId }`' alt="">
+    </li>
   </ul>
 </template>
 
@@ -58,7 +60,8 @@ export default {
         'genderless',
         'punk',
         'military'
-      ]
+      ],
+      items: []
     }
   },
   watch: {
@@ -67,8 +70,8 @@ export default {
       if (this.isOMZ) {
         // 우리 추천
         // console.log(this.isOMZ, this.filter)
-        const reverse = ''
-        if (!isOMZ) {
+        let reverse = ''
+        if (this.filter === 'issimilar') {
           this.isOMZ = !this.isOMZ
           reverse = '?/reversed= true'
         } 
@@ -79,6 +82,7 @@ export default {
         })
         .then(response => {
           console.log(response.data)
+          this.items = response.data
         })
         .catch(error => console.log(error))
       
@@ -86,6 +90,7 @@ export default {
       else {
         // 카테고리별 추천
         console.log(this.isStyle, this.filter)
+        this.isStyle = !this.isStyle
         axios.get(process.env.VUE_APP_API_URL + `/looks?style=${ this.filter }`, {
           headers: {
             'Authorization': this.$store.state.Auth['accessToken']
@@ -93,6 +98,7 @@ export default {
         })
         .then(response => {
           console.log(response.data)
+          this.items = response.data
         })
         .catch(error => console.log(error))
       }
