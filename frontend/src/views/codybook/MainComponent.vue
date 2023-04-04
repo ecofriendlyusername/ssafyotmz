@@ -61,7 +61,7 @@
       :slidesPerView="5"
     >
       <swiper-slide  v-for="item in items" @click="choice(item)" :key="item.id">
-      <img :src='`${item.src}`' style="width:100px;hegiht:100px"/>
+      <img :src='`${item.src}`' style="width:90px;height:80px"/>
       </swiper-slide >
     </swiper>
     <hr>
@@ -87,7 +87,7 @@
         <div @click="clear">clear</div>
         <div v-if="dragItemId" @click="removeItem">삭제</div>
       </div>
-      <div :style="{margin: '10px', backgroundColor: backgroundColor}">
+      <div :style="{margin: '10px'}">
         <v-stage
           ref="stage"
           :config="configKonva"
@@ -103,14 +103,14 @@
               :config="{
                 x: 0,
                 y: 0,
-                width: 400,
-                height: 400,
+                width: width,
+                height: height,
                 fill: backgroundColor
               }"
             />
             <v-image :config="{
-              x: 330,
-              y: 330,
+              x: width - 60,
+              y: height - 60,
               width: 50,
               height: 50,
               image: logo
@@ -164,7 +164,7 @@ import {Swiper, SwiperSlide} from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-const width = 400;
+const width = window.innerWidth < 415 ? window.innerWidth * 0.91 : 400;
 const height = 400;
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -201,6 +201,8 @@ export default {
         width: width,
         height: height
       },
+      width: width,
+      height: height,
       backgroundColor: '#FFDAB9',
       logo: null,
       selected: 'outer',
@@ -222,6 +224,18 @@ export default {
   },
 
   methods: {
+    dataURLtoFile(dataurl, filename) {
+      const arr = dataurl.split(',')
+      const mime = arr[0].match(/:(.*?);/)[1]
+      const bstr = atob(arr[1])
+      let n = bstr.length
+      const u8arr = new Uint8Array(n)
+      while (n) {
+        u8arr[n - 1] = bstr.charCodeAt(n - 1)
+        n -= 1 // to make eslint happy
+      }
+      return new File([u8arr], filename, { type: mime })
+    },
     saveCodiBoard() {
         const formData = new FormData();
 
@@ -323,6 +337,10 @@ export default {
       if (e.target.id() === 'background') {
         this.dragItemId = null;
         this.updateTransformer();
+        return;
+      }
+
+      if (e.target.getParent() == null) {
         return;
       }
 
