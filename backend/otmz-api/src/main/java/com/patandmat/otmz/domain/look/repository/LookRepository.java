@@ -26,6 +26,5 @@ public interface LookRepository extends JpaRepository<Look, Long> {
 
     Page<Look> findAllByMemberId(Long memberId, Pageable pageable);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM Look l where style = :style LIMIT :limit")
-    List<Look> findByStyle(@Param("style") Style style, @Param("limit") int limit);
+    List<Look> findTop2ByStyle(Style style);
 }
