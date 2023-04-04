@@ -4,6 +4,7 @@ package com.patandmat.otmz.domain.member.application;
 import com.patandmat.otmz.domain.item.repository.ItemRepository;
 import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByCountResponse;
+import com.patandmat.otmz.domain.look.api.model.SurveyStyleRequest;
 import com.patandmat.otmz.domain.look.entity.Style;
 import com.patandmat.otmz.domain.look.repository.LookRepository;
 import com.patandmat.otmz.domain.member.entity.Member;
@@ -135,9 +136,38 @@ public class MemberService {
         Map<String, List<LookResponse>> result = new HashMap<>();
 
         List<StyleByCountResponse> styleByCountResponses = lookRepository.findByMemberIdOrderByStyleDesc(memberId);
-        for (int i = 0; i < Math.min(NUM_OF_CATEGORY, styleByCountResponses.size()); i++) {
-            Style style = styleByCountResponses.get(i)
-                                               .getStyle();
+        List<Style> styles = styleByCountResponses.stream().map(StyleByCountResponse::getStyle).toList();
+
+        if (styles.size() < 3) {
+            Member member = memberRepository.findById(memberId).orElseThrow(NoSuchElementException::new);
+            Map<String, Double> styleStat = VectorParser.parseToMap(member.getLookStyleStat());
+
+            List<String> sortedStylesFromStats = styleStat.keySet()
+                                           .stream()
+                                           .sorted((o1, o2) -> {
+                                               if (styleStat.get(o1) > styleStat.get(o2)) {
+                                                   return -1;
+                                               } else if (styleStat.get(o2) < styleStat.get(o1)) {
+                                                   return 1;
+                                               }
+                                               return 0;
+                                           }).toList();
+
+            for (int i = 0; i < sortedStylesFromStats.size(); i++) {
+                Style style = Style.valueOf(sortedStylesFromStats.get(i).toUpperCase());
+                if (!styles.contains(style)) {
+                    styles.add(style);
+                }
+
+                if (styles.size() >= 3) {
+                    break;
+                }
+            }
+        }
+
+
+        for (int i = 0; i < styles.size(); i++) {
+            Style style = styles.get(i);
 
             result.put(style.getKey(), lookRepository.findAllByStyleOrderByCreatedAtDesc(style, PageRequest.of(0, size))
                                                      .stream()
@@ -154,5 +184,26 @@ public class MemberService {
         }
 
         return result;
+    }
+
+    public void setInitialStyleStats(Member member, List<SurveyStyleRequest> surveyStyleRequests) {
+        double total = 0;
+        for (SurveyStyleRequest request : surveyStyleRequests) {
+            total += request.getCount();
+        }
+
+        Map<String, Double> stats = new HashMap<>();
+        for (Style style : Style.values()) {
+            stats.put(style.getKey(), 0.0);
+        }
+
+        for (SurveyStyleRequest request : surveyStyleRequests) {
+            stats.put(request.getStyle(), request.getCount() / total * 100);
+        }
+
+        member.setLookStyleStat(VectorParser.parseToString(stats));
+        member.setItemStyleStat(VectorParser.parseToString(stats));
+
+        memberRepository.save(member);
     }
 }
