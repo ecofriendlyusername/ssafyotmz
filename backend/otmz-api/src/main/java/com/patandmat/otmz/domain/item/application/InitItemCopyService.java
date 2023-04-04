@@ -39,10 +39,10 @@ public class InitItemCopyService {
         String name = "tempDataFor" + member_id + UUID.randomUUID() + "." + type;
 
         ImageFile imageFile = ImageFile.builder()
-                .name(name)
-                .length(4L)
-                .mineType("str")
-                .originName("str")
+//                .name(name)
+//                .length(4L)
+//                .mineType("str")
+//                .originName("str")
                 .path(name)
                 .build();
 
