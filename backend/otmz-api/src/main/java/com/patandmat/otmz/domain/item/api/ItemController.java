@@ -1,5 +1,6 @@
 package com.patandmat.otmz.domain.item.api;
 
+import com.azure.core.annotation.Get;
 import com.patandmat.otmz.domain.item.application.ItemService;
 import com.patandmat.otmz.domain.item.dto.ItemRequestDto;
 import com.patandmat.otmz.domain.item.dto.ItemResponseDto;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -38,11 +40,11 @@ public class ItemController {
             , responses = {
             @ApiResponse(responseCode = "200", description = "success")
     })
-    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemRequestDto item, @RequestParam String category, Authentication authentication) {
+    public ResponseEntity<?> saveItem(@RequestPart("imagefile") MultipartFile file, @RequestPart ItemRequestDto item, @RequestParam String category, @RequestParam String style,  Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         Member member = customUserDetails.getMember();
         try {
-            itemService.saveItem(file, item, category, member.getId());
+            itemService.saveItem(file, item, category, style, member.getId());
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("User Does Not Exist", HttpStatus.BAD_REQUEST);
         } catch (AttributeNotFoundException e) {
@@ -106,6 +108,18 @@ public class ItemController {
             return new ResponseEntity<>("Unauthorized Operation", HttpStatus.UNAUTHORIZED);
         } catch (NoSuchMemberException e) {
             return new ResponseEntity<>("User Doesn't Exist", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/items/countbystyle")
+    public ResponseEntity<?> countByStyle(Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Member member = userDetails.getMember();
+        try {
+            Map<String,Integer> map = itemService.countByStyle(member.getId());
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("This Item Doesn't Exist", HttpStatus.BAD_REQUEST);
         }
     }
 
