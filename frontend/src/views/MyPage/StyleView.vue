@@ -18,20 +18,19 @@
   <!-- 얘도 가로 2~3 정도로  -->
   <ul>
     <!-- 라우트 링크 달아서 카테고리 검색 페이지로 이동? 카테고리 props 하고?  -->
-    <li v-for="style in styleList">
+    <li v-for="style in myData.styleByPercentResponseList">
       {{ style['style'] }}: {{ style['count'] }}
     </li>
   </ul>
   <hr>
     <ul>
       <li v-for="style in styleList">
-        <div style="height: 150px; width: 100px; background-color: black; margin: 0 auto;"></div>
-        <router-link to="">{{ style['style'] }}</router-link>
+        <img :src='`${path}/images/${style.imageId}`' id="picture">
         <hr>
       </li>
     </ul>
   <hr>
-  <router-link to='/MyPage'>마이페이지</router-link>
+  <!-- <img :src='`${path}/images/${unit.imageId}`' id="picture"> -->
 </div>
 </template>
 
@@ -43,59 +42,39 @@ export default {
   name:'MyPageStyleView',
   data(){
     return {
-      styleList: [
-        {
-          'style': '스트릿',
-          'count':5
-        },
-        {
-          'style': '캐주얼',
-          'count':3
-        },
-        {
-          'style': '러블리',
-          'count':1
-        },
-        {
-          'style': '페미닌',
-          'count':1
-        }
-      ],
+      path: process.env.VUE_APP_API_URL,
+      styleList: null,
       myData: {
-          lookCountDtoList: [
-            {
-              'style': '스트릿',
-              'count':5
-            },
-            {
-              'style': '캐주얼',
-              'count':3
-            },
-            {
-              'style': '러블리',
-              'count':1
-            },
-          ], 
-          nickname: "최선호", 
-          totalItemCount: 0, 
-          totalStyleCount: 10
+          nickname: "홍길동", 
         }
     }
   },
   mounted() {
-    axios.get(process.env.VUE_APP_API_URL + '/member/lookdetail', {
+    axios.get(process.env.VUE_APP_API_URL + '/member/looks', {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': this.$store.state.Auth['accessToken']
       }
     })
     .then(response => {
-      console.log(response.data)
-      // this.styleList = response.data
+      // console.log(response.data)
+      this.styleList = response.data
     })
-    .then(() => {
+    .catch(error => console.log(error))
+
+    axios.get(process.env.VUE_APP_API_URL + '/member/mypage', {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': this.$store.state.Auth['accessToken']
+      }
+    })
+  .then(response => {
+    console.log(response.data)
+    this.myData = response.data
+  })
+  .then(() => {
       const ctx = document.getElementById('myChart');
-      const data = Object.values(this.styleList)
+      const data = Object.values(this.myData.styleByPercentResponseList)
       new Chart(ctx, {
       type: 'bar',
       data: {
@@ -130,54 +109,7 @@ export default {
       })
     })
     .catch(error => console.log(error))
-
-    axios.get(process.env.VUE_APP_API_URL + '/member/mypage', {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': this.$store.state.Auth['accessToken']
-      }
-    })
-  .then(response => {
-    console.log(response.data)
-    this.myData = response.data
-    this.myData = {
-      lookCountDtoList: [
-        {
-          'style': '스트릿',
-          'count':5
-        },
-        {
-          'style': '캐주얼',
-          'count':3
-        },
-        {
-          'style': '러블리',
-          'count':1
-        },
-      ], 
-      nickname: "최선호", 
-      totalItemCount: 0, 
-      totalStyleCount: 10
-    }
-  })
-  .catch(error => console.log(error))
   },
-  methods:{
-    styleShow(category){
-      axios.get(process.env.VUE_APP_API_URL + '/looks', {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': this.$store.state.Auth['accessToken']
-        }
-      })
-      .then(response => {
-        console.log(response.data)
-        // this.myData = response.data
-
-      })
-      .catch(error => console.log(error))
-    }
-  }
 }
 </script>
 
