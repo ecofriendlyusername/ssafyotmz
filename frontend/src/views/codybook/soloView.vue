@@ -171,7 +171,7 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 
 const width = window.innerWidth < 415 ? window.innerWidth * 0.91 : 400;
-const height = 400;
+const height = width;
 
 export default {
     name:'CodybookView',
