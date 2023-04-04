@@ -103,12 +103,50 @@ export default {
     }
   },
   methods: {
-    fileUpload(event) {
-      if (event.target.files.length == 0) return 
-      this.file = event.target.files[0];
-      this.userUploadedImg = URL.createObjectURL(this.file);
-      this.userUploadedImgExist = true
+    fileUpload(e) {
+      var reader = new FileReader();
+      reader.onload = (e) => {
+        var img = new Image();
+        img.onload = () => {
+          var thumbFile = (_IMG) => {
+            var canvas = document.createElement("canvas");
+            var newWidthAndHeight = this.calculateAspectRatioFit(_IMG.width,_IMG.height, 360, 480)
+            var width = newWidthAndHeight.width;
+            var height = newWidthAndHeight.height;
+            console.log(width)
+            console.log(height)
+            console.log('original width : ' + _IMG.width)
+            console.log('original height : ' + _IMG.height)
+            canvas.width = width;
+            canvas.height = height;
+            canvas.getContext("2d").drawImage(_IMG, 0, 0, width, height);
 
+            var dataURL = canvas.toDataURL("image/jpg");
+            var byteString = atob(dataURL.split(',')[1]);
+            var mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+            var ab = new ArrayBuffer(byteString.length);
+            var ia = new Uint8Array(ab);
+            for (var i = 0; i < byteString.length; i++) {
+              ia[i] = byteString.charCodeAt(i);
+            }
+            var tmpThumbFile = new Blob([ab], {type: mimeString});
+            return tmpThumbFile;
+          };
+          var file = thumbFile(img);
+          this.file = file;
+          this.userUploadedImg = URL.createObjectURL(file);
+          this.userUploadedImgExist = true
+        };
+        img.onerror = () => {
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    },
+    calculateAspectRatioFit (srcWidth, srcHeight, maxWidth, maxHeight) {
+      var ratio = [maxWidth / srcWidth, maxHeight / srcHeight ];
+      ratio = Math.min(ratio[0], ratio[1]);
+      return { width:srcWidth*ratio, height:srcHeight*ratio };
     },
     changeCategory(category) {
       this.curCategory = category;
@@ -278,7 +316,6 @@ input {
   }
 
   .uploadedImage {
-    width: 90%;
     max-width: 280px;
     max-height: 250px;
   }
