@@ -12,4 +12,5 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> findAllByCategoryAndMemberId(int categoryNum, Long id, Pageable pageable);
 
     int countByMemberId(Long memberId);
+    int countByMemberIdAndStyle(Long id, int style);
 }

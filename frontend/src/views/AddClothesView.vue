@@ -1,6 +1,5 @@
 <template>
 <div id="x">
-
   <img v-if="isLoading" src="../assets/img/loading.gif" class="loadingImg">
   <div v-if="isLoading">
     배경을 제거 중입니다
@@ -113,10 +112,6 @@ export default {
             var newWidthAndHeight = this.calculateAspectRatioFit(_IMG.width,_IMG.height, 360, 480)
             var width = newWidthAndHeight.width;
             var height = newWidthAndHeight.height;
-            console.log(width)
-            console.log(height)
-            console.log('original width : ' + _IMG.width)
-            console.log('original height : ' + _IMG.height)
             canvas.width = width;
             canvas.height = height;
             canvas.getContext("2d").drawImage(_IMG, 0, 0, width, height);
@@ -171,7 +166,6 @@ export default {
       this.viewMultipleItems('upper',2,3)
     },
     async getStyle(formData) {
-      console.log('sending request')
       await axios.post(process.env.VUE_APP_AI_STYLE, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -179,8 +173,6 @@ export default {
       })
       .then((response) => {
         this.style = response.data
-        console.log('thisstyle ' + this.style)
-        console.log('response data' + response.data)
         return response
       })
       .catch((e) => {
@@ -204,16 +196,18 @@ export default {
     async createItemWithProcessedImage() {
       const formData = new FormData();
       formData.append('imagefile',this.processedImage)
+      var styleJSON = JSON.stringify(this.style)
       const itemJson = {
         "name" : document.getElementById('name').value,
         "color":"color",
-        "styleVector" : JSON.stringify(this.style),
+        "styleVector" : styleJSON,
       }
       const jsonString = JSON.stringify(itemJson);
       const itemBlob = new Blob([jsonString], {
       type: 'application/json'});
       formData.append('item',itemBlob);
       formData.append('category',this.curCategory)
+      formData.append('style',this.style["1"]["style"])
       this.createItem(formData)
       .then((res) => {
         this.haveImage = false
@@ -234,7 +228,6 @@ export default {
       .then(response => {
         var len = response.data.image.body.length
         var str = response.data.image.body.substring(1,len-1)
-        console.log(str)
         a.processedImageStr = 'data:image/png;base64,' + str
         const style = response.data.style
         this.processedImage = this.dataURLtoFile(a.processedImageStr,'processedImage.jpeg')

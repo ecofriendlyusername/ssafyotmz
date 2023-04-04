@@ -22,6 +22,9 @@ public class Item extends BaseEntity {
     @Column(nullable = false, length = 15)
     private int category;
 
+    @Column(nullable = false, length = 15)
+    private int style;
+
     @OneToOne
     private ImageFile image;
     @Column(length = 2000)
@@ -34,11 +37,12 @@ public class Item extends BaseEntity {
     private Member member;
 
     @Builder
-    public Item(Long id, String name, ImageFile image, int category, String styleVector, String color, Member member) {
+    public Item(Long id, String name, ImageFile image, int category, int style, String styleVector, String color, Member member) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.category = category;
+        this.style = style;
         this.styleVector = styleVector;
         this.color = color;
         this.member = member;
