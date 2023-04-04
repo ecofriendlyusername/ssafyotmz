@@ -22,8 +22,8 @@ public class ImageFileController {
         ImageFile imageFile = imageFileService.findOneImage(id);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", imageFile.getMimeType());
-        headers.add("Content-Length", String.valueOf(imageFile.getLength()));
+//        headers.add("Content-Type", imageFile.getMimeType());
+//        headers.add("Content-Length", String.valueOf(imageFile.getLength()));
 
         byte[] imageData = imageFileService.loadData(imageFile.getPath());
 

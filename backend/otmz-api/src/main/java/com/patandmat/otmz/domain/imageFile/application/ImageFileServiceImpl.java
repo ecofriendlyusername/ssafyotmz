@@ -37,15 +37,14 @@ public class ImageFileServiceImpl implements ImageFileService {
         String name = UUID.randomUUID() + "." + type;
 
         ImageFile imageFile = ImageFile.builder()
-                .mineType(multipartFile.getContentType())
-                .originName(multipartFile.getOriginalFilename())
-                .name(name)
+//                .mineType(multipartFile.getContentType())
+//                .originName(multipartFile.getOriginalFilename())
+//                .name(name)
                 .path(name)
-                .length(multipartFile.getSize())
+//                .length(multipartFile.getSize())
                 .build();
 
         File file = new File(absolutePath + imageFile.getPath());
-        System.out.println("path when saving : " + absolutePath + imageFile.getPath());
 
         try(OutputStream outputStream = new FileOutputStream(file)) {
             outputStream.write(multipartFile.getBytes());
