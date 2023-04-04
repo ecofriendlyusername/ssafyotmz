@@ -4,6 +4,7 @@ package com.patandmat.otmz.domain.member.application;
 import com.patandmat.otmz.domain.item.repository.ItemRepository;
 import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByCountResponse;
+import com.patandmat.otmz.domain.look.api.model.SurveyStyleRequest;
 import com.patandmat.otmz.domain.look.entity.Style;
 import com.patandmat.otmz.domain.look.repository.LookRepository;
 import com.patandmat.otmz.domain.member.entity.Member;
@@ -154,5 +155,26 @@ public class MemberService {
         }
 
         return result;
+    }
+
+    public void setInitialStyleStats(Member member, List<SurveyStyleRequest> surveyStyleRequests) {
+        double total = 0;
+        for (SurveyStyleRequest request : surveyStyleRequests) {
+            total += request.getCount();
+        }
+
+        Map<String, Double> stats = new HashMap<>();
+        for (Style style : Style.values()) {
+            stats.put(style.getKey(), 0.0);
+        }
+
+        for (SurveyStyleRequest request : surveyStyleRequests) {
+            stats.put(request.getStyle(), request.getCount() / total * 100);
+        }
+
+        member.setLookStyleStat(VectorParser.parseToString(stats));
+        member.setItemStyleStat(VectorParser.parseToString(stats));
+
+        memberRepository.save(member);
     }
 }

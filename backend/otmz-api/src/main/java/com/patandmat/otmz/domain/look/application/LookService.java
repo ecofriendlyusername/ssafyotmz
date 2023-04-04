@@ -62,8 +62,8 @@ public class LookService {
                         .build()).toList();
     }
 
-    public List<SurveyStyleResponse> getLooksByStyle(Style style, int limit) {
-        return lookRepository.findByStyle(style, limit)
+    public List<SurveyStyleResponse> getLooksByStyle(Style style) {
+        return lookRepository.findTop2ByStyle(style)
                              .stream()
                              .map(look -> new SurveyStyleResponse(look.getStyle().getKey(), look.getImage().getId()))
                              .collect(Collectors.toList());
