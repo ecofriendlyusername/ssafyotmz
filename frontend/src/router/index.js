@@ -22,6 +22,8 @@ import RecomView from "@/views/RecomView.vue";
 
 import showStoreView from "@/views/showStoreView.vue"
 
+import ServayView from "@/views/ServayView.vue"
+
 const routes = [
   {
     path: '/',
@@ -112,8 +114,12 @@ const routes = [
     path: '/store',
     name: 'showStoreView',
     component: showStoreView
+  },  
+  {
+    path: '/servay',
+    name: 'ServayView',
+    component: ServayView
   },
-  
 ]
 
 const router = createRouter({
