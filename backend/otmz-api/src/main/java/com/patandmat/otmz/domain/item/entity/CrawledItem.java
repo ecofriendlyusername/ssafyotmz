@@ -1,5 +1,6 @@
 package com.patandmat.otmz.domain.item.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -31,6 +32,7 @@ public class CrawledItem {
     @Column
     private String seller;
 
+    @JsonIgnore
     @Column(length = 2000)
     private String styleVector;
 
