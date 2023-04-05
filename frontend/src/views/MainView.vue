@@ -14,21 +14,23 @@
       }"
     >
 
-    <swiper-slide v-for="text in swiperTextBase" :key="text.description">
+    <swiper-slide v-for="text in swiperTextBase" :key="text.name">
       
-      <img :src="text.img" alt="image" style="width:100%; height: 280px; opacity:1 ; ">
+      <img :src="text.imageUrl" alt="image" style="width:100%; height: 280px; opacity:1 ; ">
       <div style="position: absolute; top: 0px; background-color:black; opacity:0.5; height:280px; width:100%">
       </div>
 
       <div style="position:absolute; top:200px;">
-        <p style="color: white; display: flex; font-weight: bold; font-size: 18px; padding: 5px 7px;">{{ text.description }}</p>
+        <p style="color: white; display: flex; font-weight: bold; font-size: 15px; padding: 5px 7px;">{{ text.name }}</p>
         <p style="font-size: 13px; color: white; display: flex; padding-left: 7px; margin-top: -16px;">
-          {{ text.author }}
+          {{ text.seller }}
         </p>
       </div>
 
       <div style="position:absolute; top:10px;font-size: 95%; color:white; margin-left: 77%;">
+        <a :href= text.url style="text-decoration:none; color:white;">
           → 구매하기
+        </a>
       </div>
 
     </swiper-slide>
@@ -119,7 +121,7 @@ import {Swiper, SwiperSlide} from 'swiper/vue'
 import {Autoplay, Pagination} from 'swiper'
 import 'swiper/css'
 import 'swiper/css/pagination'
-import {ref} from 'vue'
+import {onMounted, ref} from 'vue'
 
 
 export default {
@@ -127,20 +129,21 @@ export default {
   components: {Swiper, SwiperSlide},
   setup() {
     const swiperTextBase = ref([
-      {author:'러브앤드팝',
-      description: '[UNISEX] 미니멀 오버핏셔츠',
-      img: 'https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20210225_1614235708677593m.jpg'
+      {seller:'러브앤드팝',
+      name: '[UNISEX] 미니멀 오버핏셔츠',
+      imageUrl: 'https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20210225_1614235708677593m.jpg'
       },
-      {author:'아더먼데이',
-      description: '미니쉘 기본 오버핏셔츠',
-      img: 'https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20230126_1674699972522098m.jpg'
+      {seller:'아더먼데이',
+      name: '미니쉘 기본 오버핏셔츠',
+      imageUrl: 'https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20230126_1674699972522098m.jpg'
       },
-      {author:'바이영',
-      description: '봄가을 소매트임 베이직 자켓',
-      img: 'https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20200916_1600266495690951m.JPG'
+      {seller:'바이영',
+      name: '봄가을 소매트임 베이직 자켓',
+      imageUrl: 'https://d20s70j9gw443i.cloudfront.net/t_GOODS_DETAIL/https://imgb.a-bly.com/data/goods/20200916_1600266495690951m.JPG'
       },
     ]);
-    return {modules:[Pagination, Autoplay], swiperTextBase}
+
+    return {modules:[Pagination, Autoplay], swiperTextBase};
   },
   data() {
     return {
@@ -208,7 +211,20 @@ export default {
         console.log(response.data)
         this.dressDatas = response.data
       })
-      .catch(error => console.log(error))
+      .catch(error => console.log(error));
+
+       axios.get(process.env.VUE_APP_API_URL + '/items/brandi', {
+        headers: {
+          'Authorization': this.$store.state.Auth['accessToken']
+        }
+      })
+      .then(response => {
+        console.log(response.data)
+        if (response.data.length !== 0) {
+          this.swiperTextBase = response.data;
+        }
+      })
+      .catch(error => console.log(error));
     }
   }
 }
