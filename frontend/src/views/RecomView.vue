@@ -33,7 +33,7 @@
 
   <div style="display:grid; grid-template-columns: 1fr 1fr; grid-gap: 10px 5px;">
     <div v-for="item in items">
-      <img :src= '`http://localhost:8080/api/v1/images/${ item.imageId }`' style="width:100%;">
+      <img :src= '`${ path }/images/${ item.imageId }`' style="width:100%;">
     </div>
   </div>
 </template>
@@ -45,6 +45,7 @@ export default {
   name:'RecomView',
   data() {
     return {
+      path: process.env.VUE_APP_API_URL,
       isOMZ:false,
       isStyle: false,
       filter: null,
@@ -54,12 +55,12 @@ export default {
         'street':'스트릿',
         'country':'컨트리',
         'resort':'리조트',
-        'retro':'리조트',
+        'retro':'레트로',
         'classic':'클래식',
         'sexy':'섹시',
         'hippie':'히피',
         'modern':'모던',
-        'sophisticated':'스피스티케이트',
+        'sophisticated':'소피스티케이티드',
         'kitsch':'키치',
         'avantgarde':'아방가르드',
         'western':'웨스턴',
