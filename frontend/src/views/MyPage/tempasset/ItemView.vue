@@ -111,7 +111,7 @@ export default {
     async viewMultipleItems(category,page,size) {
       var a = this
       var member_id = this.Auth.memberId;
-      await axios.get(process.env.VUE_APP_ITEMS+`/${member_id}/${category}?page=${page}&size=${size}&sort=id,DESC`).then((res) => {
+      await axios.get(process.env.VUE_APP_API_URL+`/items/${member_id}/${category}?page=${page}&size=${size}&sort=id,DESC`).then((res) => {
         if (res.data.content.length !== 0) {
           for (var item of res.data.content) {
             a.pages.push(item)
@@ -143,7 +143,7 @@ export default {
       this.selectMode = !this.selectMode;
     },
     async deleteMultipleItems(array) {
-      axios.delete(process.env.VUE_APP_ITEMS + `?ids=${array.join(',')}`, {
+      axios.delete(process.env.VUE_APP_API_URL + `/items?ids=${array.join(',')}`, {
         headers: {
           'Authorization' : this.Auth.accessToken
         }
