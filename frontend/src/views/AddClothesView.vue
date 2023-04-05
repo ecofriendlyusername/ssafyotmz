@@ -208,6 +208,7 @@ export default {
       formData.append('item',itemBlob);
       formData.append('category',this.curCategory)
       formData.append('style',this.style["1"]["style"])
+      document.getElementById('name').value = ''
       this.createItem(formData)
       .then((res) => {
         return res

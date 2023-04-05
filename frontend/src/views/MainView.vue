@@ -1,4 +1,13 @@
 <template>
+
+  <div id="modal" v-if="isModal">
+    <p>{{ modalData.ownerName }} 님의 {{ modalData.style }} 스타일의 옷이에요</p>
+    <hr>
+    <img :src="`${ path }/images/${ modalData.imageId }`" alt="">
+    <hr>
+    <button v-on:click="isModal = false">닫기</button>
+  </div>
+
   <div v-if="Auth.first == true" style="margin-top: -16px; padding: 13px; background-color:black; color: white;;">
     <br><br>
 
@@ -83,7 +92,7 @@
         <div style="display:flex; justify-content:center; margin-top:7px;">
           <div class="container">
             <div class="item" v-for="unit in items">
-              <img :src='`${path}/images/${unit.imageId}`' id="picture">
+              <img :src='`${path}/images/${unit.imageId}`' id="picture" v-on:click="modal(unit)">
             </div>
           </div>
         </div>
@@ -180,7 +189,15 @@ export default {
       EndPoint: false,
       Auth: this.$store.state.Auth,
       dressDatas: null,
-      path: process.env.VUE_APP_API_URL
+      path: process.env.VUE_APP_API_URL,
+      isModal: false,
+      modalData: {
+        id: null, 
+        imageId: null,
+        memberId: null, 
+        ownerName: null, 
+        style: null
+      }
     }
   },
   created(){
@@ -195,6 +212,11 @@ export default {
         redirectUri: process.env.VUE_APP_KAKAO_REDIRECT_API_URL
       })
     },
+    modal(data) {
+      console.log(data)
+      this.isModal = !this.isModal
+      this.modalData = data
+    }
   },
   computed:{
     Auth(){
@@ -366,4 +388,16 @@ export default {
   background-color:#ff1500;
   border: 4px solid rgb(0, 0, 0);
 }
+
+
+#modal {
+  z-index: 999;
+  border: #000 solid 2px;
+  background-color: #fff;
+  position: fixed;
+  /* width: 100%;
+  height: 100%; */
+  left:50%; top:50%; transform: translate(-50%, -50%)
+}
+
 </style>
