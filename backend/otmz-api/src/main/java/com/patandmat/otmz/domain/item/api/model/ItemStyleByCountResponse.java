@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemStyleByCountResponse implements Comparable<ItemStyleByCountResponse> {
-    private Style style;
+    private String style;
     private long count;
 
     @Override
