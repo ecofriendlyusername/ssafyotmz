@@ -36,6 +36,7 @@ def from_image_to_bytes(img):
     pillow image 객체를 bytes로 변환
     """
     # Pillow 이미지 객체를 Bytes로 변환
+    
     imgByteArr = io.BytesIO()
     img.save(imgByteArr, format=img.format)
     imgByteArr = imgByteArr.getvalue()
@@ -100,14 +101,19 @@ async def remove_bg_and_style_classification(image: UploadFile = File(...)):
     
     #read image data
     img = await image.read()
+    
     img = io.BytesIO(img)
     #open image
+    
+    
     img = Image.open(img)
+    copy_format = img.format
     
     ##########################################################
     #inference style
     
     inf_img = img.convert('RGB')
+    
     # transformation
     if val_transform is not None:
 
@@ -141,11 +147,15 @@ async def remove_bg_and_style_classification(image: UploadFile = File(...)):
     
     # fix output
     # save image
-    x = int(round(np.random.rand(),5)*(10**5))
+    # x = int(round(np.random.rand(),5)*(10**5))
     
-    img.save(f"./remove/{x}.png", "png")
+    # img.save(f"./remove/{x}.png", "png")
     
-    img = Image.open(f"./remove/{x}.png")
+    # img = Image.open(f"./remove/{x}.png")
+    
+    img = img.convert("RGB")
+    
+    img.format = copy_format
     
     img_converted = from_image_to_bytes(img)
     
