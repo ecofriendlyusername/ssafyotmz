@@ -1,12 +1,32 @@
 <template>
-    <ul>
-        <li v-for="data in dataList">
-            <div v-on:click="check($event)">
-                <img :src='`${path}/images/${data.imageId}`' :alt="`${data.style}`"> 
+    <div style="background-color:black; color: white; padding: 13px;">
+        <br><br>
+
+        <p style="display:flex; font-weight: bold;">스타일 진단 설문을 진행해주세요</p>
+    
+        <div style="display:flex; color: gray;margin-top: 20px;">
+            O't MZ가 취향을 분석할 수 있도록
+        </div>
+        <div style="display:flex; color: gray; margin-top: 5px;">
+            마음에 드는 스타일을 5개 이상 선택해주세요.
+        </div>
+        <br>
+
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 5px; ">
+            <div v-for="data in dataList">
+                <div v-on:click="check($event)" >
+                    <div>
+                        
+                    </div><img :src='`${path}/images/${data.imageId}`' :alt="`${data.style}`" style="width:100%"> 
+                </div>
             </div>
-        </li>
-    </ul>
-    <button v-on:click="sub()">결정하기</button>
+        </div>
+        <br>
+
+        <button v-on:click="sub()" id="surveyBtn">선택완료</button>
+    </div>
+
     <!-- <div>{{ checked }}</div> -->
 </template>
 
@@ -82,6 +102,7 @@ export default {
 
 <style>
 .checked {
-    border-block: solid red 10px;
+    opacity: 0.3;
+
 }
 </style>
