@@ -362,4 +362,8 @@ export default {
   transform: translate(-53%, 0);
   letter-spacing: 7px;
 }
+#surveyBtn:hover {
+  background-color:#ff1500;
+  border: 4px solid rgb(0, 0, 0);
+}
 </style>
