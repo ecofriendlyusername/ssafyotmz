@@ -1,6 +1,6 @@
 <template>
   <!-- 로그인 시 메인화면 -->
-  <div v-on:click="$router.push('/servay')">servay</div>
+  <div v-on:click="$router.push('/survey')">survey</div>
   <div v-if="Auth.memberId" style="font-family: 'NanumSquareNeo-Variable';">
     <swiper
       :modules="modules"
