@@ -6,8 +6,8 @@
 
     <div id="InnerCard2"> 
       <!-- 워터마크 찍은 이미지 사이즈 맞춰서 넣기 -->
-        <img style="max-width: 100%; max-height:100%;" :src="imgsrc" />
-      </div>
+      <img style="width:100%; border-radius: 20px; max-height: 325px; " :src="imgsrc" />
+    </div>
     
       <!-- 스타일 출력 -->
       <!-- 스타일 별 설명 값 넣기 -->
