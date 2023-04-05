@@ -1,7 +1,14 @@
 <template>
+  <div v-if="Auth.first == true">
+    <p>처음 가입하셨군요!</p>
+    <p>데이터 수집을 위한 첫 설문이 있겠습니다.</p>
+    <p>아래 버튼을 클릭해주세요.</p>
+    <p>||</p>
+    <p>V</p>
+    <div v-on:click="$router.push('/survey')">servay</div>
+  </div>
   <!-- 로그인 시 메인화면 -->
-  <div v-on:click="$router.push('/survey')">survey</div>
-  <div v-if="Auth.memberId" style="font-family: 'NanumSquareNeo-Variable';">
+  <div v-else-if="Auth.memberId" style="font-family: 'NanumSquareNeo-Variable';">
     <swiper
       :modules="modules"
       :space-between="20"
