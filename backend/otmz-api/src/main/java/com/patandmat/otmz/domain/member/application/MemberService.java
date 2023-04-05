@@ -136,7 +136,7 @@ public class MemberService {
         Map<String, List<LookResponse>> result = new HashMap<>();
 
         List<StyleByCountResponse> styleByCountResponses = lookRepository.findByMemberIdOrderByStyleDesc(memberId);
-        List<Style> styles = styleByCountResponses.stream().map(StyleByCountResponse::getStyle).toList();
+        List<Style> styles = styleByCountResponses.stream().map(StyleByCountResponse::getStyle).collect(Collectors.toList());
 
         if (styles.size() < 3) {
             Member member = memberRepository.findById(memberId).orElseThrow(NoSuchElementException::new);
