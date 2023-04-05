@@ -4,20 +4,6 @@
   </div> -->
   <br>
 
-      <!-- 컴포넌트 MyModal -->
-      <MyModal @close="closeModal" v-if="modal">
-      <!-- default 슬롯 콘텐츠 -->
-      <p>Vue.js Modal Window!</p>
-      <div><input v-model="message"></div>
-      <!-- /default -->
-      <!-- footer 슬롯 콘텐츠 -->
-      <!-- <template slot="footer">
-        <button @click="doSend">제출</button>
-      </template> -->
-      <!-- /footer -->
-    </MyModal>
-
-
   <div style="display:flex; justify-content:space-between; margin: 10px;">
     <div style="font-weight:bold; font-size:120%">
       {{ this.labels[this.filter] }}
@@ -30,15 +16,15 @@
   </div>
   
   <div v-if="isOMZ" style="display:flex; justify-content:end;">
-    <label for="similar" v-on:click="this.filter='similar'" id="category">나랑 비슷한거</label><input type="radio" name="OMZ" id="similar">
-    <label for="issimilar" v-on:click="this.filter='issimilar'" id="category" style="margin-left:-17px; margin-right: 23px;">안비슷한거</label><input type="radio" name="OMZ" id="issimilar"> 
+    <label for="similar" v-on:click="this.filter='similar'" class="category">나랑 비슷한거</label><input type="radio" name="OMZ" id="similar">
+    <label for="issimilar" v-on:click="this.filter='issimilar'" class="category" style="margin-left:-17px; margin-right: 23px;">안비슷한거</label><input type="radio" name="OMZ" id="issimilar"> 
   </div>
 
   <div v-if="isStyle" style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; margin-top: 10px;">
       <div v-for="(key, value) in labels">
-        <label :for="category" v-on:click="this.filter=value">
-              <div id="category">{{ key }}</div>
-        </label>
+        <div v-on:click="this.filter=value">
+          <div class="category">{{ key }}</div>
+        </div>
       </div>
     </div>
   <hr>
@@ -91,6 +77,18 @@ export default {
       },
       items: []
     }
+  },
+  mounted() {
+    axios.get(process.env.VUE_APP_API_URL + '/looks/recommended', {
+          headers: {
+            'Authorization': this.$store.state.Auth['accessToken']
+          }
+        })
+        .then(response => {
+          console.log(response.data)
+          this.items = response.data
+        })
+        .catch(error => console.log(error))
   },
   watch: {
     filter(newValue, oldValue) {
@@ -167,7 +165,7 @@ input[type="radio"] {
   color: rgb(255, 255, 255);
 }
 
-#category {
+.category {
   border: 2px solid gray;
   /* border-radius: 15px; */
   color: black;
@@ -176,7 +174,7 @@ input[type="radio"] {
   margin: 3px;
   font-size: 72%;
 } 
-#category:hover {
+.category:hover {
   background-color: black;
   color: white;
 }
