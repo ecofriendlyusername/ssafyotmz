@@ -341,7 +341,7 @@ export default {
   padding: 15px 40px;
   border-radius: 15px;
   position: fixed;
-  bottom:30px;
+  bottom:70px;
   left: 50%;
   transform: translate(-53%, 0);
   letter-spacing: 10px;
