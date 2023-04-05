@@ -1,5 +1,4 @@
 <template>
-  {{ Auth }}
   <div v-if="Auth.first == true">
     <p>처음 가입하셨군요!</p>
     <p>데이터 수집을 위한 첫 설문이 있겠습니다.</p>
