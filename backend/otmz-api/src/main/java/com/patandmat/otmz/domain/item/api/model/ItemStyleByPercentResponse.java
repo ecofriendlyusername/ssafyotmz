@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemStyleByPercentResponse {
-    private Style style;
+    private String style;
     private double count;
 
 }
