@@ -166,7 +166,7 @@ export default {
       this.viewMultipleItems('upper',2,3)
     },
     async getStyle(formData) {
-      await axios.post(process.env.VUE_APP_AI_STYLE, formData, {
+      await axios.post(process.env.VUE_APP_AI_URL + '/style', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -208,11 +208,9 @@ export default {
       formData.append('item',itemBlob);
       formData.append('category',this.curCategory)
       formData.append('style',this.style["1"]["style"])
+      document.getElementById('name').value = ''
       this.createItem(formData)
       .then((res) => {
-        alert('옷이 등록되었습니다')
-        this.haveImage = false
-        this.processedImageStr = ""
         return res
       }).catch((e) => {
         return e
@@ -221,7 +219,7 @@ export default {
     },
     async removeBackground(formData) {
       var a = this
-      await axios.post(process.env.VUE_APP_AI_REMOVE, formData, {
+      await axios.post(process.env.VUE_APP_AI_URL + '/remove', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -244,20 +242,23 @@ export default {
       })
     },
     async createItem(formData) {
-      axios.post(process.env.VUE_APP_ITEM,formData, {
+      axios.post(process.env.VUE_APP_API_URL + '/item', formData, {
         headers: {
           'Content-Type' : 'multipart/form-data',
           'Authorization' : this.Auth.accessToken,
         }
       }).then((res) => {
+        alert('옷이 등록되었습니다')
+        this.haveImage = false
+        this.processedImageStr = ""
         return res
       }).catch((e) => {
         return e
       })
-
+      
     },
     deleteItem() {
-      axios.delete(process.env.VUE_APP_ITEMS + '/' + id, {
+      axios.delete(process.env.VUE_APP_API_URL + '/items/' + id, {
         headers: {
           'Authorization' : this.Auth.accessToken
         }

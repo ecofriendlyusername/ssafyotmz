@@ -79,7 +79,7 @@ export default {
   },
   methods:{
     async viewMultipleItemMatches(page, size) {
-        await axios.get(process.env.VUE_APP_CODYBOOKS+`?page=${page}&size=${size}`, {
+        await axios.get(process.env.VUE_APP_API_URL+`/itemmatches?page=${page}&size=${size}`, {
           headers: {
             'Authorization' : this.Auth.accessToken
           }
@@ -141,7 +141,7 @@ export default {
         this.createItemMatch(formData)
       },    
       createItemMatch(formData) {
-        axios.post(process.env.VUE_APP_CODYBOOK,formData, {
+        axios.post(process.env.VUE_APP_API_URL + '/itemmatch',formData, {
           headers: {
             'Content-Type' : 'multipart/form-data',
             'Authorization' : this.Auth.accessToken
@@ -188,7 +188,7 @@ export default {
       this.createItemMatch(formData)
     },    
     createItemMatch(formData) {
-      axios.post(process.env.VUE_APP_CODYBOOK,formData, {
+      axios.post(process.env.VUE_APP_API_URL + '/itemmatch',formData, {
         headers: {
           'Content-Type' : 'multipart/form-data',
           'Authorization' : this.Auth.accessToken
@@ -215,7 +215,7 @@ export default {
       })
     },
     async deleteMultipleItemMatches(array) {
-      await axios.delete(process.env.VUE_APP_CODYBOOKS + `?ids=${array.join(',')}`, {
+      await axios.delete(process.env.VUE_APP_API_URL + `/itemmatches?ids=${array.join(',')}`, {
         headers: {
           'Authorization' : this.Auth.accessToken
         }

@@ -2,6 +2,9 @@ package com.patandmat.otmz.domain.member.api;
 
 
 import com.patandmat.otmz.domain.auth.application.JwtService;
+import com.patandmat.otmz.domain.item.api.model.ItemStyleByCountResponse;
+import com.patandmat.otmz.domain.item.api.model.ItemStyleByPercentResponse;
+import com.patandmat.otmz.domain.item.application.ItemService;
 import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByCountResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByPercentResponse;
@@ -20,10 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,7 +35,7 @@ public class MemberController {
     private static final String FAIL = "fail";
     private final MemberService memberService;
     private final JwtService jwtService;
-
+    private final ItemService itemService;
     private final LookService lookService;
 
     @GetMapping("/refresh")
@@ -119,12 +119,28 @@ public class MemberController {
             }
         }
 
+        Map<String,Integer> itemStyle = itemService.countByStyle(member.getId());
+
+        List<ItemStyleByCountResponse> itemStyleSummaries = itemStyle.entrySet().stream()
+                .filter(entry -> entry.getValue() > 0)
+                .map(entry -> new ItemStyleByCountResponse(entry.getKey(), entry.getValue()))
+                .sorted(Comparator.comparing(ItemStyleByCountResponse::getCount).reversed())
+                .collect(Collectors.toList());
+
+        List<ItemStyleByPercentResponse> itemStyleByCountResponse = itemStyleSummaries.stream()
+                .map(summary -> new ItemStyleByPercentResponse(summary.getStyle(), Math.round(summary.getCount() / (double) totalItemCount * 100)))
+                .limit(3)
+                .collect(Collectors.toList());
+
+
         MypageResponse response = MypageResponse.builder()
                 .nickname(nickname)
                 .totalStyleCount(totalStyleCount)
                 .totalItemCount(totalItemCount)
                 .styleByPercentResponseList(styleByCountResponse)
                 .topStyleList(topStyleList)
+                .itemStyle(itemStyle)
+                .itemStyleByCountResponse(itemStyleByCountResponse)
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.OK);

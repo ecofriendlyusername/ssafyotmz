@@ -31,7 +31,7 @@ public class ImageFile extends BaseEntity {
 //    private Long length;
 
     @Builder
-    public ImageFile(String originName, String name, String path, String mineType, Long length) {
+    public ImageFile(String path) {
 //        this.originName = originName;
 //        this.name = name;
         this.path = path;

@@ -16,4 +16,6 @@ public class LoginResponse {
     private final String nickname;
 
     private final String profileImagePath;
+
+    private final boolean isFirst;
 }
