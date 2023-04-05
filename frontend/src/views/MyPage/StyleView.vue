@@ -109,4 +109,22 @@ export default {
 
 <style>
 
+.container {
+  width: 97%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 0fr;
+  /* padding: 7px; */
+  /* grid-template-rows: repeat(2, 100px);
+  grid-template-columns: repeat(3, 1fr); */
+  /* grid-auto-rows: 100px; */
+  grid-auto-rows:minmax(100px, auto)
+}
+
+#picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 </style>
