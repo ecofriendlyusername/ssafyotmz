@@ -62,4 +62,8 @@ public class Member extends BaseEntity {
     public void restore() {
         this.deleted = true;
     }
+
+    public boolean isFirst() {
+        return itemStyleStat == null || lookStyleStat == null;
+    }
 }
