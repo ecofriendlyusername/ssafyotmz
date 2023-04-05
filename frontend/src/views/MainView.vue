@@ -352,7 +352,7 @@ export default {
   border: none;
   color:white;
   font-weight: bold;
-  font-size: 90%;
+  font-size: 85%;
   /* width: 60%; */
   padding: 15px 40px;
   border-radius: 15px;
@@ -360,6 +360,6 @@ export default {
   bottom:70px;
   left: 50%;
   transform: translate(-53%, 0);
-  letter-spacing: 10px;
+  letter-spacing: 7px;
 }
 </style>
