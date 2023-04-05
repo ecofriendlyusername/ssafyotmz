@@ -254,7 +254,7 @@ export default {
       }).catch((e) => {
         return e
       })
-
+      
     },
     deleteItem() {
       axios.delete(process.env.VUE_APP_API_URL + '/items/' + id, {
