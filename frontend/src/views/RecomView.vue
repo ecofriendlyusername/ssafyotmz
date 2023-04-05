@@ -1,22 +1,15 @@
 <template>
+  <div id="modal" v-if="isModal">
+    <p>{{ modalData.ownerName }} 님의 {{ modalData.style }} 스타일의 옷이에요</p>
+    <hr>
+    <img :src="`${ path }/images/${ modalData.imageId }`" alt="">
+    <hr>
+    <button v-on:click="isModal = false">닫기</button>
+  </div>
   <!-- <div>
     스타일 추천 페이지
   </div> -->
   <br>
-
-      <!-- 컴포넌트 MyModal -->
-      <MyModal @close="closeModal" v-if="modal">
-      <!-- default 슬롯 콘텐츠 -->
-      <p>Vue.js Modal Window!</p>
-      <div><input v-model="message"></div>
-      <!-- /default -->
-      <!-- footer 슬롯 콘텐츠 -->
-      <!-- <template slot="footer">
-        <button @click="doSend">제출</button>
-      </template> -->
-      <!-- /footer -->
-    </MyModal>
-
 
   <div style="display:flex; justify-content:space-between; margin: 10px;">
     <div style="font-weight:bold; font-size:120%">
@@ -30,15 +23,15 @@
   </div>
   
   <div v-if="isOMZ" style="display:flex; justify-content:end;">
-    <label for="similar" v-on:click="this.filter='similar'" id="category">나랑 비슷한거</label><input type="radio" name="OMZ" id="similar">
-    <label for="issimilar" v-on:click="this.filter='issimilar'" id="category" style="margin-left:-17px; margin-right: 23px;">안비슷한거</label><input type="radio" name="OMZ" id="issimilar"> 
+    <label for="similar" v-on:click="this.filter='similar'" class="category">나랑 비슷한거</label><input type="radio" name="OMZ" id="similar">
+    <label for="issimilar" v-on:click="this.filter='issimilar'" class="category" style="margin-left:-17px; margin-right: 23px;">안비슷한거</label><input type="radio" name="OMZ" id="issimilar"> 
   </div>
 
   <div v-if="isStyle" style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; margin-top: 10px;">
       <div v-for="(key, value) in labels">
-        <label :for="category" v-on:click="this.filter=value">
-              <div id="category">{{ key }}</div>
-        </label>
+        <div v-on:click="this.filter=value">
+          <div class="category">{{ key }}</div>
+        </div>
       </div>
     </div>
   <hr>
@@ -46,7 +39,7 @@
   <div style="display:grid; grid-gap: 10px 5px;">
     <div class="container">
       <div v-for="item in items">
-        <img :src= '`${ path }/images/${ item.imageId }`' style="width:100%;" id="picture">
+        <img :src= '`${ path }/images/${ item.imageId }`' style="width:100%;" id="picture" v-on:click="modal(item)">
       </div>
     </div>
   </div>
@@ -89,8 +82,28 @@ export default {
         'punk':'펑크',
         'military':'밀리터리'
       },
-      items: []
+      items: [],
+      isModal: false,
+      modalData: {
+        id: null, 
+        imageId: null,
+        memberId: null, 
+        ownerName: null, 
+        style: null
+      }
     }
+  },
+  mounted() {
+    axios.get(process.env.VUE_APP_API_URL + '/looks/recommended', {
+          headers: {
+            'Authorization': this.$store.state.Auth['accessToken']
+          }
+        })
+        .then(response => {
+          console.log(response.data)
+          this.items = response.data
+        })
+        .catch(error => console.log(error))
   },
   watch: {
     filter(newValue, oldValue) {
@@ -142,6 +155,11 @@ export default {
         this.isStyle = !this.isStyle
       }
     },
+    modal(data) {
+      console.log(data)
+      this.isModal = !this.isModal
+      this.modalData = data
+    }
   }
 }
 </script>
@@ -167,7 +185,7 @@ input[type="radio"] {
   color: rgb(255, 255, 255);
 }
 
-#category {
+.category {
   border: 2px solid gray;
   /* border-radius: 15px; */
   color: black;
@@ -176,7 +194,7 @@ input[type="radio"] {
   margin: 3px;
   font-size: 72%;
 } 
-#category:hover {
+.category:hover {
   background-color: black;
   color: white;
 }
@@ -199,5 +217,14 @@ input[type="radio"] {
   object-fit: cover;
 }
 
+#modal {
+  z-index: 999;
+  border: #000 solid 2px;
+  background-color: #fff;
+  position: fixed;
+  /* width: 100%;
+  height: 100%; */
+  left:50%; top:50%; transform: translate(-50%, -50%)
+}
 
 </style>
