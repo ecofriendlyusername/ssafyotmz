@@ -27,7 +27,7 @@ data () {
 },
 methods:{
     async deleteItemMatch() {
-      await axios.delete(process.env.VUE_APP_CODYBOOK + '/' + this.selected.id, {
+      await axios.delete(process.env.VUE_APP_API_URL + '/itemmatch/' + this.selected.id, {
         headers: {
           'Authorization' : this.Auth.accessToken
         }
@@ -40,7 +40,7 @@ methods:{
       }
     },
     // deleteItemMatch() {
-    //     axios.delete(process.env.VUE_APP_CODYBOOK + '/' + this.selected.id, {
+    //     axios.delete(process.env.VUE_APP_API_URL + '/itemmatch/' + this.selected.id, {
     //       headers: {
     //         'Authorization' : this.Auth.accessToken
     //       }

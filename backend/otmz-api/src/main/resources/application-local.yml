@@ -13,10 +13,10 @@ spring:
     port: 6379
 file:
   image:
-#    path: C:/Users/SSAFY/Desktop/storage/
-#    path: C:/Users/multicampus/Desktop/storage/
-    path: /Users/bellroot/Desktop/storage/
-#     path: /Users/gayoungyang/Desktop/storage/
+#     path: C:/Users/SSAFY/Desktop/storage/
+    path: C:/Users/multicampus/Desktop/storage/
+#    path: /Users/bellroot/Desktop/storage/
+#    path: /Users/gayoungyang/Desktop/storage/
 #    path: C:/Users/cba15/Desktop/storage/
 oauth:
   kakao:

@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/oauth")
@@ -35,6 +32,14 @@ public class OAuthController {
         String accessToken = jwtUtil.createAccessToken(String.valueOf(member.getId()));
         String refreshToken = jwtUtil.createRefreshToken(String.valueOf(member.getId()));
 
-        return new ResponseEntity<>(new LoginResponse(accessToken, refreshToken, member.getId(), member.getNickname(), member.getProfileImagePath()), HttpStatus.OK);
+        return new ResponseEntity<>(
+                new LoginResponse(
+                        accessToken,
+                        refreshToken,
+                        member.getId(),
+                        member.getNickname(),
+                        member.getProfileImagePath(),
+                        member.isFirst()),
+                HttpStatus.OK);
     }
 }

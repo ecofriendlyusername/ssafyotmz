@@ -4,7 +4,6 @@
       <div id="InnerCard">
         <img id="ImgCard" style="width:100%; border-radius: 20px; max-height: 325px; " :src="image" />
       </div>
-
       <p id="CardText">전신이 나온 사진을 선택해주세요</p>
       <label for="fileInput" class="file-label">
         <img src="@/assets/img/UploadBtn.png" id="UploadBtn">
@@ -44,7 +43,6 @@ export default {
       }
       return new File([u8arr], filename, {type: mime});
     },
-
     fileUpload(event) {
       var reader = new FileReader();
       reader.onload = (e) => {
@@ -53,6 +51,9 @@ export default {
         img.onload = () => {
           var thumbFile = (_IMG) => {
             var canvas = document.createElement("canvas");
+            // var newWidthAndHeight = this.calculateAspectRatioFit(_IMG.width,_IMG.height, 360, 480)
+            // var width = newWidthAndHeight.width;
+            // var height = newWidthAndHeight.height;
             var width = 360;
             var height = 480;
             canvas.width = width;
@@ -80,6 +81,11 @@ export default {
       };
       reader.readAsDataURL(event.target.files[0]);
     },
+    calculateAspectRatioFit (srcWidth, srcHeight, maxWidth, maxHeight) {
+      var ratio = [maxWidth / srcWidth, maxHeight / srcHeight ];
+      ratio = Math.min(ratio[0], ratio[1]);
+      return { width:srcWidth*ratio, height:srcHeight*ratio };
+    },
 
     uploadImage() {
       // 예외처리
@@ -103,9 +109,7 @@ export default {
       })
       // 워터마크 찍기
       .then(() => {
-        watermark([this.image, require('@/assets/img/watermark/logo_left.png')])
-          .image(watermark.image.upperLeft(0.5))
-          .load([require('@/assets/img/watermark/logo_right.png')])
+        watermark([this.image, require('@/assets/img/watermark/logo.png')])
           .image(watermark.image.upperRight(0.5))
           .load([require('@/assets/img/watermark/' + this.result['data']['1']['style'] + '.png')])
           .image(watermark.image.lowerLeft(0.5))
@@ -134,6 +138,7 @@ export default {
 <style>
 #BackgroundCard {
   display: inline-block;
+  /* display: flex; */
   margin-top: 20px;
   width: 85%;
   height: 580px;
@@ -187,6 +192,7 @@ button {
   border: 1px solid #a7a7a7;
   border-radius: 20px;
 }
+
 
 #UploadBtn {
   display:inline-block;
