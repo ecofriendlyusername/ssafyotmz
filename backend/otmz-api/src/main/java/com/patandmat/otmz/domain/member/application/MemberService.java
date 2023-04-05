@@ -153,14 +153,14 @@ public class MemberService {
                                                return 0;
                                            }).toList();
 
-            for (int i = 0; i < sortedStylesFromStats.size(); i++) {
-                Style style = Style.valueOf(sortedStylesFromStats.get(i).toUpperCase());
-                if (!styles.contains(style)) {
-                    styles.add(style);
-                }
-
+            for (String sortedStylesFromStat : sortedStylesFromStats) {
+                Style style = Style.valueOf(sortedStylesFromStat.toUpperCase());
                 if (styles.size() >= 3) {
                     break;
+                }
+
+                if (!styles.contains(style)) {
+                    styles.add(style);
                 }
             }
         }
