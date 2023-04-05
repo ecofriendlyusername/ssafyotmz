@@ -101,13 +101,9 @@ async def remove_bg_and_style_classification(image: UploadFile = File(...)):
     
     #read image data
     img = await image.read()
-    
     img = io.BytesIO(img)
     #open image
-    
-    
     img = Image.open(img)
-    copy_format = img.format
     
     ##########################################################
     #inference style
@@ -147,15 +143,13 @@ async def remove_bg_and_style_classification(image: UploadFile = File(...)):
     
     # fix output
     # save image
-    # x = int(round(np.random.rand(),5)*(10**5))
     
-    # img.save(f"./remove/{x}.png", "png")
+    #random number generator
+    x = int(round(np.random.rand(),6)*(10**6))
     
-    # img = Image.open(f"./remove/{x}.png")
+    img.save(f"./remove/{x}.png", "png")
     
-    img = img.convert("RGB")
-    
-    img.format = copy_format
+    img = Image.open(f"./remove/{x}.png")
     
     img_converted = from_image_to_bytes(img)
     
