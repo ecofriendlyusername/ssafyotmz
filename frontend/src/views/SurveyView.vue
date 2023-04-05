@@ -103,6 +103,21 @@ export default {
 <style>
 .checked {
     opacity: 0.3;
+}
 
+#surveyBtn {
+  background-color:#e63525;
+  border: none;
+  color:white;
+  font-weight: bold;
+  font-size: 85%;
+  /* width: 60%; */
+  padding: 15px 32px;
+  border-radius: 15px;
+  position: fixed;
+  bottom:70px;
+  left: 50%;
+  transform: translate(-53%, 0);
+  letter-spacing: 7px;
 }
 </style>
