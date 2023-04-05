@@ -166,7 +166,7 @@ public class MemberService {
         }
 
 
-        for (int i = 0; i < styles.size(); i++) {
+        for (int i = 0; i < Math.min(3, styles.size()); i++) {
             Style style = styles.get(i);
 
             result.put(style.getKey(), lookRepository.findAllByStyleOrderByCreatedAtDesc(style, PageRequest.of(0, size))
