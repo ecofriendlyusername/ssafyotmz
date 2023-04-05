@@ -1,5 +1,6 @@
 package com.patandmat.otmz.domain.member.api.model;
 
+import com.patandmat.otmz.domain.item.api.model.ItemStyleByPercentResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByCountResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByPercentResponse;
 import lombok.Builder;
@@ -20,13 +21,15 @@ public class MypageResponse {
     private List<StyleByPercentResponse> styleByPercentResponseList;
     private List<StyleByPercentResponse> topStyleList;
 
+    List<ItemStyleByPercentResponse> itemStyleByCountResponse;
     @Builder
-    public MypageResponse(String nickname, int totalStyleCount, int totalItemCount, List<StyleByPercentResponse> styleByPercentResponseList, List<StyleByPercentResponse> topStyleList,Map<String, Integer> itemStyle) {
+    public MypageResponse(String nickname, int totalStyleCount, int totalItemCount, List<StyleByPercentResponse> styleByPercentResponseList, List<StyleByPercentResponse> topStyleList,Map<String, Integer> itemStyle,     List<ItemStyleByPercentResponse> itemStyleByCountResponse) {
         this.nickname = nickname;
         this.totalStyleCount = totalStyleCount;
         this.totalItemCount = totalItemCount;
         this.styleByPercentResponseList = styleByPercentResponseList;
         this.topStyleList = topStyleList;
         this.itemStyle = itemStyle;
+        this.itemStyleByCountResponse = itemStyleByCountResponse;
     }
 }

@@ -68,8 +68,8 @@
           
         <!-- 옷 종류 TOP3 출력 -->
           <p>TOP 3</p>
-          <p v-for="look in myData['clothCountDtoList']" style="margin-top:-10px;">
-          {{ look['style'] }} : {{ look['count']/this.myData['totalItemCount']*100 }}%</p>
+          <p v-for="look in myData['itemStyleByCountResponse']" style="margin-top:-10px;">
+          {{ look['style'] }} : {{ look['count'] }}%</p>
         </div>
       </div>
 
@@ -180,7 +180,7 @@ export default {
           },
         });
         const ctx2 = document.getElementById('myChart2');
-        const data2 = Object.values(this.myData['clothCountDtoList'])
+        const data2 = Object.values(this.myData['itemStyleByCountResponse'])
         new Chart(ctx2, {
           type: 'bar',
           data: {
