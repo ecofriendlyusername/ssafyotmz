@@ -15,23 +15,15 @@
       <canvas id="myChart" ></canvas>
     </div>
 
-    <!-- 이걸로 차트에 다 안들어가는 애들 출력 할수도 있음 -->
-    <!-- 
-    <ul>
-    <li v-for="style in myData.styleByPercentResponseList">
-      {{ style['style'] }}: {{ style['count'] }}
-    </li>
-    </ul>
-    -->
-
     <hr>
 
-    <!-- 여기 그리드로 만들면 됨 -->
-    <ul>
-      <li v-for="style in styleList">
-        <img :src='`${path}/images/${style.imageId}`' id="picture">
-      </li>
-    </ul>
+    <div style="display:grid; grid-gap: 10px 5px;">
+      <div class="container">
+        <div v-for="style in styleList">
+          <img :src= '`${ path }/images/${ style.imageId }`' style="width:100%;" id="picture">
+        </div>
+      </div>
+    </div>
     <!-- 여기까지 -->
     <hr>
   </div>
@@ -116,5 +108,21 @@ export default {
 </script>
 
 <style>
+.container {
+  width: 97%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 0fr;
+  /* padding: 7px; */
+  /* grid-template-rows: repeat(2, 100px);
+  grid-template-columns: repeat(3, 1fr); */
+  /* grid-auto-rows: 100px; */
+  grid-auto-rows:minmax(100px, auto)
+}
 
+#picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 </style>

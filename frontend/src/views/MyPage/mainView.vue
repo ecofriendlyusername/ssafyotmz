@@ -4,7 +4,7 @@
 
     <div v-if="Auth['nickname']">
       <!-- 유저 정보 칸 -->
-      <img :src="Auth['profileImagePath']" id="Profile">
+      <img :src="Auth['profileImagePath']" id="Profile" style="height: 100px; width: 100px;">
       <p id="Nickname">{{ Auth['nickname'] }}</p>
       
 
@@ -33,9 +33,12 @@
           <canvas id="myChart"></canvas>
         </div>
         <div style="width:100%">
-          <p>TOP 3</p>
+          <b><p v-if="myData['topStyleList'].length > 2">TOP 3</p></b>
           <p v-for="look in myData['topStyleList']" style="margin-top:-10px;">
-          {{ look['style'] }} : {{ look['count'] }}%</p>
+          {{ getStyleName(look['style']) }} : {{ look['count'] }}% 
+           </p>
+            <div v-if="myData['topStyleList'].length === 1" ><p>-</p><p>-</p></div>
+          <div v-if="myData['topStyleList'].length === 2" ><p>-</p></div>
         </div>
       </div>
     </div>
@@ -67,9 +70,12 @@
         <div style="width:100%">
           
         <!-- 옷 종류 TOP3 출력 -->
-          <p>TOP 3</p>
-          <p v-for="look in myData['itemStyleByCountResponse']" style="margin-top:-10px;">
-          {{ look['style'] }} : {{ look['count'] }}%</p>
+        <b><p v-if="myData['itemStyleByCountResponse'].length > 2">TOP 3</p></b>
+        <p v-for="look in myData['itemStyleByCountResponse']" style="margin-top:-10px;">
+          {{ getStyleName(look['style']) }} : {{ look['count'] }}% 
+           </p>
+          <div v-if="myData['itemStyleByCountResponse'].length === 1" ><p>-</p><p>-</p></div>
+          <div v-if="myData['itemStyleByCountResponse'].length === 2" ><p>-</p></div>
         </div>
       </div>
 
@@ -89,12 +95,116 @@ import axios from 'axios';
 import Chart from 'chart.js/auto';
 
 export default {
+  name: 'MyPageView',
+  data() {
+    return {
+      //...
+    }
+  },
+  methods: {
+    getStyleName(style) {
+      switch (style) {
+        case 'CLASSIC':
+          return '클래식';
+        case 'PREPPY':
+          return '프레피';
+        case 'mannish':
+          return '매니시';
+          case 'TOMBOY':
+          return '톰보이';
+        case 'ROMANTIC':
+          return '로맨틱';
+        case 'SEXY':
+          return '섹시';
+          case 'HIPPIE':
+          return '히피';
+        case 'WESTERN':
+          return '웨스턴';
+        case 'ORIENTAL':
+          return '오리엔탈';
+          case 'MODERN':
+          return '모던';
+        case 'SOPHISTICATED':
+          return '소피스트케이티드';
+        case 'AVANTGARDE':
+          return '아방가르드';
+          case 'COUNTRY':
+          return '컨트리';
+        case 'RESORT':
+          return '리조트';
+        case 'GENDERLESS':
+          return '젠더리스';
+          case 'SPORTY':
+          return '스포티';
+        case 'RETRO':
+          return '레트로';
+        case 'HIPHOP':
+          return '힙합';
+          case 'KITSCH':
+          return '키치';
+        case 'PUNK':
+          return '펑크';
+        case 'STREET':
+          return '스트릿';
+          case 'MILITARY':
+          return '밀리터리';
+          case 'classic':
+          return '클래식';
+        case 'preppy':
+          return '프레피';
+        case 'mannish':
+          return '매니시';
+        case 'tomboy':
+          return '톰보이';
+        case 'romantic':
+          return '로맨틱';
+        case 'sexy':
+          return '섹시';
+        case 'hippie':
+          return '히피';
+        case 'western':
+          return '웨스턴';
+        case 'oriental':
+          return '오리엔탈';
+          case 'modern':
+          return '모던';
+        case 'sophisticated':
+          return '소피스트케이티드';
+        case 'avantgarde':
+          return '아방가르드';
+          case 'country':
+          return '컨트리';
+        case 'resort':
+          return '리조트';
+        case 'genderless':
+          return '젠더리스';
+          case 'sporty':
+          return '스포티';
+        case 'retro':
+          return '레트로';
+        case 'hiphop':
+          return '힙합';
+          case 'kitsch':
+          return '키치';
+        case 'punk':
+          return '펑크';
+        case 'street':
+          return '스트릿';
+          case 'military':
+          return '밀리터리';
+        default:
+          return style;
+      }
+    },
+  },
     name:'MyPageView',
     data() {
       return{
         Auth: this.$store.state.Auth,
         myData: {
-          'nickname': null
+          'nickname': null,
+          topStyleList: [],
+          itemStyleByCountResponse: []
         },
       }
     },
@@ -110,39 +220,6 @@ export default {
       .then(response => {
         console.log(response.data)
         this.myData = response.data
-        // this.myData = {
-        //   clothCountDtoList:[
-        //   {
-        //       'style': '스트릿',
-        //       'count':5
-        //     },
-        //     {
-        //       'style': '캐주얼',
-        //       'count':3
-        //     },
-        //     {
-        //       'style': '러블리',
-        //       'count':1
-        //     },
-        //   ],
-        //   lookCountDtoList: [
-        //     {
-        //       'style': '스트릿',
-        //       'count':5
-        //     },
-        //     {
-        //       'style': '캐주얼',
-        //       'count':3
-        //     },
-        //     {
-        //       'style': '러블리',
-        //       'count':1
-        //     },
-        //   ], 
-        //   nickname: "최선호", 
-        //   totalItemCount: 10, 
-        //   totalStyleCount: 10
-        // }
       })
       .then(() => {
         const ctx = document.getElementById('myChart');
@@ -150,7 +227,56 @@ export default {
         new Chart(ctx, {
           type: 'bar',
           data: {
-            labels: data.map(x => x['style']),
+            labels: data.map(x => {
+      switch (x.style) {
+        case 'CLASSIC':
+          return '클래식';
+        case 'PREPPY':
+          return '프레피';
+        case 'mannish':
+          return '매니시';
+          case 'TOMBOY':
+          return '톰보이';
+        case 'ROMANTIC':
+          return '로맨틱';
+        case 'SEXY':
+          return '섹시';
+          case 'HIPPIE':
+          return '히피';
+        case 'WESTERN':
+          return '웨스턴';
+        case 'ORIENTAL':
+          return '오리엔탈';
+          case 'MODERN':
+          return '모던';
+        case 'SOPHISTICATED':
+          return '소피스트케이티드';
+        case 'AVANTGARDE':
+          return '아방가르드';
+          case 'COUNTRY':
+          return '컨트리';
+        case 'RESORT':
+          return '리조트';
+        case 'GENDERLESS':
+          return '젠더리스';
+          case 'SPORTY':
+          return '스포티';
+        case 'RETRO':
+          return '레트로';
+        case 'HIPHOP':
+          return '힙합';
+          case 'KITSCH':
+          return '키치';
+        case 'PUNK':
+          return '펑크';
+        case 'STREET':
+          return '스트릿';
+          case 'MILITARY':
+          return '밀리터리';
+        default:
+          return x.style;
+      }
+    }),
             datasets: [{
               // label: '# of Votes',
               data: data.map(x => x['count']),
@@ -184,7 +310,56 @@ export default {
         new Chart(ctx2, {
           type: 'bar',
           data: {
-            labels: data2.map(x => x['style']),
+            labels: data2.map(x => {
+        switch (x.style) {
+        case 'classic':
+          return '클래식';
+        case 'preppy':
+          return '프레피';
+        case 'mannish':
+          return '매니시';
+        case 'tomboy':
+          return '톰보이';
+        case 'romantic':
+          return '로맨틱';
+        case 'sexy':
+          return '섹시';
+        case 'hippie':
+          return '히피';
+        case 'western':
+          return '웨스턴';
+        case 'oriental':
+          return '오리엔탈';
+          case 'modern':
+          return '모던';
+        case 'sophisticated':
+          return '소피스트케이티드';
+        case 'avantgarde':
+          return '아방가르드';
+          case 'country':
+          return '컨트리';
+        case 'resort':
+          return '리조트';
+        case 'genderless':
+          return '젠더리스';
+          case 'sporty':
+          return '스포티';
+        case 'retro':
+          return '레트로';
+        case 'hiphop':
+          return '힙합';
+          case 'kitsch':
+          return '키치';
+        case 'punk':
+          return '펑크';
+        case 'street':
+          return '스트릿';
+          case 'military':
+          return '밀리터리';
+        default:
+          return x.style;
+      }
+    }),
             datasets: [{
               // label: '# of Votes',
               data: data2.map(x => x['count']),
@@ -233,6 +408,7 @@ export default {
   margin: 15px;
   border-radius: 100%;
   border: 4px solid black;
+   object-fit: cover;
 }
 
 #Nickname {

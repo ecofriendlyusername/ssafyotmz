@@ -1,12 +1,35 @@
 <template>
-  <div v-if="Auth.first == true">
-    <p>처음 가입하셨군요!</p>
-    <p>데이터 수집을 위한 첫 설문이 있겠습니다.</p>
+  <div v-if="Auth.first == true" style="margin-top: -16px; padding: 13px; background-color:black; color: white;;">
+    <br><br>
+
+    <p style="display:flex; font-weight: bold;">스타일 진단 설문을 진행해주세요</p>
+    
+    <div style="display:flex; color: gray;margin-top: 20px;">
+      O't MZ가 취향을 분석할 수 있도록
+    </div>
+    <div style="display:flex; color: gray; margin-top: 5px;">
+      아래 버튼을 클릭하여 설문을 진행해주세요.
+    </div>
+
+    <div>
+      <img src="@/assets/img/survey.png" style="width:85%; margin-top:25px;">
+    </div>
+
+
+      <button v-on:click="$router.push('/survey')" id="surveyBtn">
+        SURVEY
+      </button>
+
+
+    
+
+    <!-- <p>데이터 수집을 위한 첫 설문이 있겠습니다.</p>
     <p>아래 버튼을 클릭해주세요.</p>
     <p>||</p>
-    <p>V</p>
-    <div v-on:click="$router.push('/survey')">servay</div>
+    <p>V</p> -->
+    <!-- <div v-on:click="$router.push('/survey')">servay</div> -->
   </div>
+
   <!-- 로그인 시 메인화면 -->
   <div v-else-if="Auth.memberId" style="font-family: 'NanumSquareNeo-Variable';">
     <swiper
@@ -324,4 +347,23 @@ export default {
   max-height: 300px;
 }
 
+#surveyBtn {
+  background-color:#e63525;
+  border: none;
+  color:white;
+  font-weight: bold;
+  font-size: 85%;
+  /* width: 60%; */
+  padding: 15px 32px;
+  border-radius: 15px;
+  position: fixed;
+  bottom:70px;
+  left: 50%;
+  transform: translate(-53%, 0);
+  letter-spacing: 7px;
+}
+#surveyBtn:hover {
+  background-color:#ff1500;
+  border: 4px solid rgb(0, 0, 0);
+}
 </style>
