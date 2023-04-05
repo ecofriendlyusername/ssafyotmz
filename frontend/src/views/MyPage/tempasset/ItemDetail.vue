@@ -27,7 +27,7 @@
     methods:{
       deleteItem() {
         var a = this
-        axios.delete(process.env.VUE_APP_ITEM + '/' + this.selected.id, {
+        axios.delete(process.env.VUE_APP_API_URL + '/item/' + this.selected.id, {
           headers: {
             'Authorization' : this.Auth.accessToken
           }
