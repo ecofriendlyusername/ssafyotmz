@@ -27,7 +27,7 @@
         </p>
       </div>
 
-      <div style="position:absolute; top:10px;font-size: 100%; color:white; margin-left: 79%;">
+      <div style="position:absolute; top:10px;font-size: 95%; color:white; margin-left: 77%;">
           → 구매하기
       </div>
 
