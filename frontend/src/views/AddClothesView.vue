@@ -210,9 +210,6 @@ export default {
       formData.append('style',this.style["1"]["style"])
       this.createItem(formData)
       .then((res) => {
-        alert('옷이 등록되었습니다')
-        this.haveImage = false
-        this.processedImageStr = ""
         return res
       }).catch((e) => {
         return e
@@ -250,6 +247,9 @@ export default {
           'Authorization' : this.Auth.accessToken,
         }
       }).then((res) => {
+        alert('옷이 등록되었습니다')
+        this.haveImage = false
+        this.processedImageStr = ""
         return res
       }).catch((e) => {
         return e
