@@ -7,7 +7,7 @@
         </li>
     </ul>
     <button v-on:click="sub()">결정하기</button>
-    <div>{{ checked }}</div>
+    <!-- <div>{{ checked }}</div> -->
 </template>
 
 <script>
@@ -30,7 +30,7 @@ export default {
             },
         })
         .then((response) => {
-            console.log(response.data)
+            // console.log(response.data)
             this.dataList = response.data
         })
         .catch(error => {
@@ -63,14 +63,14 @@ export default {
             .then((response) => {
                 console.log(response.data)
                 // Auth check false save store
-                // this.$store.state.Auth['check'] = false
+                this.$store.state.Auth['first'] = false
             })
             .then(() => {
-                this.$router.push('')
+                this.$router.push('/')
             })
             .catch(error => {
                 console.log(error)
-                console.log(sendData)
+                // console.log(sendData)
             })
         },
         async check(event){
