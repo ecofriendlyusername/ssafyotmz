@@ -2,9 +2,8 @@
   <div>
     <div id="BackgroundCard">
       <div id="InnerCard">
-        <img id="ImgCard" style="max-width: 100%; max-height:100%;" :src="image" /> 
+        <img id="ImgCard" style="width:100%; border-radius: 20px; max-height: 325px; " :src="image" />
       </div>
-
       <p id="CardText">전신이 나온 사진을 선택해주세요</p>
       <label for="fileInput" class="file-label">
         <img src="@/assets/img/UploadBtn.png" id="UploadBtn">
@@ -52,9 +51,11 @@ export default {
         img.onload = () => {
           var thumbFile = (_IMG) => {
             var canvas = document.createElement("canvas");
-            var newWidthAndHeight = this.calculateAspectRatioFit(_IMG.width,_IMG.height, 360, 480)
-            var width = newWidthAndHeight.width;
-            var height = newWidthAndHeight.height;
+            // var newWidthAndHeight = this.calculateAspectRatioFit(_IMG.width,_IMG.height, 360, 480)
+            // var width = newWidthAndHeight.width;
+            // var height = newWidthAndHeight.height;
+            var width = 360;
+            var height = 480;
             canvas.width = width;
             canvas.height = height;
             canvas.getContext("2d").drawImage(_IMG, 0, 0, width, height);
@@ -181,7 +182,7 @@ button {
 #InnerCard {
   display: flex;
   /* display: inline-block; */
-  align-content: center;
+  /* align-content: center; */
   object-fit: cover;
   margin-top: 17%;
   margin-left: 12%;
