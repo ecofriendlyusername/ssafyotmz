@@ -66,13 +66,12 @@ public class InitItemCopyService {
 
     @Transactional
     public void setTestItem(Member member, int cat, String path) throws IOException {
-        String styleVector = "";
         ImageFile imageFile = copyItemsForThisUser(member.getId(),path);
         try {
             Item item = Item.builder()
                     .name(cat + " for test")
                     .image(imageFile)
-                    .styleVector(styleVector)
+                    .styleVector(null)
                     .color("red")
                     .style(1)
                     .category(cat)
