@@ -156,9 +156,9 @@ input[type="radio"] {
   /* border-radius: 15px; */
   color: black;
   font-weight: bold;
-  padding: 2px 5px;
+  padding: 2px 2px;
   margin: 3px;
-  font-size: 80%;
+  font-size: 72%;
 } 
 #category:hover {
   background-color: black;
