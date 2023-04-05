@@ -4,6 +4,19 @@
   </div> -->
   <br>
 
+      <!-- 컴포넌트 MyModal -->
+      <MyModal @close="closeModal" v-if="modal">
+      <!-- default 슬롯 콘텐츠 -->
+      <p>Vue.js Modal Window!</p>
+      <div><input v-model="message"></div>
+      <!-- /default -->
+      <!-- footer 슬롯 콘텐츠 -->
+      <!-- <template slot="footer">
+        <button @click="doSend">제출</button>
+      </template> -->
+      <!-- /footer -->
+    </MyModal>
+
 
   <div style="display:flex; justify-content:space-between; margin: 10px;">
     <div style="font-weight:bold; font-size:120%">
@@ -30,16 +43,18 @@
     </div>
   <hr>
 
-
-  <div style="display:grid; grid-template-columns: 1fr 1fr; grid-gap: 10px 5px;">
-    <div v-for="item in items">
-      <img :src= '`${ path }/images/${ item.imageId }`' style="width:100%;">
+  <div style="display:grid; grid-gap: 10px 5px;">
+    <div class="container">
+      <div v-for="item in items">
+        <img :src= '`${ path }/images/${ item.imageId }`' style="width:100%;" id="picture">
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+
 
 export default {
   name:'RecomView',
@@ -164,6 +179,24 @@ input[type="radio"] {
 #category:hover {
   background-color: black;
   color: white;
+}
+
+.container {
+  width: 97%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 0fr;
+  /* padding: 7px; */
+  /* grid-template-rows: repeat(2, 100px);
+  grid-template-columns: repeat(3, 1fr); */
+  /* grid-auto-rows: 100px; */
+  grid-auto-rows:minmax(100px, auto)
+}
+
+#picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 
