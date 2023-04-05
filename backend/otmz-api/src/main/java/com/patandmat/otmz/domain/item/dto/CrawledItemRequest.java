@@ -22,7 +22,7 @@ public class CrawledItemRequest {
     private String seller;
 
     @JsonProperty(value = "style_vector")
-    private String styleVector;
+    private Object styleVector;
 
     public CrawledItem toEntity() {
         return CrawledItem.builder()
@@ -32,7 +32,7 @@ public class CrawledItemRequest {
                 .imageUrl(this.imageUrl)
                 .price(this.price)
                 .seller(this.seller)
-                .styleVector(this.styleVector)
+                .styleVector(this.styleVector.toString())
                 .build();
     }
 }
