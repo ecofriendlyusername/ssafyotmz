@@ -10,6 +10,7 @@ spring:
       ddl-auto: create
 file:
   image:
+
 #     path: C:/Users/SSAFY/Desktop/storage/
     path: C:/Users/multicampus/Desktop/storage/
 #    path: /Users/bellroot/Desktop/storage/
