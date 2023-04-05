@@ -16,7 +16,7 @@ public enum Style {
     ORIENTAL("oriental", "오리엔탈"),
     MODERN("modern", "모던"),
     SOPHISTICATED("sophisticated", "소피스트케이티드"),
-    AVANTGRADE("avantgarde", "아방가르드"),
+    AVANTGARDE("avantgarde", "아방가르드"),
     COUNTRY("country", "컨트리"),
     RESORT("resort", "리조트"),
     GENDERLESS("genderless", "젠더리스"),
