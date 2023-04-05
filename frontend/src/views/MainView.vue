@@ -338,7 +338,7 @@ export default {
   font-weight: bold;
   font-size: 85%;
   /* width: 60%; */
-  padding: 15px 40px;
+  padding: 15px 32px;
   border-radius: 15px;
   position: fixed;
   bottom:70px;
