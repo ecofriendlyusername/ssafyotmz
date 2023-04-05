@@ -207,8 +207,9 @@ export default {
       }
     },
 
-    mounted() {
-      this.backgroundColor = '#' +Math.floor(Math.random()*16777215).toString(16);
+    async mounted() {
+      this.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+      await this.getItems('outer');
     },
 
     methods: {

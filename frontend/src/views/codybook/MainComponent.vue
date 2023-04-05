@@ -334,8 +334,9 @@ export default {
     this.myUserName = this.$store.state.Auth.nickname;
   },
 
-  mounted() {
+  async mounted() {
     this.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+    await this.getItems('outer');
   },
 
   methods: {
