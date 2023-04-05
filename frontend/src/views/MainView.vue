@@ -99,7 +99,7 @@
         <div style="display:flex; justify-content: center; align-items: center;  margin: 0px 10px;">
             <img src="@/assets/img/카카오톡.png" style="width:15%;">
               &nbsp;&nbsp;&nbsp;&nbsp;
-            <span style="font-size:95%;">
+            <span style="font-size:90%;">
               Login with Kakao
             </span>
         </div>
