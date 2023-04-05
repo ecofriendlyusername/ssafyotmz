@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @NoArgsConstructor
@@ -15,16 +16,17 @@ public class MypageResponse {
     private String nickname;
     private int totalStyleCount;
     private int totalItemCount;
-
+    private Map<String, Integer> itemStyle;
     private List<StyleByPercentResponse> styleByPercentResponseList;
     private List<StyleByPercentResponse> topStyleList;
 
     @Builder
-    public MypageResponse(String nickname, int totalStyleCount, int totalItemCount, List<StyleByPercentResponse> styleByPercentResponseList, List<StyleByPercentResponse> topStyleList) {
+    public MypageResponse(String nickname, int totalStyleCount, int totalItemCount, List<StyleByPercentResponse> styleByPercentResponseList, List<StyleByPercentResponse> topStyleList,Map<String, Integer> itemStyle) {
         this.nickname = nickname;
         this.totalStyleCount = totalStyleCount;
         this.totalItemCount = totalItemCount;
         this.styleByPercentResponseList = styleByPercentResponseList;
         this.topStyleList = topStyleList;
+        this.itemStyle = itemStyle;
     }
 }

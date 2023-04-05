@@ -2,6 +2,7 @@ package com.patandmat.otmz.domain.member.api;
 
 
 import com.patandmat.otmz.domain.auth.application.JwtService;
+import com.patandmat.otmz.domain.item.application.ItemService;
 import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByCountResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByPercentResponse;
@@ -35,7 +36,7 @@ public class MemberController {
     private static final String FAIL = "fail";
     private final MemberService memberService;
     private final JwtService jwtService;
-
+    private final ItemService itemService;
     private final LookService lookService;
 
     @GetMapping("/refresh")
@@ -119,12 +120,15 @@ public class MemberController {
             }
         }
 
+        Map<String,Integer> itemStyle = itemService.countByStyle(member.getId());
+
         MypageResponse response = MypageResponse.builder()
                 .nickname(nickname)
                 .totalStyleCount(totalStyleCount)
                 .totalItemCount(totalItemCount)
                 .styleByPercentResponseList(styleByCountResponse)
                 .topStyleList(topStyleList)
+                .itemStyle(itemStyle)
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.OK);
