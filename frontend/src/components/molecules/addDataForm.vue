@@ -2,7 +2,7 @@
   <div>
     <div id="BackgroundCard">
       <div id="InnerCard">
-        <img id="ImgCard" style="width:100%; border-radius: 20px; max-height: 325px; " :src="image" />
+        <img id="ImgCard" style="max-width: 100%; max-height:100%;" :src="image" /> 
       </div>
 
       <p id="CardText">전신이 나온 사진을 선택해주세요</p>
@@ -44,7 +44,6 @@ export default {
       }
       return new File([u8arr], filename, {type: mime});
     },
-
     fileUpload(event) {
       var reader = new FileReader();
       reader.onload = (e) => {
@@ -53,8 +52,9 @@ export default {
         img.onload = () => {
           var thumbFile = (_IMG) => {
             var canvas = document.createElement("canvas");
-            var width = 360;
-            var height = 480;
+            var newWidthAndHeight = this.calculateAspectRatioFit(_IMG.width,_IMG.height, 360, 480)
+            var width = newWidthAndHeight.width;
+            var height = newWidthAndHeight.height;
             canvas.width = width;
             canvas.height = height;
             canvas.getContext("2d").drawImage(_IMG, 0, 0, width, height);
@@ -79,6 +79,11 @@ export default {
         img.src = reader.result;
       };
       reader.readAsDataURL(event.target.files[0]);
+    },
+    calculateAspectRatioFit (srcWidth, srcHeight, maxWidth, maxHeight) {
+      var ratio = [maxWidth / srcWidth, maxHeight / srcHeight ];
+      ratio = Math.min(ratio[0], ratio[1]);
+      return { width:srcWidth*ratio, height:srcHeight*ratio };
     },
 
     uploadImage() {
@@ -134,6 +139,7 @@ export default {
 <style>
 #BackgroundCard {
   display: inline-block;
+  /* display: flex; */
   margin-top: 20px;
   width: 85%;
   height: 580px;
@@ -175,7 +181,7 @@ button {
 #InnerCard {
   display: flex;
   /* display: inline-block; */
-  /* align-content: center; */
+  align-content: center;
   object-fit: cover;
   margin-top: 17%;
   margin-left: 12%;
@@ -187,6 +193,7 @@ button {
   border: 1px solid #a7a7a7;
   border-radius: 20px;
 }
+
 
 #UploadBtn {
   display:inline-block;
