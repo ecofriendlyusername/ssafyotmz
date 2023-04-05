@@ -121,10 +121,10 @@
     </div>
   </div>
 
-  <div style="display:flex; justify-content:space-between;">
+  <div style="display:flex; justify-content:space-between; font-size: 90%;">
     <router-link to='/Codybook/live' id="goTogether">← 함께 코디하러 가기</router-link>
-    <div v-if="dragItemId" @click="removeItem" id="DelBtn" style="margin-right:-50px">선택항목 삭제</div>
-    <div @click="clear" id="DelBtn">전체 삭제</div>
+    <div v-if="dragItemId" @click="removeItem" id="DelBtn" style="margin-right:0px;" >선택항목 삭제</div>
+    <div @click="clear" id="DelBtn" style="margin-left:0px">전체 삭제</div>
   </div>
 
   <br> <br>
