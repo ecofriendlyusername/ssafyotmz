@@ -79,7 +79,7 @@ export default {
   },
   methods:{
     async viewMultipleItemMatches(page, size) {
-        await axios.get(process.env.VUE_APP_API_URL+`/itemmatches?page=${page}&size=${size}`, {
+        await axios.get(process.env.VUE_APP_API_URL+`/itemmatches?page=${page}&size=${size}&sort=id,DESC`, {
           headers: {
             'Authorization' : this.Auth.accessToken
           }
