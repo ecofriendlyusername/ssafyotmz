@@ -287,7 +287,7 @@ export default {
             datasets: [{
               // label: '# of Votes',
               data: data.map(x => x['count']),
-              borderWidth: 1,
+              borderWidth: 0.8,
               backgroundColor: [
                 '#FFBFBA',
                 '#FFD89D',
@@ -295,6 +295,7 @@ export default {
               ],
               borderColor: '#000000',
               borderWidth: 2,
+              borderRadius:8,
             }]
           },
           options: {
@@ -377,7 +378,8 @@ export default {
             datasets: [{
               // label: '# of Votes',
               data: data2.map(x => x['count']),
-              borderWidth: 1,
+              borderWidth: 0.8,
+              borderRadius:8,
               backgroundColor: [
                 '#FFBFBA',
                 '#FFD89D',
