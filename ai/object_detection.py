@@ -61,7 +61,7 @@ model_detect = DetectBackend(f"../obj/{checkpoint}.pt", device=device)
 model_detect_single = DetectBackend(f"../obj/single_ckpt.pt",device=device)
 stride = model_detect.stride
 detect_class_names = ['top','bottom','onepiece','outer']
-single_class_names = ["hat","top","bottom","onepiece","outer","bag","shoes"]
+single_class_names = ["hat","upper","lower","dress","outer","bag","shoes"]
 
 model_detect.model.float()
 model_detect_single.model.float()
