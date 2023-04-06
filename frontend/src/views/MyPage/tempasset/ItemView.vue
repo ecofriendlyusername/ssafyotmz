@@ -51,7 +51,7 @@ export default {
     return {
       pages : [],
       env: process.env.VUE_APP_IMG,
-      itemsToRemove: [],
+      // itemsToRemove: [],
       selectedIdx: -1,
       selected: null,
       Auth: this.$store.state.Auth,
@@ -93,11 +93,11 @@ export default {
       var a = this
       await this.deleteMultipleItems(this.selectedIndices.map(x => a.pages[x].id))
       .then(() => {
-        var itemsToRemove = []
+        // var itemsToRemove = []
         a.selectedIndices.sort()
         a.selectedIndices.reverse()
         for (var idx of a.selectedIndices) {
-          itemsToRemove.push(a.pages[idx].id)
+          // itemsToRemove.push(a.pages[idx].id)
           document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
           a.pages.splice(idx,1)
         }
