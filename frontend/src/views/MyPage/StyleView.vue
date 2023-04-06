@@ -1,13 +1,34 @@
 <template>
 
+<div v-if="isModal" class="modal__background" style="z-index:100">
   <div id="modal" v-if="isModal">
-    <p>{{ modalData.ownerName }} 님의 {{ modalData.style }} 스타일의 옷이에요</p>
-    <hr>
-    <img :src="`${ path }/images/${ modalData.imageId }`" alt="">
-    <hr>
-    <button v-on:click="isModal = false">닫기</button>
-    <button v-on:click="styleDelete(modalData.id)">삭제하기</button>
+
+      <img v-on:click="styleDelete(modalData.id)" src="@/assets/img/trash.png" id="trashBtn">
+
+    <!-- <button v-on:click="styleDelete(modalData.id)" class="ModalBtn">삭제</button> -->
+    <img :src="`${ path }/images/${ modalData.imageId }`" style="padding:10px; border-radius: 25px;">
+    <div style="display:flex">
+      <div style="padding:0px 15px">
+        <span style="font-weight:bold;">
+          {{ modalData.ownerName }}
+        </span> <span>님의</span>
+      </div>
+      <div style="margin-left:-10px">
+        <span style="font-weight:bold;">
+          #{{ modalData.style.toUpperCase() }}
+        </span>
+        <span>
+          스타일
+        </span>
+      </div>
+    </div>
+
+    
+    <button v-on:click="isModal = false" class="ModalBtn">
+      닫기
+    </button>
   </div>
+</div>
 
   <div id="MyPage">
     <div class="SubNav">
@@ -18,8 +39,8 @@
     <hr>
     <div>
       <!-- user profileIMG -->
-      <p>유저이름: {{ myData['nickname'] }}</p>
-      <p>스타일 진단 횟수 {{ this.myData['totalStyleCount'] }} 회</p>
+      <b><p>유저이름: {{ myData['nickname'] }}</p></b>
+     <b><p>스타일 진단 횟수 {{ this.myData['totalStyleCount'] }} 회</p></b>
     </div>
     <div>
       <canvas id="myChart" ></canvas>
@@ -27,8 +48,8 @@
 
     <hr>
 
-    <div style="display:grid; grid-gap: 10px 5px;">
-      <div class="container">
+    <div style="display:flex; justify-content:center">
+      <div class="container" style="gap:5px">
         <div v-for="(style, index) in styleList" :key="index">
           <img :src= '`${ path }/images/${ style.imageId }`' style="width:100%;" id="picture" v-on:click="modal(style, index)">
         </div>
@@ -50,7 +71,7 @@ export default {
       path: process.env.VUE_APP_API_URL,
       styleList: null,
       myData: {
-        nickname: "홍길동", 
+        nickname: null, 
       },
       isModal: false,
       modalData: {
@@ -114,12 +135,71 @@ export default {
       new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: data.map(x => x['style'] + ' : ' + x['count'] + '%'),
+        labels: data.map(x => {
+      switch (x.style) {
+        case 'CLASSIC':
+          return '클래식';
+        case 'PREPPY':
+          return '프레피';
+        case 'mannish':
+          return '매니시';
+          case 'TOMBOY':
+          return '톰보이';
+        case 'ROMANTIC':
+          return '로맨틱';
+        case 'SEXY':
+          return '섹시';
+          case 'HIPPIE':
+          return '히피';
+        case 'WESTERN':
+          return '웨스턴';
+        case 'ORIENTAL':
+          return '오리엔탈';
+          case 'MODERN':
+          return '모던';
+        case 'SOPHISTICATED':
+          return '소피스트케이티드';
+        case 'AVANTGARDE':
+          return '아방가르드';
+          case 'COUNTRY':
+          return '컨트리';
+        case 'RESORT':
+          return '리조트';
+        case 'GENDERLESS':
+          return '젠더리스';
+          case 'SPORTY':
+          return '스포티';
+        case 'RETRO':
+          return '레트로';
+        case 'HIPHOP':
+          return '힙합';
+          case 'KITSCH':
+          return '키치';
+        case 'PUNK':
+          return '펑크';
+        case 'STREET':
+          return '스트릿';
+        case 'MILITARY':
+          return '밀리터리';
+        case 'FEMININE':
+          return '페미닌';
+        default:
+          return x.style;
+      }
+    }),
         datasets: [{
           data: data.map(x => x['count']),
-          borderWidth: 1,
-              backgroundColor: '#000000',
-              pointBorderColor: '#000000',
+          borderWidth: 0.8,
+          backgroundColor: [
+                '#FFBFBA',
+                '#FFD89D',
+                '#C8E4FF',
+                '#C8CDFF',
+                '#C8FFD7',
+              ],
+              borderColor: '#000000',
+              borderWidth: 2,
+              borderRadius:8,
         }]
       },
         options: {
@@ -176,5 +256,14 @@ export default {
   /* width: 100%;
   height: 100%; */
   left:50%; top:50%; transform: translate(-50%, -50%)
+}
+
+#trashBtn {
+  width:20px;
+  position: absolute;
+  margin: 5%;
+  background-color: white;
+  border-radius: 10px;
+  padding: 7px;
 }
 </style>
