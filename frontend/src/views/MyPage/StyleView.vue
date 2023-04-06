@@ -6,7 +6,7 @@
     <img :src="`${ path }/images/${ modalData.imageId }`" alt="">
     <hr>
     <button v-on:click="isModal = false">닫기</button>
-    <button>삭제하기</button>
+    <button v-on:click="styleDelete(modalData.id)">삭제하기</button>
   </div>
 
   <div id="MyPage">
@@ -67,6 +67,18 @@ export default {
       console.log(data)
       this.isModal = !this.isModal
       this.modalData = data
+    },
+    styleDelete(lookID) {
+      axios.delete(process.env.VUE_APP_API_URL + '/looks/' + lookID, {
+        headers: {
+          'Authorization' : this.$store.state.Auth['accessToken']
+        }
+      }).then((res) => {
+        this.isModal = false
+        console.log(res)
+      }).catch((e) => {
+        console.log(e)
+      })
     }
   },
   mounted() {
@@ -88,6 +100,8 @@ export default {
         'Authorization': this.$store.state.Auth['accessToken']
       }
     })
+
+
   .then(response => {
     // console.log(response.data)
     this.myData = response.data
