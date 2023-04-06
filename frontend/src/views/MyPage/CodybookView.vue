@@ -207,7 +207,7 @@ export default {
           document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
           a.pages.splice(idx,1)
         }
-        document.getElementById('selectB').style.backgroundColor = '#a4a4a4'
+        document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
         this.selectMode = false
       })
       .catch((e) => {
