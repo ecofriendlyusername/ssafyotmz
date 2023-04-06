@@ -91,11 +91,11 @@ export default {
     },
     async deleteSelectedItems() {
       var a = this
+      this.selectedIndices.sort()
+      this.selectedIndices.reverse()
       await this.deleteMultipleItems(this.selectedIndices.map(x => a.pages[x].id))
       .then(() => {
         // var itemsToRemove = []
-        a.selectedIndices.sort()
-        a.selectedIndices.reverse()
         for (var idx of a.selectedIndices) {
           // itemsToRemove.push(a.pages[idx].id)
           document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
