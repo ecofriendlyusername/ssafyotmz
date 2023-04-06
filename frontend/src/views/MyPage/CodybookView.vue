@@ -197,38 +197,41 @@ export default {
     },
     async deleteSelectedItemMatches() {
       var a = this
-      this.selectedIndices.sort()
-      this.selectedIndices.reverse()
-      for (var idx of a.selectedIndices) {
-        await axios.delete(process.env.VUE_APP_API_URL + '/itemmatch/' + a.pages[idx].id, {
-        headers: {
-          'Authorization' : this.Auth.accessToken
-        }
-        }).then((res) => {
-          document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
-          a.pages.splice(idx,1)
-          return res
-        }).catch((e) => {
-          console.log(e)
-        })
+      const copyA = []
+      for (var el of this.selectedIndices) {
+        copyA.push(el)
       }
+      copyA.sort()
+      const sorted = copyA.reverse()
+      // for await (var i = 0; i < reversed.length; i++) {
+      //   await axios.delete(process.env.VUE_APP_API_URL + '/itemmatch/' + a.pages[idx].id, {
+      //   headers: {
+      //     'Authorization' : this.Auth.accessToken
+      //   }
+      //   }).then((res) => {
+      //     document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
+      //     a.pages.splice(idx,1)
+      //     return res
+      //   }).catch((e) => {
+      //     console.log(e)
+      //   })
+      // }
+      var len = sorted.length-1;
+      await this.deleteMultipleItemMatches(sorted.map(x => a.pages[len-x].id))
+      .then(() => {
+        for (var i = 0; i <= len; i++) {
+          document.getElementById(a.pages[sorted[len-i]].id).style.filter = 'saturate(1)'
+          a.pages.splice(sorted[len-i],1)
+        }
+        document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
+        this.selectMode = false
+      })
+      .catch((e) => {
+        return e
+      })
       document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
       this.selectMode = false
       },
-      // await this.deleteMultipleItemMatches(this.selectedIndices.map(x => a.pages[x].id))
-      // .then(() => {
-      //   // var itemMatchesToRemove = []
-      //   for (var idx of a.selectedIndices) {
-      //     // itemMatchesToRemove.push(a.pages[idx].id)
-      //     document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
-      //     a.pages.splice(idx,1)
-      //   }
-      //   document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
-      //   this.selectMode = false
-      // })
-      // .catch((e) => {
-      //   return e
-      // })
     async deleteMultipleItemMatches(array) {
       await axios.delete(process.env.VUE_APP_API_URL + `/itemmatches?ids=${array.join(',')}`, {
         headers: {
