@@ -123,8 +123,6 @@ export default {
         'Authorization': this.$store.state.Auth['accessToken']
       }
     })
-
-
   .then(response => {
     // console.log(response.data)
     this.myData = response.data
@@ -132,10 +130,27 @@ export default {
   .then(() => {
       const ctx = document.getElementById('myChart');
       const data = Object.values(this.myData.styleByPercentResponseList)
+      const chartData = []
+      let tmp = 0
+
+      data.forEach(e=>{
+        if (chartData.length < 4){
+          chartData.push(e)
+        } else {
+          tmp += e.count
+        }
+      })
+
+      if (tmp) {
+        chartData.push(
+          {style: 'etc', count: tmp}
+        )
+      }
+
       new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: data.map(x => {
+        labels: chartData.map(x => {
       switch (x.style) {
         case 'CLASSIC':
           return '클래식';
@@ -188,7 +203,7 @@ export default {
       }
     }),
         datasets: [{
-          data: data.map(x => x['count']),
+          data: chartData.map(x => x['count']),
           borderWidth: 0.8,
           backgroundColor: [
                 '#FFBFBA',
