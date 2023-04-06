@@ -5,7 +5,7 @@
     <div style="display:flex">
       <div style="padding:0px 15px">
         <span style="font-weight:bold;">
-          {{ modalData.ownerName }}
+          {{ modalData.memberNickname }}
         </span> <span>님의</span>
       </div>
       <div style="margin-left:-10px">
