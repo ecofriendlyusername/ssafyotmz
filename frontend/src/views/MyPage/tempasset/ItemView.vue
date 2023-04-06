@@ -92,8 +92,8 @@ export default {
     async deleteSelectedItems() {
       var a = this
       this.selectedIndices.sort()
-      this.selectedIndices.reverse()
-      for (var idx of a.selectedIndices) {
+      const reversedIndices = this.selectedIndices.reverse()
+      for (var idx of reversedIndices) {
         await axios.delete(process.env.VUE_APP_API_URL + '/item/' + a.pages[idx].id, {
         headers: {
           'Authorization' : this.Auth.accessToken

@@ -111,7 +111,6 @@ export default {
       },
       mySwipeChanged (swiper) {
         const index = swiper.realIndex;
-        console.log('인덱스', index, this.pages);
         if (index === Math.ceil(this.pages.length/4)-1) {
           this.viewMultipleItemMatches(index+1, 4)
         }
@@ -197,38 +196,62 @@ export default {
     },
     async deleteSelectedItemMatches() {
       var a = this
-      this.selectedIndices.sort()
-      this.selectedIndices.reverse()
-      for (var idx of a.selectedIndices) {
-        await axios.delete(process.env.VUE_APP_API_URL + '/itemmatch/' + a.pages[idx].id, {
-        headers: {
-          'Authorization' : this.Auth.accessToken
-        }
-        }).then((res) => {
-          document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
-          a.pages.splice(idx,1)
-          return res
-        }).catch((e) => {
-          console.log(e)
-        })
+      // const newData = structuredClone(this.selectedIndices)
+      const newData = []
+      for (var a of this.selectedIndices) {
+        newData.push(a)
       }
-      document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
-      this.selectMode = false
-      },
-      // await this.deleteMultipleItemMatches(this.selectedIndices.map(x => a.pages[x].id))
-      // .then(() => {
+      console.log('add')
+      for (var i of newData) {
+        console.log(i)
+      }
+      console.log('add')
+      newData.sort()
+      console.log('add')
+      for (var i of newData) {
+        console.log(i)
+      }
+      console.log('add')
+      const reversedIndices = newData.reverse()
+      console.log('add')
+      for (var i of reversedIndices) {
+        console.log(i)
+      }
+      console.log('add')
+      // for await (var idx of reversedIndices) {
+      //   var v = await axios.delete(process.env.VUE_APP_API_URL + '/itemmatch/' + a.pages[idx].id, {
+      //   headers: {
+      //     'Authorization' : this.Auth.accessToken
+      //   }
+      //   }).then((res) => {
+      //     return res
+      //   }).catch((e) => {
+      //     return e
+      //   })
+      //   if (v.status == 200) {
+      //     document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
+      //     a.pages.splice(idx,1)
+      //   }
+      // }
+      // document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
+      // this.selectMode = false
+
+      // await this.deleteMultipleItemMatches(reversedIndices.map(x => a.pages[x].id))
+      // .then((res) => {
       //   // var itemMatchesToRemove = []
-      //   for (var idx of a.selectedIndices) {
+      //   for (var idx of reversedIndices) {
       //     // itemMatchesToRemove.push(a.pages[idx].id)
       //     document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
       //     a.pages.splice(idx,1)
       //   }
       //   document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
       //   this.selectMode = false
+      //   return res
       // })
       // .catch((e) => {
       //   return e
       // })
+      },
     async deleteMultipleItemMatches(array) {
       await axios.delete(process.env.VUE_APP_API_URL + `/itemmatches?ids=${array.join(',')}`, {
         headers: {
