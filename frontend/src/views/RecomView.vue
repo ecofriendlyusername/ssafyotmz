@@ -131,8 +131,8 @@ export default {
         // 우리 추천
         // console.log(this.isOMZ, this.filter)
         let reverse = ''
+        this.isOMZ = !this.isOMZ
         if (this.filter === 'issimilar') {
-          this.isOMZ = !this.isOMZ
           reverse = '?/reversed= true'
         } 
         axios.get(process.env.VUE_APP_API_URL + '/looks/recommended' + reverse, {
