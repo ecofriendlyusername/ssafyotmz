@@ -1,12 +1,29 @@
 <template>
 
+<div v-if="isModal" class="modal__background" style="z-index:100">
   <div id="modal" v-if="isModal">
-    <p>{{ modalData.ownerName }} 님의 {{ modalData.style }} 스타일의 옷이에요</p>
-    <hr>
-    <img :src="`${ path }/images/${ modalData.imageId }`" alt="">
-    <hr>
-    <button v-on:click="isModal = false">닫기</button>
+    <img :src="`${ path }/images/${ modalData.imageId }`" style="padding:10px; border-radius: 25px;">
+    <div style="display:flex">
+      <div style="padding:0px 15px">
+        <span style="font-weight:bold;">
+          {{ modalData.ownerName }}
+        </span> <span>님의</span>
+      </div>
+      <div style="margin-left:-10px">
+        <span style="font-weight:bold;">
+          #{{ modalData.style.toUpperCase() }}
+        </span>
+        <span>
+          스타일
+        </span>
+      </div>
+    </div>
+
+    <button v-on:click="isModal = false" class="ModalBtn">
+      닫기
+    </button>
   </div>
+</div>
 
   <div v-if="Auth.first == true" style="margin-top: -16px; padding: 13px; background-color:black; color: white;;">
     <br><br>
@@ -30,13 +47,6 @@
       </button>
 
 
-    
-
-    <!-- <p>데이터 수집을 위한 첫 설문이 있겠습니다.</p>
-    <p>아래 버튼을 클릭해주세요.</p>
-    <p>||</p>
-    <p>V</p> -->
-    <!-- <div v-on:click="$router.push('/survey')">servay</div> -->
   </div>
 
   <!-- 로그인 시 메인화면 -->
@@ -76,8 +86,14 @@
     </swiper>
 
     <div>
-      <div id="LoginDiv1" v-on:click="$router.push('/Recom')">
-        스타일 필터
+      <div id="LoginDiv0" v-on:click="$router.push('/Recom')">
+        <div>
+          모아보기
+        </div>
+        <div>
+          ❤
+        </div>
+
       </div>
     </div>
 
@@ -87,7 +103,7 @@
       </div>
       <div v-for="(items, key) in dressDatas">
         <div id="LoginDiv2">
-          # {{ key }}
+          # {{ key.toUpperCase() }}
         </div>
         <div style="display:flex; justify-content:center; margin-top:7px;">
           <div class="container">
@@ -311,6 +327,23 @@ export default {
   transform: translateY(0px);
 }
 
+#LoginDiv0 {
+  display: flex;
+  justify-content: space-between;
+  font-size: 125%;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.84);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin: 5px 15px;
+  box-shadow: 2px 2px 2px 2px rgb(174, 174, 174);
+}
+#LoginDiv0:hover {
+  background-color: black;
+  color: white;
+}
+
 #LoginDiv1 {
   display: flex;
   margin-top: 5px;
@@ -394,10 +427,28 @@ export default {
   z-index: 999;
   border: #000 solid 2px;
   background-color: #fff;
+  border-radius: 15px;
   position: fixed;
-  /* width: 100%;
-  height: 100%; */
   left:50%; top:50%; transform: translate(-50%, -50%)
+}
+.modal__background{
+  position: fixed;
+  top:0; left: 0; bottom: 0; right: 0;
+  background: rgba(0, 0, 0, 0.8);
+}
+.ModalBtn {
+  background-color: white;
+  padding:5px 15px;
+  font-size: 100%;
+  font-weight: bold;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  border: 2px solid black;
+  border-radius: 8px;
+}
+.ModalBtn:hover {
+  background-color: black;
+  color: white;
 }
 
 </style>
