@@ -52,8 +52,8 @@ export default {
       const formData = new FormData()
       formData.append('styleVector', JSON.stringify(this.$store.state.result['data']))
       formData.append('imageFile', this.$store.state.result['img_path'])
-      formData.append('style', this.$store.state.result['data']['2']['style'])
-      console.log(this.$store.state.result['data']['2']['style'])
+      formData.append('style', this.$store.state.result['data']['1']['style'])
+      console.log(this.$store.state.result['data']['1']['style'])
       axios.post(process.env.VUE_APP_API_URL + '/looks', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
