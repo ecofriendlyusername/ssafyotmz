@@ -39,8 +39,8 @@
     <hr>
     <div>
       <!-- user profileIMG -->
-      <p>유저이름: {{ myData['nickname'] }}</p>
-      <p>스타일 진단 횟수 {{ this.myData['totalStyleCount'] }} 회</p>
+      <b><p>유저이름: {{ myData['nickname'] }}</p></b>
+     <b><p>스타일 진단 횟수 {{ this.myData['totalStyleCount'] }} 회</p></b>
     </div>
     <div>
       <canvas id="myChart" ></canvas>
@@ -71,7 +71,7 @@ export default {
       path: process.env.VUE_APP_API_URL,
       styleList: null,
       myData: {
-        nickname: "홍길동", 
+        nickname: null, 
       },
       isModal: false,
       modalData: {
@@ -135,12 +135,71 @@ export default {
       new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: data.map(x => x['style'] + ' : ' + x['count'] + '%'),
+        labels: data.map(x => {
+      switch (x.style) {
+        case 'CLASSIC':
+          return '클래식';
+        case 'PREPPY':
+          return '프레피';
+        case 'mannish':
+          return '매니시';
+          case 'TOMBOY':
+          return '톰보이';
+        case 'ROMANTIC':
+          return '로맨틱';
+        case 'SEXY':
+          return '섹시';
+          case 'HIPPIE':
+          return '히피';
+        case 'WESTERN':
+          return '웨스턴';
+        case 'ORIENTAL':
+          return '오리엔탈';
+          case 'MODERN':
+          return '모던';
+        case 'SOPHISTICATED':
+          return '소피스트케이티드';
+        case 'AVANTGARDE':
+          return '아방가르드';
+          case 'COUNTRY':
+          return '컨트리';
+        case 'RESORT':
+          return '리조트';
+        case 'GENDERLESS':
+          return '젠더리스';
+          case 'SPORTY':
+          return '스포티';
+        case 'RETRO':
+          return '레트로';
+        case 'HIPHOP':
+          return '힙합';
+          case 'KITSCH':
+          return '키치';
+        case 'PUNK':
+          return '펑크';
+        case 'STREET':
+          return '스트릿';
+        case 'MILITARY':
+          return '밀리터리';
+        case 'FEMININE':
+          return '페미닌';
+        default:
+          return x.style;
+      }
+    }),
         datasets: [{
           data: data.map(x => x['count']),
-          borderWidth: 1,
-              backgroundColor: '#000000',
-              pointBorderColor: '#000000',
+          borderWidth: 0.8,
+          backgroundColor: [
+                '#FFBFBA',
+                '#FFD89D',
+                '#C8E4FF',
+                '#C8CDFF',
+                '#C8FFD7',
+              ],
+              borderColor: '#000000',
+              borderWidth: 2,
+              borderRadius:8,
         }]
       },
         options: {
