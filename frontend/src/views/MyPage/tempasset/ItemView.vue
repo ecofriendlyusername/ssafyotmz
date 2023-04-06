@@ -102,7 +102,7 @@ export default {
           a.pages.splice(idx,1)
         }
         a.selectMode = false
-        document.getElementById('selectB').style.backgroundColor = 'white'
+        document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
       })
       .catch((e) => {
         return e
