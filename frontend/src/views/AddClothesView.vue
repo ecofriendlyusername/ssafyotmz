@@ -227,6 +227,7 @@ export default {
       })
       .then(response => {
         var len = response.data.image.body.length
+        console.log(response.data)
         var str = response.data.image.body.substring(1,len-1)
         a.processedImageStr = 'data:image/png;base64,' + str
         const style = response.data.style
@@ -238,7 +239,9 @@ export default {
         // ['outer','upper','lower','dress','etc']
         if (gate == 'bag' || gate ==  'shoes' || gate ==  'hat') {
           this.curCategory = 'etc'
-        } 
+        } else {
+          this.curCategory = gate
+        }
         return response
       })
       .catch(e => {
