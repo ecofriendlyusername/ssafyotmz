@@ -113,7 +113,7 @@ export default {
     }
   },
   mounted() {
-    axios.get(process.env.VUE_APP_API_URL + '/looks/recommended', {
+    axios.get(process.env.VUE_APP_API_URL + '/looks/recommended?size=10', {
           headers: {
             'Authorization': this.$store.state.Auth['accessToken']
           }
