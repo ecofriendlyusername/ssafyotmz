@@ -199,11 +199,11 @@ export default {
       var a = this
       await this.deleteMultipleItemMatches(this.selectedIndices.map(x => a.pages[x].id))
       .then(() => {
-        var itemMatchesToRemove = []
+        // var itemMatchesToRemove = []
         a.selectedIndices.sort()
         a.selectedIndices.reverse()
         for (var idx of a.selectedIndices) {
-          itemMatchesToRemove.push(a.pages[idx].id)
+          // itemMatchesToRemove.push(a.pages[idx].id)
           document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
           a.pages.splice(idx,1)
         }
