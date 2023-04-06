@@ -27,7 +27,8 @@ export default {
       file: null,
       image: null,
       resized: null,
-      result: null
+      result: null,
+      makeError: null,
     };
   },
 
@@ -105,7 +106,9 @@ export default {
       // 결과 받아서 저장
       .then(response => {
         console.log(response.data)
-        this.result = response.data;     
+        this.result = response.data;    
+        // 일부러 에러 발생 
+        this.makeError = this.result['data']['1']
       })
       // 워터마크 찍기
       .then(() => {
@@ -127,6 +130,7 @@ export default {
         this.$router.push('/Find/loading');
       })
       .catch(error => {
+        alert('사진을 다시 입력해주세요')
         console.log(error);
         // this.$router.push('/Find')
       });
