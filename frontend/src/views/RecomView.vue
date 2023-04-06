@@ -206,12 +206,12 @@ input[type="radio"] {
 
 .filter {
   border: 2px solid gray;
-  /* border-radius: 15px; */
+  border-radius: 10px;
   color: black;
   font-weight: bold;
-  padding: 3.5px 2px;
+  padding: 3.5px 3px;
   margin: 3px;
-  font-size: 72%;
+  font-size: 70%;
 } 
 .filter:hover {
   background-color: black;
