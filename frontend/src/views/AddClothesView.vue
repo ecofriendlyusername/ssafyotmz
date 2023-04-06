@@ -99,6 +99,7 @@ export default {
       userUploadedImgExist: false,
       haveImage: false,
       Auth: this.$store.state.Auth,
+
     }
   },
   methods: {
@@ -233,6 +234,11 @@ export default {
         this.style = style
         this.isLoading = false
         this.haveImage = true
+        const gate = response.data.category
+        // ['outer','upper','lower','dress','etc']
+        if (gate == 'bag' || gate ==  'shoes' || gate ==  'hat') {
+          this.curCategory = 'etc'
+        } 
         return response
       })
       .catch(e => {
