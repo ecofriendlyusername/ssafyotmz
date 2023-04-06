@@ -29,8 +29,8 @@
 
     <div style="display:grid; grid-gap: 10px 5px;">
       <div class="container">
-        <div v-for="style in styleList">
-          <img :src= '`${ path }/images/${ style.imageId }`' style="width:100%;" id="picture" v-on:click="modal(style)">
+        <div v-for="(style, index) in styleList" :key="index">
+          <img :src= '`${ path }/images/${ style.imageId }`' style="width:100%;" id="picture" v-on:click="modal(style, index)">
         </div>
       </div>
     </div>
@@ -54,6 +54,7 @@ export default {
       },
       isModal: false,
       modalData: {
+        key: null,
         id: null, 
         imageId: null,
         memberId: null, 
@@ -63,10 +64,11 @@ export default {
     }
   },
   methods:{
-    modal(data) {
+    modal(data, idx) {
       console.log(data)
       this.isModal = !this.isModal
       this.modalData = data
+      this.modalData.key = idx
     },
     styleDelete(lookID) {
       axios.delete(process.env.VUE_APP_API_URL + '/looks/' + lookID, {
@@ -75,7 +77,7 @@ export default {
         }
       }).then((res) => {
         this.isModal = false
-        console.log(res)
+        location.reload()
       }).catch((e) => {
         console.log(e)
       })
