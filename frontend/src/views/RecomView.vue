@@ -133,9 +133,9 @@ export default {
         let reverse = ''
         this.isOMZ = !this.isOMZ
         if (this.filter === 'issimilar') {
-          reverse = '?/reversed= true'
+          reverse = 'reversed=true'
         } 
-        axios.get(process.env.VUE_APP_API_URL + '/looks/recommended' + reverse, {
+        axios.get(process.env.VUE_APP_API_URL + '/looks/recommended?size=10&' + reverse, {
           headers: {
             'Authorization': this.$store.state.Auth['accessToken']
           }
