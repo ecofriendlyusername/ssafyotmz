@@ -93,20 +93,36 @@ export default {
       var a = this
       this.selectedIndices.sort()
       this.selectedIndices.reverse()
-      await this.deleteMultipleItems(this.selectedIndices.map(x => a.pages[x].id))
-      .then(() => {
-        // var itemsToRemove = []
-        for (var idx of a.selectedIndices) {
-          // itemsToRemove.push(a.pages[idx].id)
+      for (var idx of a.selectedIndices) {
+        await axios.delete(process.env.VUE_APP_API_URL + '/item/' + a.pages[idx].id, {
+        headers: {
+          'Authorization' : this.Auth.accessToken
+        }
+        }).then((res) => {
           document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
           a.pages.splice(idx,1)
-        }
-        a.selectMode = false
-        document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
-      })
-      .catch((e) => {
-        return e
-      })
+          return res
+        }).catch((e) => {
+          console.log(e)
+        })
+      }
+      // await this.deleteMultipleItems(this.selectedIndices.map(x => a.pages[x].id))
+      // .then(() => {
+      //   // var itemsToRemove = []
+      //   for (var idx of a.selectedIndices) {
+      //     // itemsToRemove.push(a.pages[idx].id)
+      //     document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
+      //     a.pages.splice(idx,1)
+      //   }
+      //   a.selectMode = false
+      //   document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
+      // })
+      // .catch((e) => {
+      //   return e
+      // })
+
+      document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
+      this.selectMode = false
     },
     async viewMultipleItems(category,page,size) {
       var a = this
