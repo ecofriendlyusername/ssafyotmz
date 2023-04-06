@@ -114,7 +114,7 @@ export default {
       .then(() => {
         watermark([this.image, require('@/assets/img/watermark/logo.png')])
           .image(watermark.image.upperRight(0.5))
-          .load([require('@/assets/img/watermark/' + this.result['data']['1']['style'] + '.png')])
+          .load([require('@/assets/img/watermark/' + this.result['data']['2']['style'] + '.png')])
           .image(watermark.image.lowerLeft(0.5))
           .then((img) => {
             const watermark = this.dataURLtoFile(img.src, 'temp.jpg')
