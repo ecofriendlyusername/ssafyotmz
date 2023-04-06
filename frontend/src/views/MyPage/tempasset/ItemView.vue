@@ -91,37 +91,23 @@ export default {
     },
     async deleteSelectedItems() {
       var a = this
-      this.selectedIndices.sort()
-      this.selectedIndices.reverse()
-      for (var idx of a.selectedIndices) {
-        await axios.delete(process.env.VUE_APP_API_URL + '/item/' + a.pages[idx].id, {
-        headers: {
-          'Authorization' : this.Auth.accessToken
-        }
-        }).then((res) => {
+      this.selectedIndices.sort(function(a, b) {
+        return b - a;
+      });
+      await this.deleteMultipleItems(this.selectedIndices.map(x => a.pages[x].id))
+      .then(() => {
+        for (var idx of a.selectedIndices) {
           document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
           a.pages.splice(idx,1)
-          return res
-        }).catch((e) => {
-          console.log(e)
-        })
-      }
-      // await this.deleteMultipleItems(this.selectedIndices.map(x => a.pages[x].id))
-      // .then(() => {
-      //   // var itemsToRemove = []
-      //   for (var idx of a.selectedIndices) {
-      //     // itemsToRemove.push(a.pages[idx].id)
-      //     document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
-      //     a.pages.splice(idx,1)
-      //   }
-      //   a.selectMode = false
-      //   document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
-      // })
-      // .catch((e) => {
-      //   return e
-      // })
-
+        }
+        a.selectMode = false
+        document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
+      })
+      .catch((e) => {
+        return e
+      })
       document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
+      this.selectedIndices = []
       this.selectMode = false
     },
     async viewMultipleItems(category,page,size) {
@@ -145,8 +131,9 @@ export default {
     },
     selectItems() {
       if (this.selectMode) {
-        this.selectedIndices.sort()
-        this.selectedIndices.reverse()
+        this.selectedIndices.sort(function(a, b) {
+        return b - a;
+      });
         for (var idx of this.selectedIndices) {
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
           document.getElementById(this.pages[idx].id).style.backgroundColor = '#F5F5F7'
