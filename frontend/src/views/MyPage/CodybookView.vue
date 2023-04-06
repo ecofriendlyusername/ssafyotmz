@@ -97,8 +97,11 @@ export default {
       },
       selectItemMatches() {
         if (this.selectMode) {
-          this.selectedIndices.sort()
-        this.selectedIndices.reverse()
+          // this.selectedIndices.sort()
+          // this.selectedIndices.reverse()
+      this.selectedIndices.sort(function(a, b) {
+        return b - a;
+      });
         for (var idx of this.selectedIndices) {
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
         }
@@ -111,7 +114,6 @@ export default {
       },
       mySwipeChanged (swiper) {
         const index = swiper.realIndex;
-        console.log('인덱스', index, this.pages);
         if (index === Math.ceil(this.pages.length/4)-1) {
           this.viewMultipleItemMatches(index+1, 4)
         }
@@ -197,39 +199,24 @@ export default {
     },
     async deleteSelectedItemMatches() {
       var a = this
-      const copyA = []
-      for (var el of this.selectedIndices) {
-        copyA.push(el)
-      }
-      copyA.sort()
-      const sorted = copyA.reverse()
-      // for await (var i = 0; i < reversed.length; i++) {
-      //   await axios.delete(process.env.VUE_APP_API_URL + '/itemmatch/' + a.pages[idx].id, {
-      //   headers: {
-      //     'Authorization' : this.Auth.accessToken
-      //   }
-      //   }).then((res) => {
-      //     document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
-      //     a.pages.splice(idx,1)
-      //     return res
-      //   }).catch((e) => {
-      //     console.log(e)
-      //   })
-      // }
-      var len = sorted.length-1;
-      await this.deleteMultipleItemMatches(sorted.map(x => a.pages[len-x].id))
-      .then(() => {
-        for (var i = 0; i <= len; i++) {
-          document.getElementById(a.pages[sorted[len-i]].id).style.filter = 'saturate(1)'
-          a.pages.splice(sorted[len-i],1)
+      this.selectedIndices.sort(function(a, b) {
+        return b - a;
+      });
+      await this.deleteMultipleItemMatches(this.selectedIndices.map(x => a.pages[x].id))
+      .then((res) => {
+        for (var i of this.selectedIndices) {
+          document.getElementById(a.pages[i].id).style.filter = 'saturate(1)'
+          a.pages.splice(i,1)
         }
         document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
         this.selectMode = false
+        return res
       })
       .catch((e) => {
         return e
       })
       document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
+      this.selectedIndices = []
       this.selectMode = false
       },
     async deleteMultipleItemMatches(array) {
