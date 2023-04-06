@@ -77,7 +77,7 @@
 
     <div>
       <div id="LoginDiv1" v-on:click="$router.push('/Recom')">
-        랭킹 보기
+        스타일 필터
       </div>
     </div>
 
@@ -366,7 +366,7 @@ export default {
 
 .item:nth-child(1) {
   grid-column: 1 / 3;
-  max-height: 300px;
+  /* max-height: 300px; */
 }
 
 #surveyBtn {
