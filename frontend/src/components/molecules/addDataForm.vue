@@ -108,7 +108,7 @@ export default {
         console.log(response.data)
         this.result = response.data;    
         // 일부러 에러 발생 
-        this.makeError = this.result['data']['1']
+        this.makeError = this.result['data']['2']
       })
       // 워터마크 찍기
       .then(() => {
