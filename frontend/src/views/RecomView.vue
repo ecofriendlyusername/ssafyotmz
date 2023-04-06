@@ -1,11 +1,29 @@
 <template>
+  <div v-if="isModal" class="modal__background" style="z-index:100">
   <div id="modal" v-if="isModal">
-    <p>{{ modalData.ownerName }} 님의 {{ modalData.style }} 스타일의 옷이에요</p>
-    <hr>
-    <img :src="`${ path }/images/${ modalData.imageId }`" alt="">
-    <hr>
-    <button v-on:click="isModal = false">닫기</button>
+    <img :src="`${ path }/images/${ modalData.imageId }`" style="padding:10px; border-radius: 25px;">
+    <div style="display:flex">
+      <div style="padding:0px 15px">
+        <span style="font-weight:bold;">
+          {{ modalData.ownerName }}
+        </span> <span>님의</span>
+      </div>
+      <div style="margin-left:-10px">
+        <span style="font-weight:bold;">
+          #{{ modalData.style.toUpperCase() }}
+        </span>
+        <span>
+          스타일
+        </span>
+      </div>
+    </div>
+
+    <button v-on:click="isModal = false" class="ModalBtn">
+      닫기
+    </button>
   </div>
+</div>
+  
   <!-- <div>
     스타일 추천 페이지
   </div> -->
@@ -36,13 +54,14 @@
     </div>
   <hr>
 
-  <div style="display:grid; grid-gap: 10px 5px;">
-    <div class="container">
-      <div v-for="item in items">
-        <img :src= '`${ path }/images/${ item.imageId }`' style="width:100%;" id="picture" v-on:click="modal(item)">
-      </div>
+<div style="display:flex; justify-content:center">
+  <div class="container" style="gap:5px">
+    <div v-for="item in items">
+      <img :src= '`${ path }/images/${ item.imageId }`' style="width:100%;" id="picture" v-on:click="modal(item)">
     </div>
   </div>
+</div>
+
 </template>
 
 <script>
@@ -222,9 +241,12 @@ input[type="radio"] {
   border: #000 solid 2px;
   background-color: #fff;
   position: fixed;
-  /* width: 100%;
-  height: 100%; */
   left:50%; top:50%; transform: translate(-50%, -50%)
+}
+.modal__background{
+  position: fixed;
+  top:0; left: 0; bottom: 0; right: 0;
+  background: rgba(0, 0, 0, 0.8);
 }
 
 </style>

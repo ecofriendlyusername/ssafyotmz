@@ -43,6 +43,7 @@ export default {
     padding: 10px;
   }
 
+
   .category {
     margin: 0 5px;
     border: 2px solid black;
@@ -52,8 +53,8 @@ export default {
   }
 
   .selected {
-    background-color: black;
     color: white;
+    background-color: black;
   }
 
   #CategoryDiv {
