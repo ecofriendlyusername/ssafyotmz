@@ -63,6 +63,7 @@ public class LookService {
     }
 
     public List<SurveyStyleResponse> getLooksByStyle(Style style) {
+        List<Look> loks = lookRepository.findTop2ByStyle(style);
         return lookRepository.findTop2ByStyle(style)
                              .stream()
                              .map(look -> new SurveyStyleResponse(look.getStyle().getKey(), look.getImage().getId()))

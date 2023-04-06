@@ -44,11 +44,9 @@ public class MemberService {
             newMember.setProfileImagePath(profileImg);
             newMember.setNickname(nickname);
             memberRepository.save(newMember);
-            System.out.println("회원가입 성공");
         } else {
             member.restore();
             memberRepository.save(member);
-            System.out.println("회원가입 성공[재가입]");
         }
     }
 
@@ -116,7 +114,6 @@ public class MemberService {
     }
 
     public void updateItemStyleStat(Member member, String styleVector) {
-        System.out.println("styleVector : " + styleVector);
         Map<String, Double> styleMap = VectorParser.parseToMap(styleVector, VectorParser.STYLE_KEY, VectorParser.STYLE_VALUE);
 
         Map<String, Double> memberStyleStatMap;

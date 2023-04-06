@@ -22,10 +22,10 @@ import java.util.Map;
 @Configuration
 public class RedisConfig {
 
-    @Value("${spring.redis.host}")
+    @Value("${spring.data.redis.host}")
     private String host;
 
-    @Value("${spring.redis.port}")
+    @Value("${spring.data.redis.port}")
     private int port;
 
     @Bean //RedisConnectionFactory라는 객체에 Redis 접속 정보를 입력해 캐싱 기능을 명시한 곳에 사용할 수 있도록 설정 정보를 담은 객체이다.
