@@ -199,21 +199,36 @@ export default {
       var a = this
       this.selectedIndices.sort()
       this.selectedIndices.reverse()
-      await this.deleteMultipleItemMatches(this.selectedIndices.map(x => a.pages[x].id))
-      .then(() => {
-        // var itemMatchesToRemove = []
-        for (var idx of a.selectedIndices) {
-          // itemMatchesToRemove.push(a.pages[idx].id)
+      for (var idx of a.selectedIndices) {
+        await axios.delete(process.env.VUE_APP_API_URL + '/itemmatch/' + a.pages[idx].id, {
+        headers: {
+          'Authorization' : this.Auth.accessToken
+        }
+        }).then((res) => {
           document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
           a.pages.splice(idx,1)
-        }
-        document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
-        this.selectMode = false
-      })
-      .catch((e) => {
-        return e
-      })
-    },
+          return res
+        }).catch((e) => {
+          console.log(e)
+        })
+      }
+      document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
+      this.selectMode = false
+      },
+      // await this.deleteMultipleItemMatches(this.selectedIndices.map(x => a.pages[x].id))
+      // .then(() => {
+      //   // var itemMatchesToRemove = []
+      //   for (var idx of a.selectedIndices) {
+      //     // itemMatchesToRemove.push(a.pages[idx].id)
+      //     document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
+      //     a.pages.splice(idx,1)
+      //   }
+      //   document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
+      //   this.selectMode = false
+      // })
+      // .catch((e) => {
+      //   return e
+      // })
     async deleteMultipleItemMatches(array) {
       await axios.delete(process.env.VUE_APP_API_URL + `/itemmatches?ids=${array.join(',')}`, {
         headers: {
