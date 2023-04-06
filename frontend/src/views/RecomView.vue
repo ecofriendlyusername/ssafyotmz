@@ -41,14 +41,14 @@
   </div>
   
   <div v-if="isOMZ" style="display:flex; justify-content:end;">
-    <label for="similar" v-on:click="this.filter='similar'" class="category">나랑 비슷한거</label><input type="radio" name="OMZ" id="similar">
-    <label for="issimilar" v-on:click="this.filter='issimilar'" class="category" style="margin-left:-17px; margin-right: 23px;">안비슷한거</label><input type="radio" name="OMZ" id="issimilar"> 
+    <label for="similar" v-on:click="this.filter='similar'" class="filter">유사도 높은 순</label><input type="radio" name="OMZ" id="similar">
+    <label for="issimilar" v-on:click="this.filter='issimilar'" class="filter" style="margin-left:-17px; margin-right: 23px;">유사도 낮은 순</label><input type="radio" name="OMZ" id="issimilar"> 
   </div>
 
   <div v-if="isStyle" style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; margin-top: 10px;">
       <div v-for="(key, value) in labels">
         <div v-on:click="this.filter=value">
-          <div class="category">{{ key }}</div>
+          <div class="filter">{{ key }}</div>
         </div>
       </div>
     </div>
@@ -204,16 +204,16 @@ input[type="radio"] {
   color: rgb(255, 255, 255);
 }
 
-.category {
+.filter {
   border: 2px solid gray;
   /* border-radius: 15px; */
   color: black;
   font-weight: bold;
-  padding: 2px 2px;
+  padding: 3.5px 2px;
   margin: 3px;
   font-size: 72%;
 } 
-.category:hover {
+.filter:hover {
   background-color: black;
   color: white;
 }
