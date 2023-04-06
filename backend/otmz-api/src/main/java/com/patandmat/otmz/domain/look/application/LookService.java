@@ -10,6 +10,7 @@ import com.patandmat.otmz.domain.look.repository.LookRepository;
 import com.patandmat.otmz.domain.member.entity.Member;
 import com.patandmat.otmz.global.exception.NoSuchMemberException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class LookService {
     private final LookRepository lookRepository;
 
     @Transactional
+    @CacheEvict(value = "recommendItem", key = "#member.id")
     public Look saveLook(MultipartFile file, String styleVector, String style, Member member) throws NoSuchMemberException {
         ImageFile image = imageFileService.save(file);
 

@@ -15,8 +15,10 @@ import com.patandmat.otmz.global.exception.NoSuchMemberException;
 import com.patandmat.otmz.global.exception.UnauthorizedException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,10 +33,12 @@ public class ItemService {
     private final ImageFileService imageFileService;
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private final MemberService memberService;
 
     @Transactional
+    @CacheEvict(value = "recommendItem", key = "#id")
     public void saveItem(MultipartFile file, ItemRequestDto itemRequestDto, String category, String style, Long id) throws IOException, AttributeNotFoundException, NoSuchMemberException {
         ImageFile imageFile = imageFileService.save(file);
         try {
