@@ -35,7 +35,7 @@ public class CrawledItemServiceImpl implements CrawledItemService {
                 .forEach(crawledItemRepository::save);
     }
 
-//    @Cacheable(value = "recommendItem", key = "#member.id")
+    @Cacheable(value = "recommendItem", key = "#member.id")
     @Override
     public List<CrawledItem> getRecommendItems(Member member) {
         String stats = member.getItemStyleStat();
