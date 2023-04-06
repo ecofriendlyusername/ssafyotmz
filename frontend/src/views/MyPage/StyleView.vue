@@ -1,13 +1,34 @@
 <template>
 
+<div v-if="isModal" class="modal__background" style="z-index:100">
   <div id="modal" v-if="isModal">
-    <p>{{ modalData.ownerName }} 님의 {{ modalData.style }} 스타일의 옷이에요</p>
-    <hr>
-    <img :src="`${ path }/images/${ modalData.imageId }`" alt="">
-    <hr>
-    <button v-on:click="isModal = false">닫기</button>
-    <button v-on:click="styleDelete(modalData.id)">삭제하기</button>
+
+      <img v-on:click="styleDelete(modalData.id)" src="@/assets/img/trash.png" id="trashBtn">
+
+    <!-- <button v-on:click="styleDelete(modalData.id)" class="ModalBtn">삭제</button> -->
+    <img :src="`${ path }/images/${ modalData.imageId }`" style="padding:10px; border-radius: 25px;">
+    <div style="display:flex">
+      <div style="padding:0px 15px">
+        <span style="font-weight:bold;">
+          {{ modalData.ownerName }}
+        </span> <span>님의</span>
+      </div>
+      <div style="margin-left:-10px">
+        <span style="font-weight:bold;">
+          #{{ modalData.style.toUpperCase() }}
+        </span>
+        <span>
+          스타일
+        </span>
+      </div>
+    </div>
+
+    
+    <button v-on:click="isModal = false" class="ModalBtn">
+      닫기
+    </button>
   </div>
+</div>
 
   <div id="MyPage">
     <div class="SubNav">
@@ -27,8 +48,8 @@
 
     <hr>
 
-    <div style="display:grid; grid-gap: 10px 5px;">
-      <div class="container">
+    <div style="display:flex; justify-content:center">
+      <div class="container" style="gap:5px">
         <div v-for="(style, index) in styleList" :key="index">
           <img :src= '`${ path }/images/${ style.imageId }`' style="width:100%;" id="picture" v-on:click="modal(style, index)">
         </div>
@@ -176,5 +197,14 @@ export default {
   /* width: 100%;
   height: 100%; */
   left:50%; top:50%; transform: translate(-50%, -50%)
+}
+
+#trashBtn {
+  width:20px;
+  position: absolute;
+  margin: 5%;
+  background-color: white;
+  border-radius: 10px;
+  padding: 7px;
 }
 </style>
