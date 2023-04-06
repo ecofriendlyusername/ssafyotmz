@@ -93,6 +93,7 @@
 <script>
 import axios from 'axios';
 import Chart from 'chart.js/auto';
+import { setBlockTracking } from 'vue';
 
 export default {
   name: 'MyPageView',
@@ -148,6 +149,8 @@ export default {
           return '스트릿';
           case 'MILITARY':
           return '밀리터리';
+          case 'FEMININE':
+          return '페미닌';
           case 'classic':
           return '클래식';
         case 'preppy':
@@ -192,6 +195,8 @@ export default {
           return '스트릿';
           case 'military':
           return '밀리터리';
+          case 'feminine':
+          return '페미닌';
         default:
           return style;
       }
@@ -271,8 +276,10 @@ export default {
           return '펑크';
         case 'STREET':
           return '스트릿';
-          case 'MILITARY':
+        case 'MILITARY':
           return '밀리터리';
+        case 'FEMININE':
+          return '페미닌';
         default:
           return x.style;
       }
@@ -281,8 +288,13 @@ export default {
               // label: '# of Votes',
               data: data.map(x => x['count']),
               borderWidth: 1,
-              backgroundColor: '#000000',
-              pointBorderColor: '#000000',
+              backgroundColor: [
+                '#FFBFBA',
+                '#FFD89D',
+                '#C8E4FF',
+              ],
+              borderColor: '#000000',
+              borderWidth: 2,
             }]
           },
           options: {
@@ -356,6 +368,8 @@ export default {
           return '스트릿';
           case 'military':
           return '밀리터리';
+          case 'feminine':
+          return '페미닌';
         default:
           return x.style;
       }
@@ -364,9 +378,13 @@ export default {
               // label: '# of Votes',
               data: data2.map(x => x['count']),
               borderWidth: 1,
-              backgroundColor: '#000000',
-              pointBorderColor: '#000000',
-       
+              backgroundColor: [
+                '#FFBFBA',
+                '#FFD89D',
+                '#C8E4FF',
+              ],
+              borderColor: '#000000',
+              borderWidth: 2,
             }]
           },
           options: {
