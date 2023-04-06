@@ -87,7 +87,7 @@ export default {
         'sexy':'섹시',
         'hippie':'히피',
         'modern':'모던',
-        'sophisticated':'소피스티케이티드',
+        'sophisticated':'소피스티케이트',
         'kitsch':'키치',
         'avantgarde':'아방가르드',
         'western':'웨스턴',
@@ -211,7 +211,7 @@ input[type="radio"] {
   font-weight: bold;
   padding: 3.5px 3px;
   margin: 3px;
-  font-size: 70%;
+  font-size: 65%;
 } 
 .filter:hover {
   background-color: black;
