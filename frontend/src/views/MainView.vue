@@ -90,7 +90,7 @@
         <div>
           모아보기
         </div>
-        <div>
+        <div style="color:red;">
           ❤
         </div>
 
@@ -336,7 +336,7 @@ export default {
   color: white;
   padding: 10px 15px;
   border-radius: 5px;
-  margin: 5px 15px;
+  margin: 15px 15px;
   box-shadow: 2px 2px 2px 2px rgb(174, 174, 174);
 }
 #LoginDiv0:hover {
@@ -346,7 +346,8 @@ export default {
 
 #LoginDiv1 {
   display: flex;
-  margin-top: 5px;
+  margin-top: 16px;
+  margin-bottom: -28px;
   padding: 10px 15px;
   font-size: 125%;
   font-weight: bold;
@@ -354,7 +355,7 @@ export default {
 
 #LoginDiv2 {
   display: flex;
-  margin-top: -3px;
+  margin-top: 25px;
   padding: 0px 15px;
   font-size: 118%;
   font-weight: bold;
