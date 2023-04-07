@@ -1,11 +1,29 @@
 <template>
+  <div v-if="isModal" class="modal__background" style="z-index:100">
   <div id="modal" v-if="isModal">
-    <p>{{ modalData.ownerName }} 님의 {{ modalData.style }} 스타일의 옷이에요</p>
-    <hr>
-    <img :src="`${ path }/images/${ modalData.imageId }`" alt="">
-    <hr>
-    <button v-on:click="isModal = false">닫기</button>
+    <img :src="`${ path }/images/${ modalData.imageId }`" style="padding:10px; border-radius: 25px;">
+    <div style="display:flex">
+      <div style="padding:0px 15px">
+        <span style="font-weight:bold;">
+          {{ modalData.memberNickname }}
+        </span> <span>님의</span>
+      </div>
+      <div style="margin-left:-10px">
+        <span style="font-weight:bold;">
+          #{{ modalData.style.toUpperCase() }}
+        </span>
+        <span>
+          스타일
+        </span>
+      </div>
+    </div>
+
+    <button v-on:click="isModal = false" class="ModalBtn">
+      닫기
+    </button>
   </div>
+</div>
+  
   <!-- <div>
     스타일 추천 페이지
   </div> -->
@@ -23,26 +41,27 @@
   </div>
   
   <div v-if="isOMZ" style="display:flex; justify-content:end;">
-    <label for="similar" v-on:click="this.filter='similar'" class="category">나랑 비슷한거</label><input type="radio" name="OMZ" id="similar">
-    <label for="issimilar" v-on:click="this.filter='issimilar'" class="category" style="margin-left:-17px; margin-right: 23px;">안비슷한거</label><input type="radio" name="OMZ" id="issimilar"> 
+    <label for="similar" v-on:click="this.filter='similar'" class="filter">유사도 높은 순</label><input type="radio" name="OMZ" id="similar">
+    <label for="issimilar" v-on:click="this.filter='issimilar'" class="filter" style="margin-left:-17px; margin-right: 23px;">유사도 낮은 순</label><input type="radio" name="OMZ" id="issimilar"> 
   </div>
 
   <div v-if="isStyle" style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; margin-top: 10px;">
       <div v-for="(key, value) in labels">
         <div v-on:click="this.filter=value">
-          <div class="category">{{ key }}</div>
+          <div class="filter">{{ key }}</div>
         </div>
       </div>
     </div>
   <hr>
 
-  <div style="display:grid; grid-gap: 10px 5px;">
-    <div class="container">
-      <div v-for="item in items">
-        <img :src= '`${ path }/images/${ item.imageId }`' style="width:100%;" id="picture" v-on:click="modal(item)">
-      </div>
+<div style="display:flex; justify-content:center">
+  <div class="container" style="gap:5px">
+    <div v-for="item in items">
+      <img :src= '`${ path }/images/${ item.imageId }`' style="width:100%;" id="picture" v-on:click="modal(item)">
     </div>
   </div>
+</div>
+
 </template>
 
 <script>
@@ -68,7 +87,7 @@ export default {
         'sexy':'섹시',
         'hippie':'히피',
         'modern':'모던',
-        'sophisticated':'소피스티케이티드',
+        'sophisticated':'소피스티케이트',
         'kitsch':'키치',
         'avantgarde':'아방가르드',
         'western':'웨스턴',
@@ -94,7 +113,7 @@ export default {
     }
   },
   mounted() {
-    axios.get(process.env.VUE_APP_API_URL + '/looks/recommended', {
+    axios.get(process.env.VUE_APP_API_URL + '/looks/recommended?size=10', {
           headers: {
             'Authorization': this.$store.state.Auth['accessToken']
           }
@@ -112,11 +131,11 @@ export default {
         // 우리 추천
         // console.log(this.isOMZ, this.filter)
         let reverse = ''
+        this.isOMZ = !this.isOMZ
         if (this.filter === 'issimilar') {
-          this.isOMZ = !this.isOMZ
-          reverse = '?/reversed= true'
+          reverse = 'reversed=true'
         } 
-        axios.get(process.env.VUE_APP_API_URL + '/looks/recommended' + reverse, {
+        axios.get(process.env.VUE_APP_API_URL + '/looks/recommended?size=10&' + reverse, {
           headers: {
             'Authorization': this.$store.state.Auth['accessToken']
           }
@@ -185,16 +204,16 @@ input[type="radio"] {
   color: rgb(255, 255, 255);
 }
 
-.category {
+.filter {
   border: 2px solid gray;
-  /* border-radius: 15px; */
+  border-radius: 10px;
   color: black;
   font-weight: bold;
-  padding: 2px 2px;
+  padding: 3.5px 3px;
   margin: 3px;
-  font-size: 72%;
+  font-size: 65%;
 } 
-.category:hover {
+.filter:hover {
   background-color: black;
   color: white;
 }
@@ -222,9 +241,12 @@ input[type="radio"] {
   border: #000 solid 2px;
   background-color: #fff;
   position: fixed;
-  /* width: 100%;
-  height: 100%; */
   left:50%; top:50%; transform: translate(-50%, -50%)
+}
+.modal__background{
+  position: fixed;
+  top:0; left: 0; bottom: 0; right: 0;
+  background: rgba(0, 0, 0, 0.8);
 }
 
 </style>

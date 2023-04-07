@@ -51,7 +51,7 @@ export default {
     return {
       pages : [],
       env: process.env.VUE_APP_IMG,
-      itemsToRemove: [],
+      // itemsToRemove: [],
       selectedIdx: -1,
       selected: null,
       Auth: this.$store.state.Auth,
@@ -91,22 +91,24 @@ export default {
     },
     async deleteSelectedItems() {
       var a = this
+      this.selectedIndices.sort(function(a, b) {
+        return b - a;
+      });
       await this.deleteMultipleItems(this.selectedIndices.map(x => a.pages[x].id))
       .then(() => {
-        var itemsToRemove = []
-        a.selectedIndices.sort()
-        a.selectedIndices.reverse()
         for (var idx of a.selectedIndices) {
-          itemsToRemove.push(a.pages[idx].id)
           document.getElementById(a.pages[idx].id).style.filter = 'saturate(1)'
           a.pages.splice(idx,1)
         }
         a.selectMode = false
-        document.getElementById('selectB').style.backgroundColor = 'white'
+        document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
       })
       .catch((e) => {
         return e
       })
+      document.getElementById('selectB').style.backgroundColor = '#a4a4a4;'
+      this.selectedIndices = []
+      this.selectMode = false
     },
     async viewMultipleItems(category,page,size) {
       var a = this
@@ -129,8 +131,9 @@ export default {
     },
     selectItems() {
       if (this.selectMode) {
-        this.selectedIndices.sort()
-        this.selectedIndices.reverse()
+        this.selectedIndices.sort(function(a, b) {
+        return b - a;
+      });
         for (var idx of this.selectedIndices) {
           document.getElementById(this.pages[idx].id).style.filter = 'saturate(1)'
           document.getElementById(this.pages[idx].id).style.backgroundColor = '#F5F5F7'
