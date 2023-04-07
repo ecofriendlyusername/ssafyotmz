@@ -80,6 +80,41 @@ def detection_clothes(img):
     
     return find
 
+def detection_single_item(img):
+    
+    hide_labels = False 
+    hide_conf = False 
+
+    img_size = 640
+
+    conf_thres =.25
+    iou_thres =.45
+    max_det =  1000
+    agnostic_nms = False
+    
+    img = img.convert("RGB")
+
+    img_size = check_img_size(img_size, s=stride)
+
+    img, img_src = process_image(img, img_size, stride, half)
+    img = img.to(device)
+    if len(img.shape) == 3:
+        img = img[None]
+        # expand for batch dim
+    pred_results = model_detect_single(img)
+    classes = [0,1,2,3,4,5,6] # the classes to keep
+    det = non_max_suppression(pred_results, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)[0]
+    
+    if len(det) == 0:
+        
+        return False
+    
+    else:
+        
+        x = int(det[0][5].item())
+        
+        return single_class_names[x]
+
 
 @app.get("/")
 async def root():
@@ -110,6 +145,17 @@ async def remove_bg_and_style_classification(image: UploadFile = File(...)):
     
     inf_img = img.convert('RGB')
     
+    inf_det = detection_single_item(inf_img)
+    
+    if inf_det == False:
+        
+        return {
+            "check":False,
+            "image":"",
+            "style":{},
+            "category":""
+        }
+        
     # transformation
     if val_transform is not None:
 
@@ -132,7 +178,7 @@ async def remove_bg_and_style_classification(image: UploadFile = File(...)):
     result = {}
 
     for i in range(num_classes_style-1, -1, -1):
-
+         
         result[23-i] = {"style": change_class_style[sorted_pred[0][i]],
                         "score": round((percentage_output[0][sorted_pred[0][i]].item())*100, 4)}
     
@@ -153,11 +199,9 @@ async def remove_bg_and_style_classification(image: UploadFile = File(...)):
     
     img_converted = from_image_to_bytes(img)
     
-    return {"image":JSONResponse(img_converted),"style":result}
+    return {"check":True, "image":JSONResponse(img_converted),"style":result, "category":inf_det}
     
     
-
-
 @app.post("/ai/v1/style")
 async def style_classification(imageFile: UploadFile = File(...)):
 

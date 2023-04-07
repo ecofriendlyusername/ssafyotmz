@@ -27,7 +27,8 @@ export default {
       file: null,
       image: null,
       resized: null,
-      result: null
+      result: null,
+      makeError: null,
     };
   },
 
@@ -105,13 +106,15 @@ export default {
       // 결과 받아서 저장
       .then(response => {
         console.log(response.data)
-        this.result = response.data;     
+        this.result = response.data;    
+        // 일부러 에러 발생 
+        this.makeError = this.result['data']['2']
       })
       // 워터마크 찍기
       .then(() => {
         watermark([this.image, require('@/assets/img/watermark/logo.png')])
           .image(watermark.image.upperRight(0.5))
-          .load([require('@/assets/img/watermark/' + this.result['data']['1']['style'] + '.png')])
+          .load([require('@/assets/img/watermark/' + this.result['data']['2']['style'] + '.png')])
           .image(watermark.image.lowerLeft(0.5))
           .then((img) => {
             const watermark = this.dataURLtoFile(img.src, 'temp.jpg')
@@ -127,6 +130,7 @@ export default {
         this.$router.push('/Find/loading');
       })
       .catch(error => {
+        alert('사진을 다시 입력해주세요')
         console.log(error);
         // this.$router.push('/Find')
       });
