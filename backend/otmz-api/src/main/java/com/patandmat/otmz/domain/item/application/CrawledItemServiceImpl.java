@@ -9,6 +9,9 @@ import com.patandmat.otmz.global.utils.SimilarityMeasurer;
 import com.patandmat.otmz.global.utils.VectorParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +25,9 @@ public class CrawledItemServiceImpl implements CrawledItemService {
 
     private final CrawledItemRepository crawledItemRepository;
 
+    private final RedisTemplate<String, Object> redisTemplate;
+
+
     @Override
     public void addItems(List<CrawledItemRequest> itemsDto) {
         itemsDto.stream()
@@ -29,10 +35,17 @@ public class CrawledItemServiceImpl implements CrawledItemService {
                 .forEach(crawledItemRepository::save);
     }
 
+    @Cacheable(value = "recommendItem", key = "#member.id")
     @Override
     public List<CrawledItem> getRecommendItems(Member member) {
         String stats = member.getItemStyleStat();
         Map<String, Double> memberStyleStats = VectorParser.parseToMap(stats);
+
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        String key = "stringKey";
+
+        // when
+        valueOperations.set(key, stats);
 
         List<CrawledItem> items = crawledItemRepository.findAll();
 

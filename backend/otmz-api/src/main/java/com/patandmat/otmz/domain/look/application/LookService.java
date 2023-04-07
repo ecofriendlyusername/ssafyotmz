@@ -14,6 +14,7 @@ import com.patandmat.otmz.domain.member.repository.MemberRepository;
 import com.patandmat.otmz.global.exception.NoSuchMemberException;
 import com.patandmat.otmz.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class LookService {
     private final MemberRepository memberRepository;
 
     @Transactional
+    @CacheEvict(value = "recommendItem", key = "#member.id")
     public Look saveLook(MultipartFile file, String styleVector, String style, Member member) throws NoSuchMemberException {
         ImageFile image = imageFileService.save(file);
 
@@ -72,6 +74,7 @@ public class LookService {
     }
 
     public List<SurveyStyleResponse> getLooksByStyle(Style style) {
+        List<Look> loks = lookRepository.findTop2ByStyle(style);
         return lookRepository.findTop2ByStyle(style)
                              .stream()
                              .map(look -> new SurveyStyleResponse(look.getStyle().getKey(), look.getImage().getId()))
