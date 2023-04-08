@@ -99,6 +99,20 @@ export default {
       this.modalData = data
       this.modalData.key = idx
     },
+    styleDelete(lookID) {
+      axios.delete(process.env.VUE_APP_API_URL + '/looks/' + lookID, {
+        headers: {
+          'Authorization' : this.$store.state.Auth['accessToken']
+        }
+      }).then((res) => {
+        this.isModal = false
+        location.reload()
+        return res
+      }).catch((e) => {
+        console.log(e)
+      })
+    },
+
     async onScroll() {
     if (this.hasMore) {
       var athis = this
