@@ -100,7 +100,8 @@ export default {
       this.modalData.key = idx
     },
     async onScroll() {
-    var athis = this
+    if (this.hasMore) {
+      var athis = this
 
     await axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=${athis.curPage}&size=10&sort=id,DESC`, {
       headers: {
@@ -122,6 +123,7 @@ export default {
       return response
     })
     .catch(error => console.log(error))
+    }
   }
 },
   mounted() {
