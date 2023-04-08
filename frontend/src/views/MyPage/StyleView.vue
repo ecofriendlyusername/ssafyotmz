@@ -81,7 +81,7 @@ export default {
         nickname: null, 
       },
       isModal: false,
-      curPage: 1,
+      curPage: 2,
       busy: false,
       modalData: {
         key: null,
