@@ -102,7 +102,6 @@ export default {
     async onScroll() {
     if (this.hasMore) {
       var athis = this
-
     await axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=${athis.curPage}&size=30&sort=id,DESC`, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -119,7 +118,7 @@ export default {
       } else {
         this.hasMore = true
       }
-      this.hasMore = response.data.length === 10
+      this.hasMore = response.data.length === 30
       return response
     })
     .catch(error => console.log(error))
@@ -127,7 +126,7 @@ export default {
   }
 },
   mounted() {
-    axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=${this.curPage}&size=20&sort=id,DESC`, {
+    axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=1&size=20&sort=id,DESC`, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': this.$store.state.Auth['accessToken']
