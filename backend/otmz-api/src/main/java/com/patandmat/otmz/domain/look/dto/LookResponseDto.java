@@ -8,13 +8,13 @@ import lombok.*;
 public class LookResponseDto {
 
     private Long id;
-    private String uploader;
+    private String ownerName;
     private String style;
 
     @Builder
-    public LookResponseDto(Long id, String uploader, String style) {
+    public LookResponseDto(Long id, String ownerName, String style) {
         this.id = id;
-        this.uploader = uploader;
+        this.ownerName = ownerName;
         this.style = style;
     }
 }
