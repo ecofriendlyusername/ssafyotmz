@@ -81,7 +81,7 @@ export default {
         nickname: null, 
       },
       isModal: false,
-      curPage: 2,
+      curPage: 1,
       busy: false,
       modalData: {
         key: null,
@@ -140,7 +140,7 @@ export default {
   }
 },
   mounted() {
-    axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=1&size=20&sort=id,DESC`, {
+    axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=0&size=20&sort=id,DESC`, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': this.$store.state.Auth['accessToken']
