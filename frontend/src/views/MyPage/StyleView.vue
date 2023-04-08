@@ -81,7 +81,7 @@ export default {
         nickname: null, 
       },
       isModal: false,
-      curPage: 1,
+      curPage: 2,
       busy: false,
       modalData: {
         key: null,
@@ -103,7 +103,7 @@ export default {
     if (this.hasMore) {
       var athis = this
 
-    await axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=${athis.curPage}&size=10&sort=id,DESC`, {
+    await axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=${athis.curPage}&size=30&sort=id,DESC`, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': athis.$store.state.Auth['accessToken']
@@ -127,7 +127,7 @@ export default {
   }
 },
   mounted() {
-    axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=${this.curPage}&size=15&sort=id,DESC`, {
+    axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=${this.curPage}&size=20&sort=id,DESC`, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': this.$store.state.Auth['accessToken']
