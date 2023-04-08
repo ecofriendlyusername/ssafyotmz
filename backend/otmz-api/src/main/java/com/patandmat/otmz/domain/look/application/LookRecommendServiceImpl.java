@@ -45,7 +45,7 @@ public class LookRecommendServiceImpl implements LookRecommendService {
                         .builder()
                         .id(lookSimilarity.getLook().getId())
                         .memberId(lookSimilarity.getLook().getMember().getId()) // TODO N+1문제
-                        .memberNickname(lookSimilarity.getLook().getMember().getNickname())
+                        .ownerName(lookSimilarity.getLook().getMember().getNickname())
                         .imageId(lookSimilarity.getLook().getImage().getId())
                         .imagePath(lookSimilarity.getLook().getImage().getPath())
                         .style(lookSimilarity.getLook().getStyle())
