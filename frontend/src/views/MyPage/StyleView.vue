@@ -102,7 +102,7 @@ export default {
     async onScroll() {
     var athis = this
 
-    axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=${athis.curPage}&size=10&sort=id,DESC`, {
+    await axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=${athis.curPage}&size=10&sort=id,DESC`, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': athis.$store.state.Auth['accessToken']
@@ -118,6 +118,7 @@ export default {
       } else {
         this.hasMore = true
       }
+      this.hasMore = response.data.length === 10
       return response
     })
     .catch(error => console.log(error))
