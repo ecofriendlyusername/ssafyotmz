@@ -242,7 +242,6 @@ export default {
         .then((response) => {
           // 파일 저장하는 api 리턴값으로 파일 경로 달라고 해야 함
           // this.image = response.data
-          console.log(response.data);
           alert('코디가 저장되었습니다!');
           history.go(-1);
         })
@@ -262,7 +261,6 @@ export default {
           .then((response) => {
             // 파일 저장하는 api 리턴값으로 파일 경로 달라고 해야 함
             // this.image = response.data
-            console.log(response.data)
             response.data.content.forEach(item => {
               item.src = process.env.VUE_APP_API_URL + '/images/' + item.imageId;
               this.items.push(item);
@@ -303,7 +301,6 @@ export default {
         item.height = e.target.height();
       },
       handleMouseDown(e) {
-        console.log('click', e.target)
         if (e.target.id() === 'background') {
           this.dragItemId = null;
           this.updateTransformer();
@@ -349,9 +346,6 @@ export default {
       },
       handleDragend(e) {
         const item = this.list.find(i => i.name === this.dragItemId);
-
-        console.log(this.list.find(i => i.name === this.dragItemId));
-
         item.x = e.target.x();
         item.y = e.target.y();
         item.rotation = e.target.rotation();
@@ -401,7 +395,6 @@ export default {
           scale: 1,
           dragable: true
         });
-        console.log(this.list)
       },
       getItems(category) {
         this.selected = category;
@@ -414,7 +407,6 @@ export default {
         .then((response) => {
           // 파일 저장하는 api 리턴값으로 파일 경로 달라고 해야 함
           // this.image = response.data
-          console.log(response.data)
           this.items = response.data.content;
           this.items.forEach(item => item.src = process.env.VUE_APP_API_URL + '/images/' + item.imageId);
         })

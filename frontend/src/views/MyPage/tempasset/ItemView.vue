@@ -163,13 +163,10 @@ export default {
       this.pages.splice(this.selectedIdx,1)
     },
     onSlideChange () {
-      console.log('slide change');
     },
     onSwiper (swiper) {
-      console.log(swiper)
     },
     slideChange() {
-      console.log('fuck you')
     },
   },
 

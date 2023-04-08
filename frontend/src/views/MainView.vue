@@ -247,11 +247,9 @@ export default {
       console.log(code)
       axios.get(process.env.VUE_APP_API_URL + '/oauth/kakao?code=' + code + process.env.VUE_APP_LOCAL_USE_API_URL)
         .then(response => {
-          console.log(response.data)
           this.$store.commit('setAuth', response.data); // auth 값을 스토어에 저장
         })
         .then(() => {
-          console.log(this.$store.state.Auth)
           this.Auth = this.$store.state.Auth  
         })
         .then(()=>{
@@ -261,7 +259,6 @@ export default {
         }
       })
       .then(response => {
-        console.log(response.data)
         this.dressDatas = response.data
       })
       .catch(error => console.log(error))

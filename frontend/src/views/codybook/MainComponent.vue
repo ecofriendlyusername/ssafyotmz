@@ -369,7 +369,6 @@ export default {
         .then((response) => {
           // 파일 저장하는 api 리턴값으로 파일 경로 달라고 해야 함
           // this.image = response.data
-          console.log(response.data);
           alert('코디가 저장되었습니다!');
           history.go(-1);
         })
@@ -499,8 +498,6 @@ export default {
     },
     handleDragend(e) {
       const item = this.list.find(i => i.name === this.dragItemId);
-
-      console.log(this.list.find(i => i.name === this.dragItemId));
 
       item.x = e.target.x();
       item.y = e.target.y();
@@ -738,7 +735,6 @@ export default {
             })
 
             this.session.on('signal:updateItemsOnBoard', (event) => {
-              console.log('updateItemsOnBoard', event.data);
               const data = JSON.parse(event.data);
               list.splice(0, list.length);
               data.forEach(x => {
@@ -867,7 +863,6 @@ export default {
       }).then((response) => {
         return response;
       });
-      console.log('리스폰스', response.data);
       this.mySessionId = response.data;
     },
 

@@ -47,7 +47,6 @@ export default {
     fileUpload(event) {
       var reader = new FileReader();
       reader.onload = (e) => {
-        console.log(e.target)
         var img = new Image();
         img.onload = () => {
           var thumbFile = (_IMG) => {
@@ -105,7 +104,6 @@ export default {
       })
       // 결과 받아서 저장
       .then(response => {
-        console.log(response.data)
         this.result = response.data;    
         // 일부러 에러 발생 
         this.makeError = this.result['data']['2']
