@@ -1,6 +1,7 @@
 package com.patandmat.otmz.domain.member.application;
 
 
+import com.patandmat.otmz.domain.item.entity.ItemStyle;
 import com.patandmat.otmz.domain.item.repository.ItemRepository;
 import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.api.model.StyleByCountResponse;
