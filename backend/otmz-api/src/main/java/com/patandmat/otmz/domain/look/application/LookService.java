@@ -2,7 +2,7 @@ package com.patandmat.otmz.domain.look.application;
 
 import com.patandmat.otmz.domain.imageFile.application.ImageFileService;
 import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
-import com.patandmat.otmz.domain.item.dto.ItemResponseDto;
+import com.patandmat.otmz.domain.item.entity.ItemStyle;
 import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.api.model.SurveyStyleResponse;
 import com.patandmat.otmz.domain.look.dto.LookResponseDto;
@@ -74,7 +74,6 @@ public class LookService {
     }
 
     public List<SurveyStyleResponse> getLooksByStyle(Style style) {
-        List<Look> loks = lookRepository.findTop2ByStyle(style);
         return lookRepository.findTop2ByStyle(style)
                              .stream()
                              .map(look -> new SurveyStyleResponse(look.getStyle().getKey(), look.getImage().getId()))
@@ -102,9 +101,8 @@ public class LookService {
         try {
             LookResponseDto lookResponseDto = LookResponseDto.builder()
                     .style(look.getStyle().getKey())
-                    .uploader(uploader)
+                    .ownerName(uploader)
                     .build();
-            System.out.println(look.getStyle().getKey());
             return lookResponseDto;
         } catch (Exception e) {
             throw new RuntimeException(e);
