@@ -4,7 +4,7 @@
           <div>{{ this.selected.name }}</div>
         </div>
         <div id="item" style="margin:10px">
-            <img :src="env+selected.imageId" width="100"/>
+            <img :src="env+selected.imageId" class="itemImage" />
         </div>
       <div class="selectionBox" style="display: flex; justify-content: end;">
         <div class="selection" @mousedown="deleteItem()">삭제</div>
@@ -43,5 +43,8 @@
     </script>
       
     <style>
-
+.itemImage {
+  max-width: 290px;
+  max-height: 290px;
+}
     </style>

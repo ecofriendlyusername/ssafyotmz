@@ -4,7 +4,7 @@
       <div>{{ this.selected.name }}</div>
     </div>
     <div id="item" style="margin:10px">
-        <img :src="env+selected.imageId" width="200"/>
+        <img :src="env+selected.imageId" width="230"/>
         <div style="margin:10px;">{{ this.selected.comment }}</div>
     </div>
     <div class="selectionBox" style="display: flex; justify-content: end;">
