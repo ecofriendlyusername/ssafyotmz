@@ -4,7 +4,6 @@
   <div id="modal" v-if="isModal">
 
       <img v-on:click="styleDelete(modalData.id)" src="@/assets/img/trash.png" id="trashBtn">
-
     <!-- <button v-on:click="styleDelete(modalData.id)" class="ModalBtn">삭제</button> -->
     <img :src="`${ path }/images/${ modalData.imageId }`" style="padding:10px; border-radius: 25px;">
     <div style="display:flex">
@@ -50,9 +49,11 @@
 
     <div style="display:flex; justify-content:center">
       <div class="container" style="gap:5px">
-        <div v-for="(style, index) in styleList" :key="index">
+
+      <div v-for="(style, index) in data" :key="index">
           <img :src= '`${ path }/images/${ style.imageId }`' style="width:100%;" id="picture" v-on:click="modal(style, index)">
-        </div>
+      </div>
+      <infinite-loading v-if="hasMore" :identifier="infiniteId" @infinite="onScroll"></infinite-loading>
       </div>
     </div>
     <!-- 여기까지 -->
@@ -63,17 +64,25 @@
 <script>
 import axios from 'axios';
 import Chart from 'chart.js/auto';
-
+import InfiniteLoading from "v3-infinite-loading";
 export default {
   name:'MyPageStyleView',
+  components: {
+    InfiniteLoading,
+  },
   data(){
     return {
       path: process.env.VUE_APP_API_URL,
-      styleList: null,
+      // styleList: null,
+      data: [],
+      hasMore : true,
+      infiniteId: +new Date(),
       myData: {
         nickname: null, 
       },
       isModal: false,
+      curPage: 1,
+      busy: false,
       modalData: {
         key: null,
         id: null, 
@@ -86,7 +95,6 @@ export default {
   },
   methods:{
     modal(data, idx) {
-      console.log(data)
       this.isModal = !this.isModal
       this.modalData = data
       this.modalData.key = idx
@@ -99,21 +107,47 @@ export default {
       }).then((res) => {
         this.isModal = false
         location.reload()
+        return res
       }).catch((e) => {
         console.log(e)
       })
+    },
+
+    async onScroll() {
+    if (this.hasMore) {
+      var athis = this
+    await axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=${athis.curPage}&size=30&sort=id,DESC`, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': athis.$store.state.Auth['accessToken']
+      }
+    })
+    .then(response => {
+      athis.curPage++
+      for (var item of response.data) {
+        athis.data.push(item)
+      }
+      if (response.data.length < 10) {
+        this.hasMore = false
+      } else {
+        this.hasMore = true
+      }
+      this.hasMore = response.data.length === 30
+      return response
+    })
+    .catch(error => console.log(error))
     }
-  },
+  }
+},
   mounted() {
-    axios.get(process.env.VUE_APP_API_URL + '/member/looks', {
+    axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=0&size=20&sort=id,DESC`, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': this.$store.state.Auth['accessToken']
       }
     })
     .then(response => {
-      console.log(response.data)
-      this.styleList = response.data
+      this.data = response.data
     })
     .catch(error => console.log(error))
 
@@ -124,7 +158,6 @@ export default {
       }
     })
   .then(response => {
-    // console.log(response.data)
     this.myData = response.data
   })
   .then(() => {

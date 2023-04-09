@@ -34,6 +34,7 @@ public class StyleSurveyController {
             surveyStyles.addAll(lookService.getLooksByStyle(style));
         }
 
+
         return ResponseEntity.ok(surveyStyles);
     }
 

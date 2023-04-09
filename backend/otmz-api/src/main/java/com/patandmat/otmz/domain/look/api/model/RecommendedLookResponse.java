@@ -15,19 +15,19 @@ public class RecommendedLookResponse {
 
     private Long memberId;
 
-    private String memberNickname;
+    private String ownerName;
 
     private Style style;
 
     private Double similarity;
 
     @Builder
-    public RecommendedLookResponse(Long id, Long imageId, String imagePath, Long memberId, String memberNickname, Style style, Double similarity) {
+    public RecommendedLookResponse(Long id, Long imageId, String imagePath, Long memberId, String ownerName, Style style, Double similarity) {
         this.id = id;
         this.imageId = imageId;
         this.imagePath = imagePath;
         this.memberId = memberId;
-        this.memberNickname = memberNickname;
+        this.ownerName = ownerName;
         this.style = style;
         this.similarity = similarity;
     }
