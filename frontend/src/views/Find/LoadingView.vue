@@ -55,9 +55,6 @@ export default {
     // },
     // 서버에 저장하기
     saveData(){
-      if (!this.$store.state.result['check']){
-        return this.$router.push('/Find')
-      }
       this.BtnDisable = true
       const formData = new FormData()
       formData.append('styleVector', JSON.stringify(this.$store.state.result['data']))
@@ -81,7 +78,6 @@ export default {
         console.log(error)
         this.$router.push('/Find/Error')
       })
-      setInterval(1000, this.BtnDisable = false)
     }
   }
 }
