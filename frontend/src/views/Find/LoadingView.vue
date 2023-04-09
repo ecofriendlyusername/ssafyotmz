@@ -28,7 +28,7 @@
       <br>
 
       <!-- 버튼 -->
-      <button class="btn-3" v-on:click=saveData()>
+      <button :disabled="BtnDisable" class="btn-3" v-on:click=saveData()>
         MY STYLE <span>FIND</span>
       </button>
 
@@ -42,13 +42,23 @@
 import axios from 'axios';
 
 export default {
+  data() {
+    return{
+      BtnDisable: false,
+    }
+  },
 
   methods: {
+    // BtnDisable(){
+    //   this.BtnDisable = true
+    //   setInterval(1000, this.BtnDisable = false)
+    // },
     // 서버에 저장하기
     saveData(){
       if (!this.$store.state.result['check']){
         return this.$router.push('/Find')
       }
+      this.BtnDisable = true
       const formData = new FormData()
       formData.append('styleVector', JSON.stringify(this.$store.state.result['data']))
       formData.append('imageFile', this.$store.state.result['img_path'])
@@ -71,6 +81,7 @@ export default {
         console.log(error)
         this.$router.push('/Find/Error')
       })
+      setInterval(1000, this.BtnDisable = false)
     }
   }
 }
