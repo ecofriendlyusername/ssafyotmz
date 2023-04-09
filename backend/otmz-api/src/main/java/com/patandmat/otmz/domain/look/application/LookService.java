@@ -2,7 +2,7 @@ package com.patandmat.otmz.domain.look.application;
 
 import com.patandmat.otmz.domain.imageFile.application.ImageFileService;
 import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
-import com.patandmat.otmz.domain.item.dto.ItemResponseDto;
+import com.patandmat.otmz.domain.item.entity.ItemStyle;
 import com.patandmat.otmz.domain.look.api.model.LookResponse;
 import com.patandmat.otmz.domain.look.api.model.SurveyStyleResponse;
 import com.patandmat.otmz.domain.look.dto.LookResponseDto;
@@ -14,6 +14,7 @@ import com.patandmat.otmz.domain.member.repository.MemberRepository;
 import com.patandmat.otmz.global.exception.NoSuchMemberException;
 import com.patandmat.otmz.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class LookService {
     private final MemberRepository memberRepository;
 
     @Transactional
+    @CacheEvict(value = "recommendItem", key = "#member.id")
     public Look saveLook(MultipartFile file, String styleVector, String style, Member member) throws NoSuchMemberException {
         ImageFile image = imageFileService.save(file);
 
@@ -99,9 +101,8 @@ public class LookService {
         try {
             LookResponseDto lookResponseDto = LookResponseDto.builder()
                     .style(look.getStyle().getKey())
-                    .uploader(uploader)
+                    .ownerName(uploader)
                     .build();
-            System.out.println(look.getStyle().getKey());
             return lookResponseDto;
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -4,6 +4,8 @@ import com.patandmat.otmz.domain.imageFile.application.ImageFileService;
 import com.patandmat.otmz.domain.imageFile.entity.ImageFile;
 import com.patandmat.otmz.domain.imageFile.repository.ImageFileRepository;
 import com.patandmat.otmz.domain.item.entity.Item;
+import com.patandmat.otmz.domain.item.entity.ItemCat;
+import com.patandmat.otmz.domain.item.entity.ItemStyle;
 import com.patandmat.otmz.domain.item.repository.ItemRepository;
 import com.patandmat.otmz.domain.member.entity.Member;
 import jakarta.transaction.Transactional;
@@ -22,8 +24,6 @@ public class InitItemCopyService {
     private final ImageFileRepository imageFileRepository;
     private final ItemRepository itemRepository;
     private final ImageFileService imageFileService;
-
-    private final String[] pathsForStyle = {"outer.png","upper.png","lower.png","dress.png","etc.png"};
     @Transactional
     public ImageFile copyItemsForThisUser(Long member_id, String imgPath) throws FileNotFoundException {
         FileInputStream inputStream = null;
@@ -39,10 +39,6 @@ public class InitItemCopyService {
         String name = "tempDataFor" + member_id + UUID.randomUUID() + "." + type;
 
         ImageFile imageFile = ImageFile.builder()
-//                .name(name)
-//                .length(4L)
-//                .mineType("str")
-//                .originName("str")
                 .path(name)
                 .build();
 
@@ -59,21 +55,21 @@ public class InitItemCopyService {
         return imageFile;
     }
     public void setTestItemsForThisUser(Member joinedMember) throws IOException {
-        for (int i = 0; i < pathsForStyle.length; i++) {
-            setTestItem(joinedMember,i,pathsForStyle[i]);
+        for (ItemCat itemCat : ItemCat.values()) {
+            setTestItem(joinedMember,itemCat);
         }
     }
 
     @Transactional
-    public void setTestItem(Member member, int cat, String path) throws IOException {
-        ImageFile imageFile = copyItemsForThisUser(member.getId(),path);
+    public void setTestItem(Member member, ItemCat cat) throws IOException {
+        ImageFile imageFile = copyItemsForThisUser(member.getId(),cat.name().toLowerCase()+".png");
         try {
             Item item = Item.builder()
                     .name(cat + " for test")
                     .image(imageFile)
                     .styleVector(null)
                     .color("red")
-                    .style(1)
+                    .style(ItemStyle.FEMININE)
                     .category(cat)
                     .member(member)
                     .build();

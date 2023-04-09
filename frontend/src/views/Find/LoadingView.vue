@@ -59,8 +59,7 @@ export default {
       const formData = new FormData()
       formData.append('styleVector', JSON.stringify(this.$store.state.result['data']))
       formData.append('imageFile', this.$store.state.result['img_path'])
-      formData.append('style', this.$store.state.result['data']['1']['style'])
-      console.log(this.$store.state.result['data']['1']['style'])
+      formData.append('style', this.$store.state.result['data']['2']['style'])
       axios.post(process.env.VUE_APP_API_URL + '/looks', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -70,7 +69,6 @@ export default {
       .then((response) => {
         // 파일 저장하는 api 리턴값으로 파일 경로 달라고 해야 함
         // this.image = response.data
-        console.log(response.data)
         this.$store.state.result['imageId'] = response.data['imageId']
         this.$router.push('/Find/result')
       })

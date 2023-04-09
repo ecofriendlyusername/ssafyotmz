@@ -1,6 +1,5 @@
 package com.patandmat.otmz.domain.look.api.model;
 
-
 import com.patandmat.otmz.domain.look.entity.Style;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

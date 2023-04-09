@@ -47,7 +47,6 @@ export default {
     fileUpload(event) {
       var reader = new FileReader();
       reader.onload = (e) => {
-        console.log(e.target)
         var img = new Image();
         img.onload = () => {
           var thumbFile = (_IMG) => {
@@ -105,16 +104,15 @@ export default {
       })
       // 결과 받아서 저장
       .then(response => {
-        console.log(response.data)
         this.result = response.data;    
         // 일부러 에러 발생 
-        this.makeError = this.result['data']['1']
+        this.makeError = this.result['data']['2']
       })
       // 워터마크 찍기
       .then(() => {
         watermark([this.image, require('@/assets/img/watermark/logo.png')])
           .image(watermark.image.upperRight(0.5))
-          .load([require('@/assets/img/watermark/' + this.result['data']['1']['style'] + '.png')])
+          .load([require('@/assets/img/watermark/' + this.result['data']['2']['style'] + '.png')])
           .image(watermark.image.lowerLeft(0.5))
           .then((img) => {
             const watermark = this.dataURLtoFile(img.src, 'temp.jpg')
