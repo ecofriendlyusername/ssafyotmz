@@ -189,7 +189,7 @@ export default {
           return '클래식';
         case 'PREPPY':
           return '프레피';
-        case 'mannish':
+        case 'manish':
           return '매니시';
           case 'TOMBOY':
           return '톰보이';

@@ -154,7 +154,4 @@ public class ItemService {
                 .build();
         return itemResponsePageDto;
     }
-    // private static final String[] numToCategory = {"outer", "upper", "lower", "dress", "etc"};
-
-    // private static final String[] numToStyle = {"street","sporty","kitsch","sexy","romantic","hippie","preppy","retro","resort","classic","military","modern","hiphop","feminine","tomboy","country","manish","genderless","avantgarde","oriental","punk","sophisticated","western"};
 }

@@ -19,12 +19,13 @@
       <br>
     </div>
     
-    <div v-if="!haveImage" id="closetbox">
+    <div v-if="!haveImage" class="closetbox">
       <p v-if="!userUploadedImgExist" id="notImg">선택된 옷 미리보기</p>
       <img v-if="userUploadedImgExist" :src="userUploadedImg" class="uploadedImage" >
     </div>
 
     <div v-if="haveImage">
+     
       <div style="font-size:95%; padding:2px; font-weight: bold; margin-top: 5px;">
         <p style="margin-top:0px;">
           배경이 제거되었습니다!
@@ -33,7 +34,9 @@
           정보 입력을 완료하고 옷장에 등록해 보세요.
         </p>
       </div>
+      <div class="closetbox">
       <img :src="processedImageStr" class="uploadedImage">
+    </div>
       <br>
     </div>
     <br>
@@ -324,7 +327,7 @@ input {
   }
 
 .loadingImg {
-  width: 70%;
+  width: 30%;
 }
 
 #x {
@@ -336,7 +339,7 @@ input {
   position: relative;
 }
 
-#closetbox {
+.closetbox {
   display: inline-block;
   width: 90%;
   height: 250px;
@@ -362,6 +365,10 @@ input {
   justify-content: center;
   align-items: center;
   color: gray;
+}
+
+#pimage {
+  background-color: gray;
 }
 
 #name {

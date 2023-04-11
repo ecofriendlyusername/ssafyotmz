@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum Style {
     CLASSIC("classic", "클래식"),
     PREPPY("preppy", "프레피"),
-    MANNISH("mannish", "매니시"),
+    MANISH("manish", "매니시"),
     TOMBOY("tomboy", "톰보이"),
     FEMININE("feminine", "페미닌"),
     ROMANTIC("romantic", "로맨틱"),
