@@ -2,7 +2,7 @@
 
 <!-- * 버전 수정 필요: 아무거나 넣어뒀어요 -->
 ![Github](https://img.shields.io/badge/javascript-1-blue)
-![Github](https://img.shields.io/badge/java-1-blue)
+![Github](https://img.shields.io/badge/java-17-blue)
 ![Github](https://img.shields.io/badge/vue-3-%234FC08D?style=plastic&logo=Vue.js)
 ![Github](https://img.shields.io/badge/spring_boot-3-%236DB33F?style=plastic&logo=Spring)
 
