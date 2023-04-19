@@ -51,11 +51,11 @@ export default {
         img.onload = () => {
           var thumbFile = (_IMG) => {
             var canvas = document.createElement("canvas");
-            // var newWidthAndHeight = this.calculateAspectRatioFit(_IMG.width,_IMG.height, 360, 480)
-            // var width = newWidthAndHeight.width;
-            // var height = newWidthAndHeight.height;
-            var width = 360;
-            var height = 480;
+            var newWidthAndHeight = this.calculateAspectRatioFit(_IMG.width,_IMG.height, 360, 480)
+            var width = newWidthAndHeight.width;
+            var height = newWidthAndHeight.height;
+            // var width = 360;
+            // var height = 480;
             canvas.width = width;
             canvas.height = height;
             canvas.getContext("2d").drawImage(_IMG, 0, 0, width, height);

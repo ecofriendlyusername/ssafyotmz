@@ -47,16 +47,14 @@
 
     <hr>
 
-    <div style="display:flex; justify-content:center">
-      <div class="container" style="gap:5px">
-
-      <div v-for="(style, index) in data" :key="index">
-          <img :src= '`${ path }/images/${ style.imageId }`' style="width:100%;" id="picture" v-on:click="modal(style, index)">
-      </div>
+    <div>
+      <masonry-wall :items="data" :ssr-columns="1" :column-width="100" :gap="16">
+        <template #default="{ item, index }">
+          <img :src= '`${ path }/images/${ item.imageId }`' style="width:100%;"  class="card flex items-center justify-center" v-on:click="modal(item, index)">
+        </template>
+      </masonry-wall>
       <infinite-loading v-if="hasMore" :identifier="infiniteId" @infinite="onScroll"></infinite-loading>
-      </div>
     </div>
-    <!-- 여기까지 -->
     <hr>
   </div>
 </template>
@@ -65,10 +63,12 @@
 import axios from 'axios';
 import Chart from 'chart.js/auto';
 import InfiniteLoading from "v3-infinite-loading";
+import MasonryWall from '@yeger/vue-masonry-wall'
 export default {
   name:'MyPageStyleView',
   components: {
     InfiniteLoading,
+    MasonryWall
   },
   data(){
     return {
@@ -114,9 +114,11 @@ export default {
     },
 
     async onScroll() {
+      console.log('heeyy')
+      console.log(this.hasMore)
     if (this.hasMore) {
       var athis = this
-    await axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=${athis.curPage}&size=30&sort=id,DESC`, {
+    await axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=${athis.curPage}&size=5&sort=id,DESC`, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': athis.$store.state.Auth['accessToken']
@@ -140,7 +142,7 @@ export default {
   }
 },
   mounted() {
-    axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=0&size=20&sort=id,DESC`, {
+    axios.get(process.env.VUE_APP_API_URL + '/member/looks' + `?page=0&size=5&sort=id,DESC`, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': this.$store.state.Auth['accessToken']
@@ -280,14 +282,14 @@ export default {
 
 .container {
   width: 97%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 0fr;
+  /* display: grid; */
+  /* grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 0fr; */
   /* padding: 7px; */
   /* grid-template-rows: repeat(2, 100px);
   grid-template-columns: repeat(3, 1fr); */
   /* grid-auto-rows: 100px; */
-  grid-auto-rows:minmax(100px, auto)
+  /* grid-auto-rows:minmax(100px, auto) */
 }
 
 #picture {
